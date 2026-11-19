@@ -1810,19 +1810,26 @@ function renderBlocks() {
   updateBlockPreview();
 }
 
-/* ====================== 블록 퍼즐 · 직접 그리는 드래그 미리보기 ====================== */
+/* ====================== v51 · 블록 퍼즐 격자 맞춤 드래그 ======================
+   손가락·마우스가 가리킨 위치를 실제 게임판 칸의 좌표로 변환합니다.
+   미리보기와 손을 놓았을 때의 배치 칸을 동일한 좌표로 사용합니다.
+   모바일에서는 손가락이 블록을 가리지 않도록 목표점을 손가락 위쪽에 둡니다. */
 let blockPointer=null;
 let blockGhost=null;
 let blockSuppressClick=false;
 function clearBlockGhost(){if(blockGhost){blockGhost.remove();blockGhost=null;}}
 function makeBlockGhost(pieceIndex){
   const piece=blockGame.tray[pieceIndex];if(!piece)return null;
-  const shape=blockShapes[piece.shapeId], dims=blockDimensions(shape);
+  const shape=blockShapes[piece.shapeId],dims=blockDimensions(shape);
   const ghost=document.createElement('div');
-  ghost.className=`block-drag-ghost block-color-${pieceIndex}`;
+  ghost.className=`block-drag-ghost v51-block-ghost block-color-${pieceIndex}`;
   ghost.style.gridTemplateColumns=`repeat(${dims[1]},var(--ghost-cell))`;
   ghost.style.gridTemplateRows=`repeat(${dims[0]},var(--ghost-cell))`;
-  shape.cells.forEach(([r,c])=>{const tile=document.createElement('span');tile.className='block-mini-tile';tile.style.gridRow=String(r+1);tile.style.gridColumn=String(c+1);ghost.appendChild(tile);});
+  ghost.setAttribute('aria-hidden','true');
+  shape.cells.forEach(([r,c])=>{
+    const tile=document.createElement('span');tile.className='block-mini-tile';
+    tile.style.gridRow=String(r+1);tile.style.gridColumn=String(c+1);ghost.appendChild(tile);
+  });
   document.body.appendChild(ghost);
   return ghost;
 }
@@ -1831,17 +1838,59 @@ function blockCellUnderPointer(x,y){
   const cell=element?.closest('.block-cell');
   return cell&&$('block-board').contains(cell)?{r:Number(cell.dataset.r),c:Number(cell.dataset.c)}:null;
 }
-$('block-tray').addEventListener('pointerdown',(event)=>{
+function v51BlockGridMetrics(){
+  const board=$('block-board');
+  const first=board.querySelector('.block-cell[data-r="0"][data-c="0"]');
+  const secondX=board.querySelector('.block-cell[data-r="0"][data-c="1"]');
+  const secondY=board.querySelector('.block-cell[data-r="1"][data-c="0"]');
+  if(!first||!secondX||!secondY)return null;
+  const a=first.getBoundingClientRect(),bx=secondX.getBoundingClientRect(),by=secondY.getBoundingClientRect();
+  const dx=bx.left-a.left,dy=by.top-a.top;
+  if(dx<1||dy<1||a.width<1||a.height<1)return null;
+  return {left:a.left,top:a.top,w:a.width,h:a.height,dx,dy,
+    right:bx.right+dx*8,bottom:by.bottom+dy*8};
+}
+function v51BlockTarget(pointerX,pointerY,pieceIndex,pointerType){
+  const metrics=v51BlockGridMetrics();
+  const piece=blockGame.tray[pieceIndex];
+  if(!metrics||!piece||piece.used)return null;
+  const shape=blockShapes[piece.shapeId],dims=blockDimensions(shape);
+  // 터치 좌표보다 1~2칸 위에 블록을 놓아 손가락에 가리지 않도록 합니다.
+  const lift=pointerType==='touch'?Math.min(62,Math.max(36,metrics.h*1.55)):0;
+  const aimX=pointerX,aimY=pointerY-lift;
+  const inside=aimX>=metrics.left&&aimX<=metrics.right&&aimY>=metrics.top&&aimY<=metrics.bottom;
+  if(!inside)return {inside:false,metrics,shape,dims,lift};
+  const c=Math.round((aimX-(metrics.left+metrics.w/2)-(dims[1]-1)*metrics.dx/2)/metrics.dx);
+  const r=Math.round((aimY-(metrics.top+metrics.h/2)-(dims[0]-1)*metrics.dy/2)/metrics.dy);
+  return {inside:true,metrics,shape,dims,lift,r,c,valid:canPlaceBlock(blockGame.board,shape,r,c)};
+}
+function v51DrawBlockGhost(target,x,y){
+  if(!blockGhost||!target)return;
+  const {metrics,dims}=target;
+  const cellSize=Math.max(8,metrics.w);
+  blockGhost.style.setProperty('--ghost-cell',`${cellSize}px`);
+  blockGhost.style.columnGap=`${Math.max(0,metrics.dx-metrics.w)}px`;
+  blockGhost.style.rowGap=`${Math.max(0,metrics.dy-metrics.h)}px`;
+  blockGhost.classList.toggle('v51-invalid',target.inside&&!target.valid);
+  blockGhost.classList.toggle('v51-snapped',target.inside);
+  const ghostWidth=dims[1]*metrics.w+(dims[1]-1)*(metrics.dx-metrics.w);
+  const ghostHeight=dims[0]*metrics.h+(dims[0]-1)*(metrics.dy-metrics.h);
+  const left=target.inside?metrics.left+target.c*metrics.dx:x-ghostWidth/2;
+  const top=target.inside?metrics.top+target.r*metrics.dy:y-target.lift-ghostHeight/2;
+  blockGhost.style.left=`${left}px`;
+  blockGhost.style.top=`${top}px`;
+}
+$('block-tray').addEventListener('pointerdown',event=>{
   if(event.button!==0||activeGame!=='blocks'||blockGame.state!=='playing')return;
   const piece=event.target.closest('.block-piece');
   if(!piece||piece.disabled)return;
   const index=[...$('block-tray').children].indexOf(piece);
   if(index<0)return;
-  blockPointer={id:event.pointerId,index,startX:event.clientX,startY:event.clientY,dragging:false};
-  // 이미지나 버튼 텍스트가 운영체제 드래그로 잡히지 않도록 보호합니다.
+  blockPointer={id:event.pointerId,index,startX:event.clientX,startY:event.clientY,
+    pointerType:event.pointerType||'mouse',dragging:false,hoverKey:null,target:null};
   event.preventDefault();
 });
-window.addEventListener('pointermove',(event)=>{
+window.addEventListener('pointermove',event=>{
   if(!blockPointer||event.pointerId!==blockPointer.id)return;
   const drag=blockPointer;
   if(!drag.dragging&&Math.hypot(event.clientX-drag.startX,event.clientY-drag.startY)<7)return;
@@ -1852,29 +1901,39 @@ window.addEventListener('pointermove',(event)=>{
     blockGhost=makeBlockGhost(drag.index);
     $('block-tray').children[drag.index]?.classList.add('selected');
   }
-  event.preventDefault();
-  if(blockGhost){blockGhost.style.left=`${event.clientX+13}px`;blockGhost.style.top=`${event.clientY-35}px`;}
-  const cell=blockCellUnderPointer(event.clientX,event.clientY);
-  blockGame.hover=cell;
-  updateBlockPreview();
+  if(event.cancelable)event.preventDefault();
+  const target=v51BlockTarget(event.clientX,event.clientY,drag.index,drag.pointerType);
+  drag.target=target;
+  v51DrawBlockGhost(target,event.clientX,event.clientY);
+  const hover=target?.inside?{r:target.r,c:target.c}:null;
+  const hoverKey=hover?`${hover.r},${hover.c},${target.valid}`:'outside';
+  if(hoverKey!==drag.hoverKey){
+    drag.hoverKey=hoverKey;
+    blockGame.hover=hover;
+    updateBlockPreview();
+    const note=$('v41-block-preview-note');
+    if(note && target?.inside){
+      note.textContent=target.valid?'✓ 칸에 맞았어요! 여기서 손가락을 떼면 배치돼요.':'✕ 빨간 칸에는 놓을 수 없어요. 다른 자리로 움직여 보세요.';
+    }
+  }
 });
-window.addEventListener('pointerup',(event)=>{
+window.addEventListener('pointerup',event=>{
   if(!blockPointer||event.pointerId!==blockPointer.id)return;
   const drag=blockPointer;blockPointer=null;
-  const cell=blockCellUnderPointer(event.clientX,event.clientY);
+  // 마지막 pointermove가 생략되어도 손을 놓은 위치로 판정합니다.
+  const target=v51BlockTarget(event.clientX,event.clientY,drag.index,drag.pointerType);
   clearBlockGhost();
   if(drag.dragging){
     blockSuppressClick=true;
-    // 클릭에 필요한 기본 기능도 유지하고, 드래그 후에만 미리보기 위치에 배치합니다.
     blockGame.selected=drag.index;
     blockGame.hover=null;
-    if(cell)placeBlock(cell.r,cell.c);
-    else {setStatus('block-status','블록을 게임판 위에 놓거나, 선택 후 칸을 클릭하세요.');renderBlocks();}
-    // 브라우저가 추가로 생성하는 click 이벤트 한 번만 무시합니다.
+    if(target?.inside&&target.valid){placeBlock(target.r,target.c);}
+    else{
+      setStatus('block-status',target?.inside?'빨간 칸에는 놓을 수 없어요. 빈 공간으로 옮겨 보세요.':'블록을 게임판 위에 맞춘 뒤 손가락을 떼세요.');
+      renderBlocks();
+    }
     setTimeout(()=>{blockSuppressClick=false;},0);
-  }else{
-    selectBlockPiece(drag.index);
-  }
+  }else selectBlockPiece(drag.index);
 });
 window.addEventListener('pointercancel',()=>{
   if(!blockPointer)return;
@@ -2443,6 +2502,8 @@ $("shikaku-board").addEventListener("pointerdown", (event) => {
 document.addEventListener("pointermove", (event) => {
   const drag = shikaku.dragging;
   if (!drag || drag.pointer !== event.pointerId || activeGame !== "shikaku") return;
+  // 터치 드래그 도중 브라우저 기본 스크롤·텍스트 선택을 막습니다.
+  if(event.cancelable)event.preventDefault();
   const coord = shikakuCellFromPoint(event.clientX, event.clientY);
   if (!coord) return;
   drag.last = coord;
