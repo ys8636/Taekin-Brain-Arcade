@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="dark light" name="color-scheme"/>
+<title>TAEKIN BRAIN ARCADE | v47</title>
+<meta name="description" content="TAEKIN BRAIN ARCADE에서 숫자야구, 2048, 지뢰찾기, 파이프 연결, 시카쿠, 블록 퍼즐 6종과 총 1,500단계를 즐겨보세요.">
+<meta name="theme-color" content="#172124">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link href="style.css" rel="stylesheet"/>
+
+
+
+<script defer="" src="script.js"></script>
+
+
+
+</head>
+<body>
+<div class="site-shell">
+<header class="topbar">
+<button aria-label="TAEKIN BRAIN ARCADE 메인 메뉴로 돌아가기" class="brand" id="brand-home" type="button">
+<span class="brand-mark" id="v19-profile-mark">T.</span>
+<span class="brand-text">TAEKIN <strong>BRAIN ARCADE</strong><small>A PUZZLE COLLECTION</small></span>
+</button><nav aria-label="사이트 주요 메뉴" class="arcade-nav"><button aria-current="page" class="arcade-nav-btn active" data-destination="games" type="button"><span aria-hidden="true" class="v26-nav-icon">🎮</span><span class="v26-nav-label">게임</span></button><button aria-current="false" class="arcade-nav-btn" data-destination="challenges" type="button"><span aria-hidden="true" class="v26-nav-icon">🎯</span><span class="v26-nav-label">도전</span></button><button aria-current="false" class="arcade-nav-btn" data-destination="records" type="button"><span aria-hidden="true" class="v26-nav-icon">📊</span><span class="v26-nav-label">내 기록</span></button><button aria-current="false" class="arcade-nav-btn" data-destination="profile" type="button"><span aria-hidden="true" class="v26-nav-icon">👤</span><span class="v26-nav-label">프로필</span></button><button aria-current="false" class="arcade-nav-btn" data-destination="more" type="button"><span aria-hidden="true" class="v26-nav-icon">🏆</span><span class="v26-nav-label">더보기</span></button></nav>
+<div class="top-actions"><button class="v26-profile-chip" id="v26-header-profile" title="내 프로필" type="button"><span class="sr-only">프로필 · </span><span aria-hidden="true" class="v26-avatar">✦</span><span class="v26-profile-text"><b id="v26-header-level">플레이어 · LV. 1</b><small id="v26-header-title">견습 탐험가</small></span></button>
+<button id="v32-save-status" class="v32-save-status" type="button" aria-label="기록 저장 상태와 백업 메뉴 보기" title="내 기록 저장 상태">◌ 확인 중</button><button id="v32-settings-open" class="v32-settings-button" type="button" aria-haspopup="dialog" aria-controls="v32-settings-dialog">⚙ 설정</button><div class="display-settings-wrap">
+<button aria-controls="display-settings" aria-expanded="false" class="display-settings-toggle" id="display-settings-toggle" type="button">화면 설정</button>
+<div class="display-settings" hidden="" id="display-settings">
+<div class="display-settings-head"><strong>화면 설정</strong><button aria-label="화면 설정 닫기" id="display-settings-close" type="button">✕</button></div>
+<p>사용 중인 모니터와 화면 배율에 맞춰 선택하세요.</p>
+<div aria-label="색상 테마" class="setting-group" role="group"><span>색상 테마</span><div class="setting-options">
+<button aria-pressed="true" data-theme-option="dark" type="button">🌙 다크</button>
+<button aria-pressed="false" data-theme-option="light" type="button">☀ 라이트</button></div></div>
+<div aria-label="화면 밀도" class="setting-group" role="group"><span>화면 밀도</span><div class="setting-options">
+<button aria-pressed="false" data-density-option="compact" type="button">컴팩트</button>
+<button aria-pressed="true" data-density-option="normal" type="button">기본</button>
+<button aria-pressed="false" data-density-option="wide" type="button">넓게</button></div></div>
+<div class="setting-group v19-access"><span>접근성</span><label><input id="v19-colorblind" type="checkbox"/> 색상 구분 강화 (기호·테두리)</label><label><input id="v19-motion" type="checkbox"/> 움직임 줄이기</label></div>
+<div class="display-settings-foot">설정은 이 브라우저에 저장됩니다.</div></div>
+</div><button aria-controls="audio-settings" aria-expanded="false" class="audio-settings-toggle" id="audio-settings-toggle" type="button">사운드</button>
+<div class="audio-settings" id="audio-settings">
+<!-- BGM 6곡 선택 및 재생 -->
+<div aria-label="배경음악 플레이어" class="music-player">
+<span class="music-track-label">♫ BGM</span>
+<!-- 사용자에게 숨기되 음악 재생 코드와 동기화하기 위해 유지하는 선택 요소 -->
+<select aria-hidden="true" class="sr-only" id="music-track" tabindex="-1">
+<option value="arcade_classic">기본 아케이드</option>
+<option value="neon_drive">네온 드라이브</option>
+<option value="pixel_jump">픽셀 점프</option>
+<option value="focus_flow">집중 모드</option>
+<option value="mystic_maze">미스터리 퍼즐</option>
+<option value="space_lounge">스페이스 라운지</option>
+</select>
+<div class="music-picker" id="music-picker">
+<button aria-controls="music-track-menu" aria-expanded="false" aria-haspopup="listbox" aria-label="배경음악 곡 선택창 열기" class="music-picker-button" id="music-picker-button" type="button">
+<span aria-hidden="true" class="music-current-icon" id="music-current-icon">🎮</span>
+<span class="music-current-info">
+<strong id="music-current-name">기본 아케이드</strong>
+<small id="music-current-sub">6곡 중 선택</small>
+</span>
+<span aria-hidden="true" class="music-current-chevron">⌄</span>
+</button>
+<div aria-label="배경음악 목록" class="music-track-menu" hidden="" id="music-track-menu" role="listbox">
+<div class="music-menu-header">
+<span class="music-menu-overline">SOUNDTRACK LIBRARY</span>
+<div class="music-menu-heading"><strong>🎧 음악 라이브러리</strong><span>6 TRACKS</span></div>
+<p>게임 분위기에 맞는 음악을 골라보세요.</p>
+</div>
+<div class="music-track-options" id="music-track-options"></div>
+<div class="music-menu-foot">곡을 선택하면 재생 중일 때 즉시 전환돼요.</div>
+</div>
+</div>
+<button aria-pressed="false" class="music-toggle" id="music-toggle" title="배경음악 켜기/끄기" type="button">♪ 음악 켜기</button>
+<label class="sr-only" for="music-volume">배경음악 음량</label>
+<input aria-label="음악 음량" id="music-volume" max="100" min="0" type="range" value="35"/>
+</div>
+<!-- 게임 효과음은 BGM과 독립적으로 켜고 음량을 조절할 수 있습니다. -->
+<div aria-label="게임 효과음 설정" class="sfx-player">
+<span class="sfx-label" title="게임 조작·힌트·클리어 효과음">SFX</span>
+<button aria-pressed="true" class="sfx-toggle" id="sfx-toggle" title="게임 효과음 켜기/끄기" type="button">🔊 효과음 켜짐</button>
+<label class="sr-only" for="sfx-volume">효과음 음량</label>
+<input aria-label="효과음 음량" id="sfx-volume" max="100" min="0" type="range" value="40"/>
+<button class="sfx-test" id="sfx-test" title="효과음이 정상 출력되는지 확인" type="button">▶ 소리 확인</button>
+</div>
+</div>
+<span aria-live="polite" class="sr-only" id="sfx-status" role="status">효과음 켜짐</span>
+<span aria-live="polite" class="sr-only" id="music-status" role="status">배경음악 선택: 기본 아케이드</span>
+<button class="btn btn-quiet hidden" id="header-back" type="button">게임 선택</button>
+</div>
+</header>
+<div id="v27-quick-menu" class="v27-quick-menu" role="menu" aria-label="빠른 보관함" hidden>
+  <span class="v27-quick-overline">QUICK COLLECTION</span>
+  <button type="button" role="menuitem" data-v27-panel="hall"><span aria-hidden="true">🏆</span><span><b>명예의 전당</b><small>트로피 8종</small></span></button>
+  <button type="button" role="menuitem" data-v27-panel="badges"><span aria-hidden="true">🎖️</span><span><b>배지 도감</b><small>배지 35종 · 대표 배지</small></span></button>
+  <button type="button" role="menuitem" data-v27-panel="certificate"><span aria-hidden="true">🎓</span><span><b>올클리어 기념패</b><small>진행 상황과 닉네임 확인</small></span></button>
+</div>
+<audio id="arcade-bgm" loop="" preload="metadata" src="assets/arcade_bgm.mp3"></audio>
+<main>
+<section class="screen" id="home-screen">
+<!-- 게임 메뉴: 바로 시작, 게임 카드, 선택형 소개 슬라이드 -->
+<div aria-label="게임" class="v26-view" data-v26-page="games" id="v26-view-games" role="region"><h1 class="sr-only">TAEKIN BRAIN ARCADE — 게임 선택</h1>
+<section aria-label="체험 및 이어하기" class="v19-welcome">
+<div><span class="eyebrow">QUICK START</span><h2>바로 플레이하기</h2><p>처음 방문했다면 6종 체험 모드부터, 이어서 하고 싶다면 저장한 게임을 선택하세요.</p></div>
+<div class="v19-welcome-actions"><button class="btn btn-primary" id="v19-demo-start" type="button">▶ 게임 6종 체험하기</button><button class="btn btn-secondary" id="v19-resume-last" type="button">마지막 게임 이어하기</button><button class="btn btn-secondary v31-help-btn" id="v31-help-open" type="button">❔ 처음 이용 가이드</button></div>
+<div aria-live="polite" class="v19-saves" id="v19-save-list"></div>
+</section><div class="v47-showcase-label"><strong>🎞 오늘의 추천 게임</strong><span>자동으로 게임이 바뀌어요 · 일시정지 가능</span></div><section aria-label="게임 소개 슬라이드" aria-roledescription="캐러셀" class="hero-carousel" id="hero-carousel">
+<div aria-live="off" class="hero-slides" id="hero-slides"></div>
+<button aria-label="이전 소개 보기" class="hero-arrow hero-prev" id="hero-prev" type="button">❮</button>
+<button aria-label="다음 소개 보기" class="hero-arrow hero-next" id="hero-next" type="button">❯</button>
+<div class="hero-footer">
+<div aria-label="소개 슬라이드 선택" class="hero-dots" id="hero-dots" role="group"></div>
+<div class="hero-controls">
+<span class="hero-count" id="hero-count">1 / 7</span>
+<button aria-label="자동 넘김 일시정지" aria-pressed="false" class="hero-pause" id="hero-pause" type="button">Ⅱ 일시정지</button>
+</div>
+</div>
+</section>
+<div class="section-heading" id="game-collection"><div><span class="eyebrow">THE COLLECTION</span><h2>여섯 개의 게임, 여섯 가지 재미</h2></div><span class="heading-note">단계별 도전과 자유 플레이, 원하는 방식으로 즐기세요.</span></div><div class="game-cards">
+<button class="game-card card-baseball" data-open="baseball" type="button">
+<span class="game-icon">01</span><span class="card-category">GAME 01 / 06</span><span aria-hidden="true" class="card-preview preview-baseball"><span class="preview-tag">NUMBER DEDUCTION</span><span class="preview-secret"><i>0</i><i>7</i><i>2</i><i>9</i></span><span class="preview-answer">2 STRIKE · 1 BALL</span></span>
+<strong>숫자야구</strong><span class="card-desc">서로 다른 숫자를 추리합니다. 단계에 따라 자리 수가 달라집니다.</span><span aria-label="baseball 진행률" class="card-progress"><span class="card-progress-label"><span>도전 진행률</span><b class="card-percent">0%</b></span><span class="card-progress-track"><span class="card-progress-fill" style="width:0%"></span></span></span>
+<span class="card-bottom"><span>논리 · 추리</span><span class="card-go">게임 플레이</span></span>
+</button>
+<button class="game-card card-2048" data-open="2048" type="button">
+<span class="game-icon">02</span><span class="card-category">GAME 02 / 06</span><span aria-hidden="true" class="card-preview preview-2048"><span class="preview-tag">TILE MERGING</span><span class="preview-grid"><i class="p-tile p-2">2</i><i class="p-tile p-4">4</i><i class="p-tile p-0"></i><i class="p-tile p-8">8</i><i class="p-tile p-4">4</i><i class="p-tile p-16">16</i><i class="p-tile p-2">2</i><i class="p-tile p-0"></i><i class="p-tile p-0"></i><i class="p-tile p-8">8</i><i class="p-tile p-32">32</i><i class="p-tile p-0"></i><i class="p-tile p-0"></i><i class="p-tile p-2">2</i><i class="p-tile p-4">4</i><i class="p-tile p-64">64</i></span></span>
+<strong>2048</strong><span class="card-desc">같은 숫자를 합쳐 단계별 목표 블록을 만듭니다.</span><span aria-label="2048 진행률" class="card-progress"><span class="card-progress-label"><span>도전 진행률</span><b class="card-percent">0%</b></span><span class="card-progress-track"><span class="card-progress-fill" style="width:0%"></span></span></span>
+<span class="card-bottom"><span>전략 · 집중</span><span class="card-go">게임 플레이</span></span>
+</button>
+<button class="game-card card-mines" data-open="mines" type="button">
+<span class="game-icon">03</span><span class="card-category">GAME 03 / 06</span><span aria-hidden="true" class="card-preview preview-mines"><span class="preview-tag">LOGIC GAME</span><span class="preview-grid"><i>1</i><i>2</i><i></i><i>⚑</i><i></i><i>1</i><i>2</i><i></i><i></i><i></i><i>💣</i><i></i><i>⚑</i><i>2</i><i>1</i><i></i></span></span>
+<strong>지뢰찾기</strong><span class="card-desc">숫자 힌트를 따라 지뢰를 피하고 안전한 칸을 열어 보세요.</span><span aria-label="mines 진행률" class="card-progress"><span class="card-progress-label"><span>도전 진행률</span><b class="card-percent">0%</b></span><span class="card-progress-track"><span class="card-progress-fill" style="width:0%"></span></span></span>
+<span class="card-bottom"><span>추론 · 관찰</span><span class="card-go">게임 플레이</span></span>
+</button>
+<button class="game-card card-pipes" data-open="pipes" type="button">
+<span class="game-icon">04</span><span class="card-category">GAME 04 / 06</span><span aria-hidden="true" class="card-preview preview-pipes"><span class="preview-tag">PIPE NETWORK</span><svg fill="none" viewbox="0 0 220 136"><path d="M4 76H51Q67 76 67 60V31Q67 16 82 16H122Q137 16 137 31V104Q137 119 152 119H218" stroke="#14576A" stroke-linecap="round" stroke-width="20"></path><path d="M4 76H51Q67 76 67 60V31Q67 16 82 16H122Q137 16 137 31V104Q137 119 152 119H218" stroke="#68E2E7" stroke-linecap="round" stroke-width="11"></path><circle cx="13" cy="76" fill="#60C9E7" r="12"></circle><circle cx="210" cy="119" fill="#8CEFC0" r="12"></circle></svg></span>
+<strong>파이프 연결</strong><span class="card-desc">배관 전체를 연결해 시작점의 물이 모든 파이프로 흐르게 하세요.</span><span aria-label="pipes 진행률" class="card-progress"><span class="card-progress-label"><span>도전 진행률</span><b class="card-percent">0%</b></span><span class="card-progress-track"><span class="card-progress-fill" style="width:0%"></span></span></span>
+<span class="card-bottom"><span>공간 · 경로</span><span class="card-go">게임 플레이</span></span>
+</button>
+<button class="game-card card-shikaku" data-open="shikaku" type="button">
+<span class="game-icon">05</span><span class="card-category">GAME 05 / 06</span><span aria-hidden="true" class="card-preview preview-shikaku"><span class="preview-tag">RECTANGLE LOGIC</span><span class="preview-grid"><i class="area-1"></i><i class="area-1">4</i><i class="area-2"></i><i class="area-2">6</i><i class="area-1"></i><i class="area-1"></i><i class="area-2"></i><i class="area-2"></i><i class="area-3">3</i><i class="area-3"></i><i class="area-4">2</i><i class="area-4"></i><i class="area-3"></i><i class="area-3"></i><i class="area-5">1</i><i class="area-4"></i><i class="area-4"></i><i class="area-6">2</i><i class="area-6"></i><i class="area-5"></i></span></span>
+<strong>시카쿠</strong><span class="card-desc">숫자에 맞는 직사각형으로 모든 칸을 정확하게 나누세요.</span><span aria-label="shikaku 진행률" class="card-progress"><span class="card-progress-label"><span>도전 진행률</span><b class="card-percent">0%</b></span><span class="card-progress-track"><span class="card-progress-fill" style="width:0%"></span></span></span>
+<span class="card-bottom"><span>공간 · 계산</span><span class="card-go">게임 플레이</span></span>
+</button>
+<button class="game-card card-blocks" data-open="blocks" type="button">
+<span class="game-icon">06</span><span class="card-category">GAME 06 / 06</span><span aria-hidden="true" class="card-preview preview-blocks"><span class="preview-tag">BLOCK PLACEMENT</span><span class="preview-grid"><i class="block-color-0" style="opacity:1"></i><i class="block-color-0" style="opacity:1"></i><i class="block-color-0" style="opacity:1"></i><i class="block-color-0" style="opacity:0.13"></i><i class="block-color-1" style="opacity:1"></i><i class="block-color-1" style="opacity:1"></i><i class="block-color-1" style="opacity:0.13"></i><i class="block-color-1" style="opacity:1"></i><i class="block-color-2" style="opacity:1"></i><i class="block-color-2" style="opacity:0.13"></i><i class="block-color-2" style="opacity:0.13"></i><i class="block-color-2" style="opacity:1"></i><i class="block-color-3" style="opacity:1"></i><i class="block-color-3" style="opacity:1"></i><i class="block-color-3" style="opacity:1"></i><i class="block-color-3" style="opacity:1"></i><i class="block-color-0" style="opacity:0.13"></i><i class="block-color-0" style="opacity:0.13"></i><i class="block-color-0" style="opacity:0.13"></i><i class="block-color-0" style="opacity:1"></i></span></span>
+<strong>블록 퍼즐</strong><span class="card-desc">블록 세 개를 배치하고 가로·세로 줄을 완성해 목표 점수를 획득하세요.</span><span aria-label="blocks 진행률" class="card-progress"><span class="card-progress-label"><span>도전 진행률</span><b class="card-percent">0%</b></span><span class="card-progress-track"><span class="card-progress-fill" style="width:0%"></span></span></span>
+<span class="card-bottom"><span>배치 · 전략</span><span class="card-go">게임 플레이</span></span>
+</button>
+</div>
+<section class="v46-home-guides" aria-label="게임 설명 바로 보기">
+  <div class="v46-home-guides-head"><strong>❔ 이 게임은 뭔가요?</strong><span>설명 버튼을 눌러 규칙을 알아보고 게임을 시작하세요.</span></div>
+  <div class="v46-home-guide-links">
+    <button type="button" data-v46-help="game" data-v46-game="baseball">⚾ 숫자야구 <span>?</span></button>
+    <button type="button" data-v46-help="game" data-v46-game="2048">🔢 2048 <span>?</span></button>
+    <button type="button" data-v46-help="game" data-v46-game="mines">💣 지뢰찾기 <span>?</span></button>
+    <button type="button" data-v46-help="game" data-v46-game="pipes">🔧 파이프 <span>?</span></button>
+    <button type="button" data-v46-help="game" data-v46-game="shikaku">▦ 시카쿠 <span>?</span></button>
+    <button type="button" data-v46-help="game" data-v46-game="blocks">🧩 블록 퍼즐 <span>?</span></button>
+  </div>
+</section><div aria-label="내 진행 상황" class="v26-home-summary"><div class="v26-home-summary-text"><span class="v26-mini-overline">나의 진행 상황</span><strong id="v26-home-progress">0 / 1,500단계</strong><span id="v26-home-goal">오늘의 목표는 도전 메뉴에서 확인할 수 있어요.</span></div><button class="v26-jump" data-v26-jump="records" type="button">기록 자세히 보기</button></div><details class="v26-guide-fold"><summary>❔ 처음 이용하시나요? 게임 방법 3단계 보기</summary><section aria-label="사이트 이용 방법" class="quick-guide">
+<div class="quick-guide-title"><strong>처음 이용하시나요?</strong><span>처음 방문하셨다면 아래 순서로 진행하세요.</span><button class="tour-entry" id="tour-first" type="button">? 게임 체험 가이드</button></div>
+<div class="quick-guide-steps">
+<div><b>01</b><span><strong>게임 선택</strong><small>아래 6개 게임 중 하나를 클릭</small></span></div>
+<div><b>02</b><span><strong>단계 또는 난이도 선택</strong><small>단계 도전·자유 플레이 지원</small></span></div>
+<div><b>03</b><span><strong>게임 플레이</strong><small>우측 규칙·힌트 확인, 완료 기록 저장</small></span></div>
+</div>
+</section></details><div class="home-footnote">TAEKIN BRAIN ARCADE  /  SIX PUZZLE GAMES</div></div><div aria-label="게임 도전" class="v26-view" data-v26-page="challenges" hidden="" id="v26-view-challenges" role="region"><div class="v26-page-heading"><span aria-hidden="true" class="v26-page-icon">🎯</span><div><span class="v26-page-overline">TAEKIN BRAIN ARCADE</span><h1>게임 도전</h1><p>100라운드 종합 도전에 참여하세요. 다음 목표와 일일 미션은 아래에서 확인할 수 있어요.</p></div></div><section aria-label="6개 게임 통합 도전 모드 100라운드" class="marathon-banner" id="challenge-hub">
+<div class="marathon-top">
+<div><span class="eyebrow">ARCADE CHALLENGE · 100 ROUNDS</span>
+<h2>도전 모드 <em>100라운드</em></h2>
+<p>6개 게임을 순서대로 모두 클리어하면 다음 라운드가 열립니다. 라운드가 올라갈수록 난이도가 높아집니다.</p>
+</div>
+<div class="marathon-controls">
+<strong id="marathon-summary">1 / 100 라운드 도전 가능</strong>
+<button class="btn btn-primary" id="marathon-start" type="button">도전 모드 이어하기</button>
+<button class="reset-progress-btn" id="marathon-reset" type="button">↺ 도전 모드 기록 초기화</button>
+</div>
+</div>
+<div aria-label="현재 라운드 6게임 진행" class="marathon-track" id="marathon-track"></div>
+<div aria-label="도전 모드 100라운드 진행도" class="marathon-progress"><div id="marathon-progress-fill"></div></div>
+<div class="marathon-stage-heading"><span>도전 모드 라운드 선택 <small>이미 완료한 라운드는 연습으로 다시 플레이 가능</small></span>
+<span><button id="marathon-page-prev" type="button">이전</button> <b id="marathon-page-label">01~10</b> <button id="marathon-page-next" type="button">다음</button></span></div>
+<div class="marathon-round-buttons" id="marathon-round-buttons"></div>
+</section><div class="v35-missions-lower"><div class="v35-missions-heading"><h2>📋 다음 목표와 일일 미션</h2><p>필요할 때 아래에서 진행률과 보상을 확인하세요.</p></div><section aria-labelledby="v25-goals-title" class="v25-panel v25-goals" id="next-achievements">
+<div class="v25-section-head"><div><span class="eyebrow">NEXT UP</span><h3 id="v25-goals-title">🎯 다음 목표 추천</h3><p>현재 진행률을 바탕으로 가장 가까운 배지 3개를 추천합니다.</p></div><button class="v25-mini-button" id="v25-show-codex" type="button">배지 도감 보기</button></div>
+<div aria-live="polite" class="v25-goal-grid" id="v25-goal-list"></div>
+</section><section aria-labelledby="v25-mission-title" class="v25-panel v25-missions" id="mission-board">
+<div class="v25-section-head"><div><span class="eyebrow">DAILY &amp; WEEKLY QUESTS</span><h3 id="v25-mission-title">📅 오늘의 미션</h3><p>게임에서 새로 성공한 기록만 반영됩니다. 미션 경험치는 한 번씩만 지급됩니다.</p></div><div class="v25-mission-summary"><span>누적 미션 XP</span><strong id="v25-mission-xp">0 XP</strong></div></div>
+<div aria-label="일일 미션 세 가지" class="v25-mission-grid" id="v25-daily-missions"></div>
+<details class="v25-weekly" id="v25-weekly-wrap"><summary><span>🏁 주간 도전</span><span id="v25-week-label">이번 주 · 0 / 2 완료</span><span aria-hidden="true">⌄</span></summary><div class="v25-mission-grid" id="v25-weekly-missions"></div></details>
+<p class="v25-footnote" id="v25-reset-note">일일 미션은 자정에, 주간 미션은 월요일에 갱신됩니다. 기록은 사용 중인 브라우저에 저장됩니다.</p>
+</section></div></div><div aria-label="내 기록" class="v26-view" data-v26-page="records" hidden="" id="v26-view-records" role="region"><div class="v26-page-heading"><span aria-hidden="true" class="v26-page-icon">📊</span><div><span class="v26-page-overline">TAEKIN BRAIN ARCADE</span><h1>내 기록</h1><p>단계·별·보스 기록과 플레이 분석을 확인하세요.</p></div></div><section aria-label="나의 게임 기록과 업적" class="stats-section" id="stats-section">
+<div class="section-heading"><div><span class="eyebrow">PLAYER DASHBOARD</span><h2>나의 도전 기록</h2></div><span class="heading-note">현재 브라우저의 기록을 표시합니다.</span></div>
+<div class="arcade-stats">
+<div class="arcade-stat"><span>완료 단계</span><strong id="stat-cleared">0 / 1,500</strong></div>
+<div class="arcade-stat"><span>획득한 별</span><strong id="stat-stars">0 ★</strong></div>
+<div class="arcade-stat"><span>보스 클리어</span><strong id="stat-boss">0 / 30</strong></div>
+<div class="arcade-stat"><span>도전 모드</span><strong id="stat-marathon">0 / 100</strong></div>
+</div><div class="overall-progress"><div class="overall-progress-heading"><span>전체 퍼즐 마스터리</span><strong id="overall-progress-label">0 / 1,500단계 · 0%</strong></div><div class="overall-progress-track"><div id="overall-progress-fill"></div></div></div>
+</section><section class="v19-records-section"><h3>게임별 상세 기록</h3><p>최고 기록, 성공 시간, 힌트 사용 횟수를 한눈에 확인할 수 있습니다.</p><div class="v19-record-grid" id="v19-record-grid"></div></section><details class="v25-panel v25-analysis" id="v25-analysis-wrap"><summary><span>📊 내 플레이 분석 리포트</span><small>게임별 기록 비교 · 내 강점 확인</small><span aria-hidden="true">⌄</span></summary><div class="v25-analysis-body"><div class="v25-metric-grid" id="v25-metric-grid"></div><div aria-label="게임별 완료 단계 비교" class="v25-analysis-chart" id="v25-analysis-chart"></div><p class="v25-footnote">누적 성공 플레이 시간은 저장된 성공 판의 기록만 합산하며, 쉬고 있던 시간은 포함하지 않습니다.</p></div></details><div class="backup-actions">
+<button class="btn btn-secondary" id="export-progress" type="button">⬇ 진행 기록 백업 (JSON)</button>
+<button class="btn btn-secondary" id="import-progress" type="button">⬆ 기록 가져오기</button>
+<input accept="application/json,.json" aria-label="진행 기록 JSON 가져오기" class="sr-only" id="import-progress-file" type="file"/>
+<span aria-live="polite" id="backup-message" role="status">기록은 이 브라우저에 저장돼요. 다른 기기로 옮기려면 먼저 백업 파일을 만들어 주세요.</span>
+</div><section aria-label="진행 기록 관리" class="arcade-updates">
+<div class="reset-strip reset-manager">
+<div class="reset-info"><strong>진행 기록 관리</strong><span>개별 게임마다 5개 난이도 × 50단계, 도전 모드 100라운드의 기록은 각각 저장됩니다. 초기화 후에는 복구할 수 없습니다.</span></div>
+<div class="reset-manager-actions">
+<button class="reset-progress-btn" id="reset-all-stages" type="button">↺ 개별 게임 단계 초기화</button>
+<button class="reset-progress-btn reset-all-btn" id="reset-all-progress" type="button">↺ 모든 진행 기록 초기화</button>
+</div>
+</div>
+</section></div><div aria-label="내 프로필" class="v26-view" data-v26-page="profile" hidden="" id="v26-view-profile" role="region"><div class="v26-page-heading"><span aria-hidden="true" class="v26-page-icon">👤</span><div><span class="v26-page-overline">TAEKIN BRAIN ARCADE</span><h1>내 프로필</h1><p>닉네임·레벨·대표 배지·사이트 꾸미기를 관리하세요.</p></div></div>
+<section class="v27-nickname-panel" aria-labelledby="v27-nickname-heading"><div><span class="v27-panel-eyebrow">PLAYER PROFILE</span><h2 id="v27-nickname-heading">🎮 나의 닉네임</h2><p>닉네임은 상단 프로필과 올클리어 기념패에 표시되고 이 브라우저에 저장됩니다.</p></div><div class="v27-nickname-edit"><label for="v27-nickname-input">플레이어 닉네임</label><input id="v27-nickname-input" type="text" maxlength="20" autocomplete="nickname" placeholder="닉네임을 입력하세요" aria-describedby="v27-nickname-status"/><span id="v27-nickname-status" role="status" aria-live="polite">아직 닉네임이 설정되지 않았어요.</span></div></section><section aria-label="플레이어 레벨과 칭호" class="v22-growth" id="player-growth">
+<div aria-hidden="true" class="v22-growth-emblem" data-rank="rookie"><span class="v29-crest-spark">✶</span><span class="v29-crest-icon" id="v29-crest-icon">✦</span><strong id="v22-level-mark">01</strong><small id="v29-crest-name">ROOKIE</small></div>
+<div class="v22-growth-main"><span class="eyebrow">YOUR ARCADE JOURNEY</span><h3><span id="v22-level">LV. 1</span><span id="v22-title">견습 탐험가</span></h3><p id="v22-growth-description">플레이 기록과 획득한 배지로 경험치가 쌓입니다.</p><div class="v22-xp-heading"><span id="v22-xp-label">0 XP</span><span id="v22-xp-next">다음 레벨까지 115 XP</span></div><div class="v22-xp-track"><span id="v22-xp-bar"></span></div></div>
+<div class="v22-growth-side"><span>대표 배지</span><div aria-live="polite" id="v22-featured-badge">아직 선택한 배지가 없어요</div><button id="v22-open-badges" type="button">🎖 대표 배지 바로 선택</button><button class="v27-hall-profile-link" data-v27-panel="hall" type="button">🏆 명예의 전당 보기</button></div>
+</section>
+<section id="v47-level-rewards" class="v47-level-rewards" aria-labelledby="v47-level-rewards-heading">
+  <div class="v47-level-rewards-head"><div><span class="v47-perk-kicker">LEVEL UP REWARDS</span><h2 id="v47-level-rewards-heading">✨ 레벨을 올리면 무엇이 열릴까요?</h2></div><span id="v47-current-level" class="v47-current-level">LV. 1</span></div>
+  <p id="v47-next-reward" class="v47-next-reward" role="status">게임을 클리어하고 경험치를 모아 꾸미기 보상을 열어 보세요.</p>
+  <div class="v47-level-rewards-grid" id="v47-level-rewards-grid"></div>
+  <p class="v47-rewards-note">보상은 게임 실력에 영향을 주지 않는 프로필·화면 꾸미기예요. 획득한 보상은 아래 「레벨 스타일 스튜디오」에서 선택할 수 있어요.</p>
+  <button type="button" id="v47-show-style" class="v47-style-jump">🎨 해금된 꾸미기 확인하기</button>
+</section><details class="v29-rank-journey"><summary><span>✦ 레벨별 엠블럼 진화</span><small id="v29-rank-next">다음 성장 등급을 확인해 보세요</small></summary><div id="v29-rank-roadmap" class="v29-rank-roadmap" aria-label="등급별 엠블럼"></div></details><details class="v29-style-studio" id="v29-style-studio"><summary><span class="v29-studio-icon">◈</span><span><strong>레벨 스타일 스튜디오</strong><small>레벨을 올려 오라·프로필 테두리·사이트 스킨을 해금하세요.</small></span><span class="v29-studio-arrow">⌄</span></summary><div class="v29-studio-inner"><div class="v29-live-preview"><span class="v29-preview-avatar" id="v29-preview-avatar">✦</span><div><small>MY ARCADE IDENTITY</small><strong id="v29-preview-nickname">플레이어</strong><span id="v29-preview-rank">견습 탐험가 · LV. 1</span></div></div><div id="v29-style-choices" class="v29-style-choices"></div><p class="v29-style-foot">레벨 보상은 플레이 기록을 기준으로 열리고, 선택한 디자인은 이 기기에 저장돼요. 기존 업적 꾸미기와 함께 적용됩니다.</p></div></details><details aria-label="사이트 꾸미기" class="v23-site-style" id="site-customize">
+<summary><span aria-hidden="true" class="v23-style-icon">🎨</span><span><strong>사이트 꾸미기</strong><small>업적을 달성해 배경 · 프로필 테두리 · 포인트 색상 · 엠블럼을 해금하세요.</small></span><span aria-hidden="true" class="v23-style-arrow">⌄</span></summary>
+<div class="v20-wardrobe"><div class="v20-wardrobe-head"><div><h3>내 아케이드 스타일</h3><p>아이템을 선택하면 사이트에 즉시 적용되고 이 브라우저에 저장됩니다. 방 꾸미기 기능은 포함되지 않습니다.</p></div></div><div id="v20-inventory"></div></div>
+</details><div class="v19-rewards" hidden=""><div class="v19-frame-picker" id="v19-frame-picker"></div></div></div><div aria-label="보관함 &amp; 더보기" class="v26-view" data-v26-page="more" hidden="" id="v26-view-more" role="region"><div class="v26-page-heading"><span aria-hidden="true" class="v26-page-icon">🏆</span><div><span class="v26-page-overline">TAEKIN BRAIN ARCADE</span><h1>보관함 &amp; 더보기</h1><p>카드를 누르면 화면 이동 없이 작은 창으로 열립니다.</p></div></div><div class="v26-more-shortcuts"><button class="v26-more-link" data-v27-panel="hall" type="button"><span aria-hidden="true">🏆</span><strong>명예의 전당</strong><small>트로피 진열</small></button><button class="v26-more-link" data-v27-panel="badges" type="button"><span aria-hidden="true">🎖️</span><strong>배지 도감</strong><small>35개 수집</small></button><button class="v26-more-link" data-v27-panel="certificate" type="button"><span aria-hidden="true">🎓</span><strong>올클리어 기념패</strong><small>최종 목표</small></button></div><section aria-labelledby="v22-hall-title" class="v22-hall" id="hall-of-fame">
+<div class="v22-hall-heading"><div><span class="eyebrow">HALL OF FAME</span><h3 id="v22-hall-title">명예의 전당 <span>🏆</span></h3><p>도전을 완수할수록 트로피가 진열됩니다. 모든 기록은 이 브라우저 기준입니다.</p></div><div class="v22-hall-total"><span>수집한 트로피</span><strong id="v22-trophy-count">0 <small>/ 8</small></strong></div></div>
+<div aria-label="트로피 진열장" class="v22-trophy-grid" id="v22-trophy-grid"></div>
+<div class="v22-hall-footer"><span id="v22-next-goal">첫 트로피를 향해 도전해 보세요.</span><span id="v22-hall-badges">실제 획득 배지 0 / 35</span></div>
+</section><details aria-label="업적 보관함" class="v20-showcase v21-ach-cabinet" id="achievement-hub">
+<summary class="v21-ach-summary"><span aria-hidden="true" class="v21-ach-summary-icon">✦</span><span class="v21-ach-summary-text"><span class="eyebrow">BADGE CODEX</span><strong>배지 도감 · 35개</strong><small>기본은 접혀 있습니다. 펼치면 배지의 달성 조건과 희귀도를 확인하고 대표 배지를 설정할 수 있어요.</small></span><span class="v21-ach-summary-right"><strong class="v20-showcase-count" id="v20-total">0 / 35개 해금</strong><span class="v21-summary-chevron">⌄</span></span></summary>
+<div class="v21-ach-cabinet-body">
+<div aria-label="업적 해금률" class="v20-progress"><div id="v20-total-bar"></div></div>
+<div aria-label="업적 분류" class="v20-filter-bar" id="v20-filter-bar">
+<button aria-pressed="true" data-v20-filter="all" type="button">전체</button><button aria-pressed="false" data-v20-filter="available" type="button">해금 완료</button><button aria-pressed="false" data-v20-filter="locked" type="button">잠김</button><button aria-pressed="false" data-v20-filter="start" type="button">시작</button><button aria-pressed="false" data-v20-filter="progress" type="button">단계 도전</button><button aria-pressed="false" data-v20-filter="stars" type="button">별·보스</button><button aria-pressed="false" data-v20-filter="games" type="button">게임별</button><button aria-pressed="false" data-v20-filter="challenge" type="button">종합 도전</button>
+</div><div class="v20-ach-grid" id="v20-collection"></div>
+<p class="v22-badge-hint">배지를 실제로 획득하면 클릭하여 대표 배지로 전시할 수 있습니다. 마스터 특별 해금은 경험치에 포함되지 않습니다.</p>
+</div>
+</details><div class="achievement-list" hidden="" id="achievement-list"></div><section aria-labelledby="v25-finale-title" class="v25-panel v25-finale" id="final-challenge">
+<div aria-hidden="true" class="v25-finale-art">🏆</div><div class="v25-finale-main"><span class="eyebrow">THE FINAL MILESTONE</span><h3 id="v25-finale-title">올클리어 기념패</h3><p id="v25-finale-state">1,500단계와 도전 모드 100라운드를 모두 완료하면 열립니다.</p><div class="v25-finale-progress"><span id="v25-finale-stages">단계 0 / 1,500</span><span id="v25-finale-rounds">도전 0 / 100</span></div></div><div class="v25-finale-actions"><label for="v25-player-name">플레이어 닉네임 (올클리어 기념패에 표시)</label><input autocomplete="nickname" id="v25-player-name" maxlength="20" placeholder="닉네임을 설정하세요" type="text"/><button disabled="" id="v25-open-certificate" type="button">🔒 올클리어 기념패 잠김</button></div>
+</section></div></section>
+<section aria-live="off" class="screen hidden" id="play-screen">
+<div class="game-heading">
+<div><button class="back-link" id="back-to-home" type="button">전체 게임으로 돌아가기</button><div class="game-title-line"><span id="active-emoji">⚾</span><h1 id="active-title">숫자야구</h1></div><p class="game-description" id="active-description"></p></div>
+<div class="play-title-tools"><button class="btn btn-secondary v41-jump-board" id="v41-jump-board" type="button">🎮 게임판 바로가기</button><button class="tour-entry" id="game-tutorial" type="button">❔ 3단계 튜토리얼</button><button class="btn btn-secondary v19-pause-btn" id="v19-pause" type="button">Ⅱ 일시정지</button><button class="btn btn-secondary" id="v19-save-now" type="button">▣ 현재 판 저장</button><button class="btn btn-secondary" id="v19-resume-game" type="button">이어하기</button><span class="game-index" id="game-counter">01 / 06</span></div>
+</div>
+
+<div class="play-layout">
+<div class="play-primary">
+<section aria-live="polite" class="mode-banner hidden" id="mode-banner">
+<span class="eyebrow" id="mode-caption">CHALLENGE MODE</span>
+<strong id="mode-title">6종 도전</strong>
+<div class="mode-steps" id="mode-steps"></div>
+<p id="mode-target"></p>
+</section>
+<details class="v41-tier-fold" id="v41-tier-fold"><summary>🎯 난이도 선택 펼치기 · 5개 난이도</summary><section aria-label="난이도 선택 · 난이도마다 50단계" class="v29-tier-switch" id="v29-tier-switch"><div class="v29-tier-heading"><strong>난이도를 선택하세요</strong><small>어떤 난이도든 바로 시작 · 각 난이도 1~50단계 별도 기록</small></div><div class="v29-tier-buttons"><button data-tier="easy" type="button"><b>🌱 쉬움</b><small>0/50</small></button><button data-tier="normal" type="button"><b>🔷 보통</b><small>0/50</small></button><button data-tier="hard" type="button"><b>⚡ 어려움</b><small>0/50</small></button><button data-tier="extreme" type="button"><b>💜 매우 어려움</b><small>0/50</small></button><button data-tier="expert" type="button"><b>🔥 전문가</b><small>0/50</small></button></div></section></details><div aria-live="polite" class="stage-quick" id="stage-quick">
+<div><strong id="stage-quick-name">1단계 · 입문</strong><span id="stage-quick-goal">현재 단계의 목표를 확인하세요.</span></div>
+<button type="button" class="v46-help-icon v46-stage-help" data-v46-help="stages" aria-label="단계 선택과 난이도가 뭔가요?">?</button><button class="btn btn-secondary" id="stage-open-button" type="button">전체 단계 선택 ↓</button>
+</div>
+<section class="v46-what-bar" aria-label="게임 도움말">
+  <div class="v46-what-intro"><span class="v46-what-mark" aria-hidden="true">?</span><strong>이건 뭔가요?</strong><small>궁금한 버튼을 눌러 설명을 확인하세요.</small></div>
+  <div class="v46-what-links">
+    <button type="button" data-v46-help="game">게임 소개</button>
+    <button type="button" data-v46-help="controls">🎮 조작 방법</button>
+    <button type="button" data-v46-help="goal">🎯 단계 목표</button>
+    <button type="button" data-v46-help="hint">💡 힌트</button>
+  </div>
+</section>
+<!-- 숫자야구 -->
+<section aria-label="숫자야구" class="game-panel hidden" id="panel-baseball">
+<div class="toolbar"><label for="bb-difficulty">난이도</label><select aria-label="숫자야구 난이도" id="bb-difficulty"><option value="easy">쉬움 · 50단계</option><option selected="" value="normal">보통 · 50단계</option><option value="hard">어려움 · 50단계</option><option value="extreme">매우 어려움 · 50단계</option><option value="expert">전문가 · 50단계</option></select><span class="stat-chip" id="bb-attempts">도전 0회</span></div>
+<div class="v42-size-tools" data-v42-game="baseball" role="group" aria-label="숫자야구 게임판 크기 조절">
+  <span class="v42-size-title">🔍 게임판 크기 <small>게임별로 따로 기억</small></span><button type="button" class="v46-help-icon" data-v46-help="zoom" aria-label="게임판 크기 조절이 뭔가요?" title="화면 크기 조절 도움말">?</button>
+  <div class="v42-size-buttons">
+    <button type="button" data-v42-action="out" aria-label="숫자야구 축소">−</button>
+    <output data-v42-output="baseball" aria-live="polite">100%</output>
+    <button type="button" data-v42-action="in" aria-label="숫자야구 확대">＋</button>
+    <button type="button" data-v42-action="reset">기본</button>
+    <button type="button" data-v42-action="fit">화면 맞춤</button>
+  </div>
+</div>
+<div class="v42-board-window" id="v42-window-baseball" aria-label="숫자야구 숫자판 가로 스크롤">
+<div aria-label="비밀 숫자 자리" class="secret-slots"></div></div>
+<form class="guess-form" id="bb-form"><label class="sr-only" for="bb-input">서로 다른 숫자 4개</label><input aria-label="서로 다른 숫자 입력" autocomplete="off" id="bb-input" inputmode="numeric" maxlength="4" placeholder="" spellcheck="false" type="text"/><button class="btn btn-primary" id="bb-submit" type="submit">결과 확인</button></form>
+<div class="v19-candidates" id="v19-candidates">남은 숫자 후보: 계산 준비 중</div>
+<div class="status-message" id="bb-status" role="status">0~9에서 서로 다른 숫자 4개를 입력하세요.</div>
+<div class="subheading"><h3>추리 기록</h3><span>GUESS HISTORY</span></div>
+<div class="table-wrap"><table class="history-table"><thead><tr><th>#</th><th>입력한 숫자</th><th>판정 결과</th></tr></thead><tbody id="bb-history"><tr class="empty-row"><td colspan="3">아직 입력한 기록이 없어요.</td></tr></tbody></table></div>
+<div class="panel-actions"><button class="btn btn-hint" id="bb-hint" type="button">힌트</button><button class="btn btn-reveal" id="bb-answer" type="button">◉ 정답 보기</button><button class="btn btn-secondary" id="bb-reset" type="button">↻ 새 게임</button></div>
+</section>
+<!-- 2048 -->
+<section aria-label="2048" class="game-panel hidden" id="panel-2048">
+<div class="toolbar"><label for="g2048-difficulty">난이도</label><select id="g2048-difficulty"><option value="easy">쉬움 · 50단계</option><option selected="" value="normal">보통 · 50단계</option><option value="hard">어려움 · 50단계</option><option value="extreme">매우 어려움 · 50단계</option><option value="expert">전문가 · 50단계</option></select></div>
+<div class="score-grid"><div class="score-card"><span>SCORE</span><strong id="g2048-score">0</strong></div><div class="score-card"><span>BEST</span><strong id="g2048-best">0</strong></div><div class="score-card"><span>되돌리기</span><strong id="g2048-undo-count">0</strong></div></div>
+<div class="v42-size-tools" data-v42-game="2048" role="group" aria-label="2048 게임판 크기 조절">
+  <span class="v42-size-title">🔍 게임판 크기 <small>게임별로 따로 기억</small></span><button type="button" class="v46-help-icon" data-v46-help="zoom" aria-label="게임판 크기 조절이 뭔가요?" title="화면 크기 조절 도움말">?</button>
+  <div class="v42-size-buttons">
+    <button type="button" data-v42-action="out" aria-label="2048 축소">−</button>
+    <output data-v42-output="2048" aria-live="polite">100%</output>
+    <button type="button" data-v42-action="in" aria-label="2048 확대">＋</button>
+    <button type="button" data-v42-action="reset">기본</button>
+    <button type="button" data-v42-action="fit">화면 맞춤</button>
+  </div>
+</div>
+<div class="v42-board-window" id="v42-window-2048" aria-label="2048 게임판 가로 스크롤"><div aria-label="2048 게임판" class="board-2048" id="g2048-board" role="group"></div></div>
+<div class="status-message" id="g2048-status" role="status">키보드 방향키 또는 WASD로 움직이세요.</div>
+<div aria-label="2048 이동 조작" class="arrow-pad"><div></div><button aria-label="위로 이동" data-move="up" type="button"><span class="arrow-main">↑</span><span class="arrow-sub">위</span></button><div></div><button aria-label="왼쪽으로 이동" data-move="left" type="button"><span class="arrow-main">←</span><span class="arrow-sub">왼쪽</span></button><button aria-label="아래로 이동" data-move="down" type="button"><span class="arrow-main">↓</span><span class="arrow-sub">아래</span></button><button aria-label="오른쪽으로 이동" data-move="right" type="button"><span class="arrow-main">→</span><span class="arrow-sub">오른쪽</span></button></div>
+<div class="panel-actions"><button class="btn btn-secondary" id="g2048-undo" type="button">↶ 되돌리기 (U)</button><button class="btn btn-hint" id="g2048-hint" type="button">힌트</button><button class="btn btn-secondary" id="g2048-reset" type="button">↻ 새 게임</button></div>
+</section>
+<!-- 지뢰찾기 -->
+<section aria-label="지뢰찾기" class="game-panel hidden" id="panel-mines">
+<div class="toolbar"><label for="mine-difficulty">난이도</label><select id="mine-difficulty"><option value="easy">쉬움 · 50단계</option><option value="normal">보통 · 50단계</option><option value="hard">어려움 · 50단계</option><option value="extreme">매우 어려움 · 50단계</option><option value="expert">전문가 · 50단계</option></select><button class="btn btn-secondary" id="mine-reset" type="button">↻ 새 게임</button></div>
+<div class="score-grid mines-stats"><div class="score-card"><span>전체 지뢰</span><strong id="mine-total">6</strong></div><div class="score-card"><span>깃발</span><strong id="mine-flags">0</strong></div><div class="score-card"><span>열린 칸</span><strong id="mine-opened">0</strong></div></div>
+<div aria-label="지뢰찾기 조작 모드" class="mode-switch" role="group"><button class="mode-btn active" id="mine-mode-open" type="button">☝ 칸 열기</button><button class="mode-btn" id="mine-mode-flag" type="button">⚑ 깃발 놓기</button></div>
+<p class="v41-mine-mode-note" id="v41-mine-mode-note" aria-live="polite">☝ 열기 모드: 칸을 누르면 열려요.</p>
+<div class="v42-size-tools" data-v42-game="mines" role="group" aria-label="지뢰찾기 게임판 크기 조절">
+  <span class="v42-size-title">🔍 게임판 크기 <small>게임별로 따로 기억</small></span><button type="button" class="v46-help-icon" data-v46-help="zoom" aria-label="게임판 크기 조절이 뭔가요?" title="화면 크기 조절 도움말">?</button>
+  <div class="v42-size-buttons">
+    <button type="button" data-v42-action="out" aria-label="지뢰찾기 축소">−</button>
+    <output data-v42-output="mines" aria-live="polite">100%</output>
+    <button type="button" data-v42-action="in" aria-label="지뢰찾기 확대">＋</button>
+    <button type="button" data-v42-action="reset">기본</button>
+    <button type="button" data-v42-action="fit">화면 맞춤</button>
+  </div>
+</div>
+<p id="v39-mine-position" class="v39-mine-position" aria-live="polite">↔ 넓은 판은 좌우로 밀어서 이동</p>
+<div class="mines-board-wrap v42-board-window" id="v39-mine-viewport" tabindex="0" aria-label="지뢰찾기 게임판: 좌우 스크롤 가능"><div aria-label="지뢰찾기 게임판" class="mine-board" id="mine-board" role="group"></div></div>
+<div aria-live="off" class="mine-time" id="mine-time"></div><div class="status-message" id="mine-status" role="status">첫 클릭 위치와 주변 8칸은 안전해요.</div>
+<div class="panel-actions"><button class="btn btn-hint" id="mine-hint" type="button">힌트</button><span class="hint-usage">사용 <span id="mine-hint-count">0</span>회</span></div>
+</section>
+<!-- 파이프: 전체 배관 연결 + 실시간 물 흐름 -->
+<section aria-label="파이프 연결" class="game-panel hidden" id="panel-pipes">
+<div class="toolbar"><label for="pipe-difficulty">난이도</label><select id="pipe-difficulty"><option value="easy">쉬움 · 50단계</option><option selected="" value="normal">보통 · 50단계</option><option value="hard">어려움 · 50단계</option><option value="extreme">매우 어려움 · 50단계</option><option value="expert">전문가 · 50단계</option></select><button class="btn btn-secondary" id="pipe-reset" type="button">↻ 새 퍼즐</button></div>
+<div class="pipe-dashboard">
+<div class="pipe-meter"><span>물 도달</span><strong id="pipe-wet-count">0 / 25</strong></div>
+<div class="pipe-meter"><span>열린 연결</span><strong id="pipe-leaks">0개</strong></div>
+<div class="pipe-meter"><span>총 회전 횟수 · 제한 없음</span><strong id="pipe-moves">0회</strong></div>
+</div>
+<div aria-label="물이 도달한 파이프 비율" class="pipe-progress"><div class="pipe-progress-fill" id="pipe-progress-fill"></div></div>
+<div class="v42-size-tools" data-v42-game="pipes" role="group" aria-label="파이프 게임판 크기 조절">
+  <span class="v42-size-title">🔍 게임판 크기 <small>게임별로 따로 기억</small></span><button type="button" class="v46-help-icon" data-v46-help="zoom" aria-label="게임판 크기 조절이 뭔가요?" title="화면 크기 조절 도움말">?</button>
+  <div class="v42-size-buttons">
+    <button type="button" data-v42-action="out" aria-label="파이프 축소">−</button>
+    <output data-v42-output="pipes" aria-live="polite">100%</output>
+    <button type="button" data-v42-action="in" aria-label="파이프 확대">＋</button>
+    <button type="button" data-v42-action="reset">기본</button>
+    <button type="button" data-v42-action="fit">화면 맞춤</button>
+  </div>
+</div>
+<div class="v42-board-window" id="v42-window-pipes" aria-label="파이프 게임판 가로 스크롤"><div class="pipe-board-wrap">
+<div aria-label="물이 나오는 시작점" class="pipe-endpoint source" id="pipe-source"><span class="endpoint-icon">💧</span><span>START</span></div>
+<div aria-label="모든 칸을 연결하는 배관 퍼즐" class="pipe-board" id="pipe-board" role="group"></div>
+<div aria-label="물이 도착하는 출구" class="pipe-endpoint sink" id="pipe-sink"><span class="endpoint-icon">🏁</span><span>GOAL</span></div>
+</div>
+</div>
+<div class="v19-water-control"><label for="v19-water-speed">물 흐름 속도</label><select id="v19-water-speed"><option value="slow">느리게</option><option selected="" value="normal">보통</option><option value="fast">빠르게</option></select></div><div class="pipe-legend"><span><i class="legend-water"></i> 물이 흐르는 파이프</span><span><i class="legend-dry"></i> 아직 연결되지 않은 파이프</span></div>
+<div class="status-message" id="pipe-status" role="status">시작점에서 물이 흐릅니다. 모든 파이프를 연결해 주세요.</div>
+<div class="panel-actions pipe-actions"><button class="btn btn-secondary pipe-control" id="pipe-direction" type="button" aria-pressed="false" title="회전 방향 바꾸기">시계 방향</button><button class="btn btn-secondary pipe-control" id="pipe-undo" type="button" disabled>한 수 되돌리기</button><button class="btn btn-hint" id="pipe-hint" type="button">힌트</button><span class="hint-usage">사용 <span id="pipe-hint-count">0</span>회</span><button class="btn btn-secondary" id="pipe-check" type="button">연결 상태 확인</button></div><p class="pipe-help-line">방향 버튼으로 시계·반시계를 바꿀 수 있어요. 회전은 무제한이며, 힌트를 쓰면 이전 회전의 되돌리기 기록이 초기화됩니다.</p>
+</section>
+<!-- 시카쿠 -->
+<section aria-label="시카쿠" class="game-panel hidden" id="panel-shikaku">
+<div class="toolbar"><label for="shikaku-difficulty">난이도</label><select id="shikaku-difficulty"><option value="easy">쉬움 · 50단계</option><option value="normal">보통 · 50단계</option><option value="hard">어려움 · 50단계</option><option value="extreme">매우 어려움 · 50단계</option><option value="expert">전문가 · 50단계</option></select><button class="btn btn-secondary" id="shikaku-reset" type="button">↻ 새 퍼즐</button></div>
+<div class="score-grid"><div class="score-card"><span>완성 영역</span><strong id="shikaku-count">0 / 6</strong></div><div class="score-card"><span>힌트 사용</span><strong id="shikaku-hints">0</strong></div></div>
+<div class="v19-shikaku-preview" id="v19-shikaku-preview">영역 선택: 시작 칸을 클릭하거나 드래그하세요.</div>
+<div class="v42-size-tools" data-v42-game="shikaku" role="group" aria-label="시카쿠 게임판 크기 조절">
+  <span class="v42-size-title">🔍 게임판 크기 <small>게임별로 따로 기억</small></span><button type="button" class="v46-help-icon" data-v46-help="zoom" aria-label="게임판 크기 조절이 뭔가요?" title="화면 크기 조절 도움말">?</button>
+  <div class="v42-size-buttons">
+    <button type="button" data-v42-action="out" aria-label="시카쿠 축소">−</button>
+    <output data-v42-output="shikaku" aria-live="polite">100%</output>
+    <button type="button" data-v42-action="in" aria-label="시카쿠 확대">＋</button>
+    <button type="button" data-v42-action="reset">기본</button>
+    <button type="button" data-v42-action="fit">화면 맞춤</button>
+  </div>
+</div>
+<div class="v42-board-window" id="v42-window-shikaku" aria-label="시카쿠 게임판 가로 스크롤"><div aria-label="시카쿠 퍼즐판" class="shikaku-board" id="shikaku-board" role="group"></div></div>
+<div class="status-message" id="shikaku-status" role="status">시작 칸과 끝 칸을 차례로 클릭하거나 드래그하세요.</div>
+<div class="panel-actions"><button aria-pressed="false" class="btn btn-secondary" id="shikaku-erase" type="button">⌫ 지우개 모드</button><button class="btn btn-secondary" id="shikaku-undo" type="button">↶ 되돌리기</button><button class="btn btn-hint" id="shikaku-hint" type="button">힌트</button><button class="btn btn-secondary" id="shikaku-clear" type="button">선택 취소</button></div>
+</section>
+<!-- 블록 퍼즐 -->
+<section aria-label="블록 퍼즐" class="game-panel hidden" id="panel-blocks">
+<div class="toolbar"><label for="block-difficulty">난이도</label>
+<select id="block-difficulty">
+<option selected="" value="easy">쉬움 · 50단계</option>
+<option value="normal">보통 · 50단계</option>
+<option value="hard">어려움 · 50단계</option>
+<option value="extreme">매우 어려움 · 50단계</option>
+<option value="expert">전문가 · 50단계</option></select><button class="btn btn-secondary" id="block-reset" type="button">↻ 새 게임</button>
+</div>
+<div class="score-grid"><div class="score-card"><span>현재 점수</span><strong id="block-score">0</strong></div>
+<div class="score-card"><span>목표 점수</span><strong id="block-target">750</strong></div>
+<div class="score-card"><span>최고 점수</span><strong id="block-best">0</strong></div></div>
+<div class="v19-combo" id="v19-block-combo">줄을 연속으로 지우면 콤보 보너스!</div><div aria-label="블록 퍼즐 목표 진행도" class="block-progress"><div id="block-progress-fill"></div></div>
+<!-- 125% 확대에서도 게임판과 선택 블록을 동시에 볼 수 있는 전용 레이아웃 -->
+<div class="block-play-area">
+<div class="block-board-zone"><div class="v42-size-tools" data-v42-game="blocks" role="group" aria-label="블록 퍼즐 게임판 크기 조절">
+  <span class="v42-size-title">🔍 게임판 크기 <small>게임별로 따로 기억</small></span><button type="button" class="v46-help-icon" data-v46-help="zoom" aria-label="게임판 크기 조절이 뭔가요?" title="화면 크기 조절 도움말">?</button>
+  <div class="v42-size-buttons">
+    <button type="button" data-v42-action="out" aria-label="블록 퍼즐 축소">−</button>
+    <output data-v42-output="blocks" aria-live="polite">100%</output>
+    <button type="button" data-v42-action="in" aria-label="블록 퍼즐 확대">＋</button>
+    <button type="button" data-v42-action="reset">기본</button>
+    <button type="button" data-v42-action="fit">화면 맞춤</button>
+  </div>
+</div>
+<div class="v42-board-window" id="v42-window-blocks" aria-label="블록 퍼즐판 가로 스크롤">
+<div aria-label="블록 퍼즐 10x10 게임판" class="block-board" id="block-board" role="group"></div></div>
+</div>
+<div class="block-piece-zone">
+<div class="block-piece-heading"><h3>놓을 블록 3개</h3><span>드래그하거나 선택 후 게임판 클릭</span></div>
+<p class="v41-block-preview-note" id="v41-block-preview-note" role="status">블록을 먼저 선택하세요. 초록 칸은 배치 가능, 빨간 칸은 배치 불가입니다.</p>
+<div aria-label="블록 선택" class="block-tray" id="block-tray"></div>
+</div>
+</div>
+<div class="status-message" id="block-status" role="status">오른쪽 블록을 끌어다 놓거나 선택 후 게임판을 클릭하세요.</div>
+<div class="panel-actions"><button class="btn btn-hint" id="block-hint" type="button">힌트</button>
+<button class="btn btn-secondary" id="block-undo" type="button">↶ 되돌리기</button>
+<span class="hint-usage">힌트 사용 <span id="block-hint-count">0</span>회</span></div>
+</section>
+<details class="stage-details" id="stage-details">
+<summary>🗺️ 난이도별 50단계 · 기록 및 단계 선택 <span>펼치기 ▾</span></summary>
+<section aria-label="단계별 도전" class="stage-challenge">
+<div class="stage-heading"><div><span class="eyebrow">STAGE CHALLENGE</span><h3>난이도별 50단계 · 👑 보스 5개 <span id="stage-progress-label">0 / 50 진행</span></h3></div><span class="stage-help">난이도는 처음부터 자유 선택 · 난이도별 1~50단계 순서대로 해금 · 보스 10/20/30/40/50</span></div>
+<div aria-label="현재 난이도 50단계 달성률" class="stage-progress-track"><div id="stage-progress-fill"></div></div>
+<div class="stage-tool-row">
+<button class="free-mode-btn" id="challenge-free" type="button">🎮 자유 플레이로 전환</button>
+<button class="reset-progress-btn" id="reset-current-stages" type="button">↺ 선택한 난이도 기록 초기화</button>
+<button class="reset-progress-btn" id="skip-stage" type="button">⏭ 현재 단계 건너뛰기 (잔여 3회)</button>
+</div>
+<div class="stage-pager"><button aria-label="이전 10단계" id="stage-page-prev" type="button">이전</button><strong id="stage-page-label">01~10 / 50</strong><button aria-label="다음 10단계" id="stage-page-next" type="button">다음</button></div>
+<div class="v19-map-head"><strong>스테이지 지도</strong><span>완료한 구간을 따라 다음 목표로 이동하세요.</span></div><div class="v19-stage-zones" id="v19-stage-zones"></div>
+<div class="stage-buttons v19-stage-map" id="stage-buttons"></div><div aria-live="polite" class="stage-achievements" id="stage-achievements"></div>
+<div class="stage-zone" id="stage-zone">🌱 튜토리얼 구간</div><div class="stage-goal-info" id="stage-goal-info">단계가 올라갈수록 목표가 어려워집니다.</div>
+<p class="challenge-mode-status" id="challenge-mode-status">단계를 선택하면 클리어 기록이 저장됩니다.</p>
+<button class="btn btn-primary hidden" id="challenge-next" type="button">다음 도전</button>
+</section>
+</details>
+</div>
+<aside class="play-sidebar"><div class="aside-card"><div class="aside-label">HOW TO PLAY <span>✦</span></div><h3 id="rules-title">게임 방법</h3><div class="rules-content" id="rules-content"></div></div><div class="aside-tip"><span>✧ TIP</span><p id="game-tip"></p></div>
+<div class="aside-hint"><strong>💡 힌트는 무엇을 해주나요?</strong><p id="hint-description"></p></div><div class="aside-bottom">TAEKIN BRAIN ARCADE<br/>게임 방법과 힌트를 확인하세요.</div></aside>
+</div>
+</section>
+</main>
+<footer class="footer"><span>TAEKIN BRAIN ARCADE · 플레이어 닉네임 설정 지원</span><span>HTML · CSS · JavaScript · v47</span></footer>
+</div>
+<dialog aria-labelledby="tutorial-title" class="tutorial-dialog" id="tutorial-dialog">
+<div class="tutorial-shell">
+<div class="tutorial-head"><span class="eyebrow">HOW TO PLAY · INTERACTIVE GUIDE</span><button aria-label="튜토리얼 닫기" class="tutorial-close" id="tutorial-close" type="button">✕</button></div>
+<div aria-hidden="true" class="tutorial-symbol" id="tutorial-symbol">🎮</div>
+<p class="tutorial-progress" id="tutorial-progress">1 / 3</p>
+<h2 id="tutorial-title">게임 방법</h2>
+<p id="tutorial-text"></p>
+<div class="tutorial-dots" id="tutorial-dots"></div>
+<div class="tutorial-actions"><button class="btn btn-secondary" id="tutorial-prev" type="button">이전</button><button class="btn btn-primary" id="tutorial-next" type="button">다음</button></div>
+</div>
+</dialog>
+<dialog class="v46-help-dialog" id="v46-help-dialog" aria-labelledby="v46-help-title" aria-describedby="v46-help-text">
+  <div class="v46-help-shell">
+    <div class="v46-help-head"><span>❔ 이건 뭔가요?</span><button type="button" id="v46-help-close" aria-label="설명 닫기">✕</button></div>
+    <h2 id="v46-help-title">도움말</h2>
+    <p id="v46-help-text"></p>
+    <p class="v46-help-extra" id="v46-help-extra"></p>
+    <div class="v46-help-actions"><button type="button" class="btn btn-secondary" id="v46-help-tour">3단계 튜토리얼 보기</button><button type="button" class="btn btn-primary" id="v46-help-ok">알겠어요 ✓</button></div>
+  </div>
+</dialog>
+<!-- 클리어 즉시 노출되는 다음 단계 이동 패널 -->
+<div aria-labelledby="clear-title" aria-modal="true" class="clear-overlay hidden" id="clear-overlay" role="dialog">
+<div class="clear-card"><div aria-hidden="true" class="clear-confetti" id="clear-confetti"></div>
+<div aria-hidden="true" class="clear-emblem">✦</div>
+<span class="clear-eyebrow">MISSION COMPLETE · STAGE CLEAR</span>
+<h2 id="clear-title">🎉 스테이지 클리어!</h2>
+<p id="clear-description">목표를 달성했습니다.</p>
+<div class="clear-rating-label">YOUR RESULT</div><div aria-label="이번 클리어 평가" class="clear-stars" id="clear-stars"></div><div class="clear-award" id="clear-award">다음 단계 또는 메인 메뉴를 선택하세요.</div>
+<div class="clear-actions">
+<button class="btn btn-primary" id="clear-next" type="button">다음 단계</button>
+<button class="btn btn-secondary" id="clear-home" type="button">⌂ 메인 메뉴</button><button class="btn btn-secondary" id="v19-share" type="button">↓ 결과 이미지 저장</button>
+</div>
+</div>
+</div>
+<div aria-label="일시정지" aria-modal="true" class="v19-paused hidden" id="v19-paused-overlay" role="dialog">
+<div class="v19-paused-card"><span class="eyebrow">PAUSE</span><h2>게임 일시정지</h2><p>잠시 쉬어도 괜찮아요. 시간 제한이 있는 게임은 시간이 멈춥니다.</p><button class="btn btn-primary" id="v19-resume-pause" type="button">▶ 계속하기</button><button class="btn btn-secondary" id="v19-pause-home" type="button">⌂ 메인 메뉴</button></div></div>
+<div aria-live="polite" class="v19-toast hidden" id="v19-toast" role="status"></div>
+<dialog aria-labelledby="v20-master-title" class="v20-master-dialog" id="v20-master-dialog">
+<h3 id="v20-master-title">개인 마스터 코드</h3><p id="v20-master-message" role="status"></p>
+<label for="v20-master-code">비밀 코드</label><input autocomplete="new-password" id="v20-master-code" placeholder="6자 이상 코드" type="password"/>
+<div id="v20-master-confirm-wrap"><label for="v20-master-confirm-input">코드 확인</label><input autocomplete="new-password" id="v20-master-confirm-input" placeholder="같은 코드 다시 입력" type="password"/></div>
+<div class="v20-master-buttons"><button id="v20-master-set" type="button">코드 설정</button><button hidden="" id="v20-master-login" type="button">확인</button><button id="v20-master-close" type="button">닫기</button></div>
+<div hidden="" id="v20-master-tools"><p>마스터 코드로 잠긴 요소를 미리 살펴볼 수 있어요. 게임 기록·별·경험치는 그대로 유지하며 올클리어 기념패는 시연용으로 표시됩니다.</p><div class="v20-master-buttons"><button id="v20-master-unlock" type="button">모든 해금 요소 열기</button><button id="v20-master-relock" type="button">특별 해금 해제</button></div></div>
+</dialog>
+
+<!-- 배지·트로피·올클리어 기념패 팝업: 본문 콘텐츠를 이동해 중복 없이 재사용 -->
+<dialog class="v27-collection-dialog" id="v27-hall-dialog" aria-labelledby="v27-hall-dialog-title">
+  <div class="v27-dialog-header"><div><span class="v27-panel-eyebrow">YOUR COLLECTION</span><h2 id="v27-hall-dialog-title">🏆 명예의 전당</h2></div><button type="button" class="v27-dialog-close" data-v27-close aria-label="명예의 전당 닫기">✕</button></div>
+  <div class="v27-dialog-content" id="v27-hall-content"></div>
+</dialog>
+<dialog class="v27-collection-dialog" id="v27-badges-dialog" aria-labelledby="v27-badges-dialog-title">
+  <div class="v27-dialog-header"><div><span class="v27-panel-eyebrow">BADGE COLLECTION</span><h2 id="v27-badges-dialog-title">🎖 배지 도감</h2><p id="v27-badges-dialog-desc">획득한 배지를 클릭하면 대표 배지가 즉시 적용됩니다.</p></div><button type="button" class="v27-dialog-close" data-v27-close aria-label="배지 도감 닫기">✕</button></div>
+  <div class="v27-dialog-content" id="v27-badges-content"></div>
+</dialog>
+<dialog class="v27-collection-dialog" id="v27-certificate-hub-dialog" aria-labelledby="v27-certificate-hub-title">
+  <div class="v27-dialog-header"><div><span class="v27-panel-eyebrow">FINAL REWARD</span><h2 id="v27-certificate-hub-title">🏆 올클리어 기념패</h2></div><button type="button" class="v27-dialog-close" data-v27-close aria-label="올클리어 기념패 창 닫기">✕</button></div>
+  <div class="v27-dialog-content" id="v27-certificate-content"></div>
+</dialog>
+<dialog aria-labelledby="v25-achievement-name" class="v25-achievement-dialog" id="v25-achievement-dialog"><div class="v25-celebration"><span aria-hidden="true" class="v25-spotlight">✦</span><div aria-hidden="true" class="v25-ceremony-icon" id="v25-achievement-icon">🏆</div><span class="v25-ceremony-label" id="v25-achievement-rarity">RARE ACHIEVEMENT</span><h2 id="v25-achievement-name">업적 달성!</h2><p id="v25-achievement-description"></p><button id="v25-achievement-close" type="button">멋져요! 계속 도전하기</button></div></dialog>
+<dialog aria-labelledby="v25-cert-title" class="v25-certificate-dialog" id="v25-certificate-dialog"><div class="v25-cert-paper"><span class="v25-cert-eyebrow">TAEKIN BRAIN ARCADE</span><h2 id="v25-cert-title">ARCADE ALL CLEAR</h2><p>모든 퍼즐과 종합 도전을 완수했음을 인증합니다.</p><div class="v25-cert-name" id="v25-cert-name">플레이어</div><div class="v25-cert-record" id="v25-cert-record">1,500 STAGES · 100 CHALLENGE ROUNDS</div><div class="v25-cert-date" id="v25-cert-date"></div><div class="v25-cert-seal">🏆</div></div><div class="v25-cert-actions"><button id="v25-download-certificate" type="button">↓ 올클리어 기념패 PNG 저장</button><button id="v25-close-certificate" type="button">닫기</button></div></dialog>
+
+
+<!-- 첫 방문 가이드: 자동 표시 후 홈과 설정에서 다시 열 수 있습니다. -->
+<dialog id="v31-onboarding" class="v31-onboarding" aria-labelledby="v31-guide-title" aria-describedby="v31-guide-description">
+  <div class="v31-guide-shell">
+    <div class="v31-guide-top"><span>WELCOME TO THE ARCADE</span><button type="button" id="v31-guide-close" aria-label="안내 닫기">✕</button></div>
+    <div class="v31-guide-symbol" id="v31-guide-icon" aria-hidden="true">🎮</div>
+    <p id="v31-guide-count" class="v31-guide-count">STEP 1 / 3</p>
+    <h2 id="v31-guide-title">게임을 선택하세요</h2>
+    <p id="v31-guide-description">첫 화면의 6가지 게임 카드에서 원하는 게임을 고르면 바로 시작할 수 있어요.</p>
+    <div id="v31-guide-dots" class="v31-guide-dots" aria-hidden="true">● ○ ○</div>
+    <label class="v31-guide-remember"><input id="v31-guide-remember" type="checkbox"> 다음 접속부터 자동 안내 끄기</label>
+    <div class="v31-guide-actions"><button type="button" class="btn btn-secondary" id="v31-guide-prev">이전</button><button type="button" class="btn btn-primary" id="v31-guide-next">다음</button></div>
+    <p class="v31-guide-note">게임별 조작 방법은 플레이 화면의 '조작 튜토리얼'에서 볼 수 있어요.</p>
+  </div>
+</dialog>
+
+<!-- 통합 편의 설정: 화면·조작·음악·백업. 설정 저장 키는 호환성 유지. -->
+<dialog class="v32-settings-dialog" id="v32-settings-dialog" aria-labelledby="v32-settings-title">
+  <div class="v32-settings-shell">
+    <div class="v32-settings-head">
+      <div><span class="v32-settings-kicker">PLAYER PREFERENCES</span><h2 id="v32-settings-title">⚙ 편의성 설정</h2><p>게임 환경을 내 화면과 취향에 맞게 바꿔보세요.</p></div>
+      <button class="v32-settings-close" id="v32-settings-close" aria-label="설정 닫기" type="button">✕</button>
+    </div>
+    <div class="v32-settings-scroll">
+      <section class="v32-setting-section" aria-labelledby="v32-visual-title">
+        <h3 id="v32-visual-title">🎨 화면과 가독성</h3>
+        <div class="v32-setting-row"><div><strong>화면 테마</strong><small>밝고 어두운 배경 전환</small></div><div class="v32-segments"><button type="button" data-v32-theme="dark">🌙 다크</button><button type="button" data-v32-theme="light">☀ 라이트</button></div></div>
+        <div class="v32-setting-row"><div><strong>화면 밀도</strong><small>카드와 콘텐츠 사이 간격</small></div><div class="v32-segments"><button type="button" data-v32-density="compact">좁게</button><button type="button" data-v32-density="normal">기본</button><button type="button" data-v32-density="wide">넓게</button></div></div>
+        <div class="v32-setting-row"><div><strong>글씨 크기</strong><small>설명과 버튼을 편하게 읽기</small></div><div class="v32-segments"><button type="button" data-v32-font="normal">기본</button><button type="button" data-v32-font="large">크게</button></div></div>
+        <label class="v32-setting-toggle"><span><strong>큰 조작 버튼</strong><small>스마트폰에서 버튼을 더 쉽게 누르기</small></span><input type="checkbox" id="v32-large-targets" role="switch"></label>
+        <label class="v32-setting-toggle"><span><strong>색상 구분 강화</strong><small>기호와 테두리로 상태 구분</small></span><input type="checkbox" id="v32-colorblind" role="switch"></label>
+        <label class="v32-setting-toggle"><span><strong>움직임 줄이기</strong><small>반짝임·전환 애니메이션 최소화</small></span><input type="checkbox" id="v32-motion" role="switch"></label>
+      </section>
+      <section class="v32-setting-section" aria-labelledby="v32-help-title">
+        <h3 id="v32-help-title">📘 안내와 게임 편의</h3>
+        <label class="v32-setting-toggle"><span><strong>첫 방문 가이드 자동 표시</strong><small>끄면 다음 접속부터 환영 튜토리얼 생략</small></span><input type="checkbox" id="v32-auto-guide" role="switch"></label>
+        <label class="v32-setting-toggle"><span><strong>게임 조작 튜토리얼 버튼</strong><small>불필요하면 플레이 화면에서 숨기기</small></span><input type="checkbox" id="v32-show-game-tutorial" role="switch"></label>
+        <label class="v32-setting-toggle"><span><strong>게임 나가기 확인</strong><small>플레이 도중 메뉴 이동을 실수로 누르는 것 방지</small></span><input type="checkbox" id="v32-leave-confirm" role="switch"></label>
+        <label class="v32-setting-toggle"><span><strong>모바일 버튼 여유 공간</strong><small>큰 터치 영역과 스크롤 충돌 감소</small></span><input type="checkbox" id="v32-touch-spacing" role="switch"></label>
+        <button class="v32-action-link" id="v32-guide-reopen" type="button">❔ 첫 방문 가이드 다시 보기</button>
+      </section>
+      <section class="v32-setting-section" aria-labelledby="v32-sound-title">
+        <h3 id="v32-sound-title">🎵 배경음악과 효과음</h3>
+        <p class="v32-section-sub">BGM 6곡 선택, 재생·정지, 음악·효과음 볼륨을 여기서 조절합니다.</p>
+        <div id="v32-audio-slot" class="v32-audio-slot"></div>
+      </section>
+      <section class="v32-setting-section" id="v32-backup-section" aria-labelledby="v32-backup-title">
+        <h3 id="v32-backup-title">💾 저장과 백업</h3>
+        <div class="v32-save-detail"><strong id="v32-save-detail-text">저장 상태 확인 중</strong><small>기록은 현재 브라우저에 저장됩니다. 다른 기기에서는 JSON으로 옮겨주세요.</small></div>
+        <div class="v32-backup-actions"><button type="button" id="v32-backup-export">⬇ 전체 기록·설정 백업</button><button type="button" id="v32-backup-import">⬆ 백업 파일 가져오기</button></div>
+        <p class="v32-settings-footnote">닉네임, 진행 기록, 배지·꾸미기, 화면·사운드·편의 설정을 백업합니다. <strong>개인 마스터 코드와 인증 정보는 보안상 포함되지 않습니다.</strong></p>
+      </section>
+    </div>
+    <div class="v32-settings-footer"><span>변경 내용은 자동으로 저장됩니다.</span><button type="button" id="v32-settings-done">설정 완료</button></div>
+  </div>
+</dialog>
+</body>
+</html>

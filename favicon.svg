@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="TAEKIN BRAIN ARCADE">
+<rect width="64" height="64" rx="14" fill="#172b32"/>
+<rect x="5" y="5" width="54" height="54" rx="11" fill="none" stroke="#b7d6c6" stroke-width="2"/>
+<path d="M15 20h34v8H37v23H27V28H15z" fill="#d5ba88"/>
+<circle cx="49" cy="48" r="5" fill="#76e0d7"/>
+</svg>
