@@ -2297,3 +2297,297 @@ body[data-theme="light"] .v47-current-level{color:#f8ffff}
   .v46-what-intro small{display:none}
   .v46-what-links button{min-height:31px;padding:5px 9px}
 }
+
+/* ================================================================
+   v48 · 모바일에서 잘리지 않는 글씨, 화면 배율, 조작 집중 레이아웃
+   기존 v47 테마·게임 규칙·기록 키는 변경하지 않습니다.
+   ================================================================ */
+:root{--v48-font-scale:1;--v48-ui-scale:1}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body .site-shell{zoom:var(--v48-ui-scale);box-sizing:border-box}
+body .site-shell,body .site-shell *{overflow-wrap:break-word}
+/* 메뉴·버튼·도움말 글씨는 기기 글자 크기와 독립적으로 비율을 조절할 수 있습니다. */
+body .site-shell :is(.status-message,.card-desc,.game-description,.v26-page-heading p,.v46-help-dialog p,.v46-help-extra,.v19-welcome p,.aside-tip p,.rules-content,.v32-section-sub,.v32-setting-section small,.v32-setting-row small,.v32-setting-toggle small,.v41-block-preview-note,.v41-mine-mode-note,.pipe-help-line){font-size:calc(12px * var(--v48-font-scale))!important;line-height:1.55!important;overflow-wrap:anywhere;max-width:100%}
+body .site-shell :is(.v32-setting-row strong,.v32-setting-toggle strong,.v46-what-intro strong,.block-piece-heading h3,.game-card>strong,.v26-page-heading h1){font-size:calc(15px * var(--v48-font-scale))!important;line-height:1.35!important;white-space:normal!important}
+body .site-shell :is(.v32-setting-section,.v46-help-dialog,.v26-view) button:not(.mine-cell):not(.pipe-cell):not(.block-cell):not(.shikaku-cell):not(.block-piece):not(.game-card):not(.v46-help-icon),
+body .site-shell :is(.panel-actions,.toolbar,.mode-switch,.v42-size-buttons,.v19-welcome-actions) button{
+ font-size:calc(12px * var(--v48-font-scale))!important;line-height:1.35!important;white-space:normal!important;min-width:0;overflow-wrap:anywhere;
+}
+body .site-shell :is(.v26-nav-label,.v42-size-title,.v41-block-preview-note,.v48-showcase-label span){font-size:calc(11px * var(--v48-font-scale))!important;line-height:1.3!important;white-space:normal!important}
+body .site-shell .v32-settings-dialog :is(input,select,output){font-size:calc(13px * var(--v48-font-scale))!important;min-width:0}
+body .site-shell :is(.v32-setting-row,.v32-setting-toggle,.v32-settings-head,.music-track-item,.stage-quick,.v46-what-bar,.v26-page-heading,.game-heading){min-width:0}
+body .site-shell :is(.music-track-name,.music-track-description,.music-current-name,.v32-settings-head p,.v32-settings-footer span){white-space:normal!important;overflow-wrap:anywhere;min-width:0}
+body .site-shell :is(.game-panel,.v26-view,.play-primary,.play-sidebar,.play-layout,.block-play-area,.block-piece-zone,.block-board-zone){min-width:0}
+/* 퍼센트 설정 컨트롤: 큰 기기 글씨에도 번호 입력창과 슬라이더를 겹치지 않게 배치 */
+.v48-percent-setting{align-items:stretch;flex-direction:column}
+.v48-percent-control{display:flex;flex-wrap:wrap;align-items:center;gap:9px;width:100%;min-width:0}
+.v48-percent-control input[type=range]{flex:1 1 160px;min-width:95px;accent-color:#b9d79e;min-height:33px}
+.v48-percent-control input[type=number]{width:68px;min-width:64px;min-height:42px;background:#122a30;color:#f4ffe9;border:1px solid #8bb6a8;border-radius:8px;text-align:center;padding:6px 3px}
+.v48-percent-control>label{font-size:12px;color:#b9d0c9}
+.v48-percent-control>span{font-size:12px;color:#e7f5e5}
+.v48-percent-control>button{min-height:40px;padding:7px 9px;background:#2e554b;border:1px solid #689687;color:#f0fff4;border-radius:8px;cursor:pointer}
+body[data-theme=light] .v48-percent-control input[type=number]{background:#fff;color:#285349}
+/* 음악 선택창: 설정 스크롤 영역 안에서 펼쳐져 잘림 없이 끝까지 스크롤 가능 */
+.v32-audio-slot .music-picker{width:100%!important;min-width:0!important}
+.v32-audio-slot .music-track-menu{
+ position:relative!important;inset:auto!important;right:auto!important;left:auto!important;top:auto!important;
+ display:block;width:100%!important;max-width:100%!important;max-height:min(54dvh,450px)!important;
+ margin:8px 0 0;overflow-y:auto!important;box-sizing:border-box;animation:none!important;
+}
+.v32-audio-slot .music-track-menu[hidden]{display:none!important}
+.v32-audio-slot .music-track-item{min-width:0;max-width:100%;gap:8px}
+.v32-audio-slot .music-track-meta{flex:1;min-width:0}
+.v32-audio-slot .music-track-art{width:40px;height:40px;flex-shrink:0}
+.v32-audio-slot .music-track-state{flex-shrink:0;min-width:0}
+/* 모바일 실사용: 화면을 스크롤하려다 손가락 드래그가 취소되지 않게 분리 */
+#shikaku-board,#shikaku-board .shikaku-cell,#g2048-board,#g2048-board *{touch-action:none!important;-webkit-user-select:none;user-select:none}
+#block-tray,#block-tray .block-piece,#block-tray .block-piece *{touch-action:none!important;-webkit-user-select:none;user-select:none}
+.block-drag-ghost{pointer-events:none!important;z-index:10000!important}
+/* 파이프: 10x10 이상 모바일 칸마다 움직이는 필터·반복 물결이 끊기는 문제 완화 */
+@media (pointer:coarse){
+ #pipe-board .pipe-cell .pipe-water,#pipe-board .pipe-cell .pipe-water-shine,#pipe-board .pipe-cell .pipe-water-glow{filter:none!important}
+ #pipe-board .pipe-cell .pipe-water-shine{animation:none!important;opacity:.8!important}
+ #pipe-board .pipe-cell.just-turned .pipe-graphic{animation-duration:.16s!important;filter:none!important}
+}
+@media(max-width:720px){
+  /* 헤더는 페이지 맨 위에서만 표시. 게임 진행 중 화면을 가리지 않습니다. */
+  body .topbar{position:relative!important;top:auto!important;z-index:80!important;
+    display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;grid-template-rows:auto auto!important;
+    padding:7px 8px!important;margin:0 -6px 0!important;gap:5px!important;min-height:0!important;}
+  body .topbar>.brand{grid-column:1!important;grid-row:1!important;min-width:0;max-width:100%!important;justify-self:start!important;overflow:hidden!important}
+  body .topbar>.top-actions{grid-column:2!important;grid-row:1!important;width:auto!important;max-width:100%!important;min-width:0!important;flex-wrap:nowrap!important;justify-content:flex-end!important;gap:5px!important}
+  body .topbar>.arcade-nav{grid-column:1 / -1!important;grid-row:2!important;order:unset!important;width:100%!important;min-width:0!important;gap:3px!important;padding:2px!important}
+  body .arcade-nav .arcade-nav-btn{display:flex;flex:1 1 0!important;flex-direction:column;gap:2px!important;min-width:0;min-height:44px;padding:5px 2px!important;white-space:normal!important;line-height:1.15!important}
+  body .arcade-nav .arcade-nav-btn .v26-nav-label{font-size:calc(10px * var(--v48-font-scale))!important;line-height:1.16!important;white-space:normal!important}
+  body .arcade-nav .arcade-nav-btn .v26-nav-icon{font-size:14px!important}
+  body .topbar .brand-mark{flex:0 0 29px!important;width:29px!important;height:29px!important}
+  body .topbar .brand-text{min-width:0!important;max-width:100%!important;white-space:normal!important;overflow:visible!important;font-size:11px!important;line-height:1.15!important}
+  body .topbar .brand-text strong{display:block!important;white-space:normal!important}
+  body .topbar .v26-profile-chip,body .topbar #v32-save-status,body .topbar .display-settings-wrap,body .topbar #audio-settings-toggle{display:none!important}
+  body .topbar #v32-settings-open{white-space:nowrap!important;font-size:calc(11px * var(--v48-font-scale))!important;min-height:38px;min-width:50px;padding:6px 7px!important;max-width:90px}
+  /* 콘텐츠 위의 세 겹 장식과 난이도 반복을 접어, 게임판까지의 세로 이동을 단축 */
+  #play-screen .game-heading{margin:4px 0 6px!important;padding:8px!important}
+  #play-screen .game-title-line h1{font-size:clamp(15px,calc(18px * var(--v48-font-scale)),27px)!important}
+  #play-screen .game-description{font-size:calc(11px * var(--v48-font-scale))!important;line-height:1.45!important;margin:3px 0!important}
+  #play-screen .v41-tier-fold{margin:2px 0 5px!important}
+  #play-screen .stage-quick{padding:6px 8px!important;margin:4px 0 6px!important;gap:7px;flex-wrap:wrap}
+  #play-screen .v46-what-bar{padding:5px 8px!important;margin:3px 0 6px!important;gap:5px}
+  #play-screen .v46-what-intro small{display:none!important}
+  #play-screen .v46-what-links{gap:3px!important;grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  #play-screen .v46-what-links button{padding:4px 2px!important;font-size:calc(9px * var(--v48-font-scale))!important;min-height:35px!important}
+  #play-screen .v46-what-intro strong{font-size:calc(11px * var(--v48-font-scale))!important}
+  #play-screen .game-panel{padding:9px 8px!important}
+  #play-screen .toolbar{gap:4px!important;min-height:0!important;margin:0 0 4px!important;flex-wrap:wrap}
+  #play-screen .toolbar label{display:none!important}
+  #play-screen .toolbar select{width:auto!important;max-width:100%;flex:1 1 115px;min-height:34px!important}
+  #play-screen .score-grid{gap:4px!important;margin:0 0 5px!important}
+  #play-screen .score-card{padding:5px 3px!important;min-width:0}
+  #play-screen .score-card strong{font-size:clamp(13px,calc(16px * var(--v48-font-scale)),26px)!important}
+  #play-screen .score-card span{font-size:calc(9px * var(--v48-font-scale))!important;line-height:1.25!important}
+  #play-screen .v42-size-tools{display:flex;flex-wrap:wrap;gap:3px!important;padding:5px!important;margin:3px 0!important}
+  #play-screen .v42-size-title{width:auto;flex:1 1 auto;min-width:95px!important;font-size:calc(10px * var(--v48-font-scale))!important}
+  #play-screen .v42-size-title small{display:none!important}
+  #play-screen .v42-size-buttons{width:auto!important;flex:1 1 180px;gap:3px!important;justify-content:flex-end!important}
+  #play-screen .v42-size-buttons button{min-height:33px!important;min-width:30px!important;padding:4px 5px!important;font-size:calc(10px * var(--v48-font-scale))!important}
+  #play-screen .v42-size-buttons output{min-width:35px!important;font-size:11px}
+  #play-screen .status-message{padding:5px 7px!important;margin:5px 0!important;line-height:1.4!important}
+  #play-screen .panel-actions{gap:5px!important;margin:5px 0!important;flex-wrap:wrap}
+  #play-screen .panel-actions button{min-height:35px!important;padding:6px 8px!important}
+  #play-screen .v42-board-window{padding:1px 0 4px!important;margin:1px 0 4px!important;touch-action:pan-x pan-y}
+  #play-screen .v42-pan-tools:not([hidden]){margin:0 0 4px;font-size:10px}
+  #play-screen .v42-pan-tools button{min-height:30px}
+  #play-screen .v19-shikaku-preview{padding:5px!important;margin:4px 0!important}
+  #play-screen .v41-mine-mode-note{padding:5px!important;margin:3px 0!important}
+  #play-screen .v19-combo,#play-screen .block-progress{margin:3px 0!important}
+  #play-screen .mode-switch{gap:4px!important;margin:3px 0!important}
+  #play-screen .mode-switch button{min-height:36px!important;padding:5px 7px!important}
+  html{scroll-padding-top:8px!important}
+  #play-screen .game-panel,.game-heading,#game-collection{scroll-margin-top:10px!important}
+  .v32-settings-dialog{width:calc(100vw - 10px)!important;max-height:calc(100dvh - 10px)!important;height:calc(100dvh - 10px)!important}
+  .v32-settings-scroll{padding:9px!important}
+  .v32-setting-section{padding:10px!important}
+  .v32-settings-head{padding:11px!important}
+  .v32-audio-slot .music-track-menu{max-height:53dvh!important}
+  /* 블록 선택판과 보드가 같은 화면: 블록은 위, 게임판은 바로 아래 */
+  body.v48-compact-game #panel-blocks .block-play-area{display:flex!important;flex-direction:column!important;gap:5px!important}
+  body.v48-compact-game #panel-blocks .block-piece-zone{order:-1!important}
+  body.v48-compact-game #panel-blocks .block-board-zone{order:0!important}
+  body.v48-compact-game #panel-blocks .block-piece-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 3px!important}
+  body.v48-compact-game #panel-blocks .block-piece-heading h3{font-size:calc(12px * var(--v48-font-scale))!important;margin:0!important}
+  body.v48-compact-game #panel-blocks .block-piece-heading span{font-size:calc(10px * var(--v48-font-scale))!important}
+  body.v48-compact-game #panel-blocks .block-tray{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px!important;padding:5px!important;margin:0 auto 3px!important;width:100%!important;max-width:430px!important}
+  body.v48-compact-game #panel-blocks .block-piece{min-height:64px!important;gap:2px!important;padding:3px!important;border-radius:8px!important}
+  body.v48-compact-game #panel-blocks .block-mini{--mini:clamp(8px,2.7vw,13px)!important;min-height:35px!important}
+  body.v48-compact-game #panel-blocks .block-piece-label{font-size:calc(9px * var(--v48-font-scale))!important;line-height:1.1!important}
+  body.v48-compact-game #panel-blocks .v41-block-preview-note{margin:3px 0!important;padding:5px!important;font-size:calc(10px * var(--v48-font-scale))!important}
+  body.v48-compact-game #panel-blocks #block-board{margin:0 auto!important}
+  body.v48-compact-game #panel-blocks .block-progress{margin:3px 0!important}
+}
+@media(max-width:340px){
+  body .topbar .brand-text{font-size:10px!important}
+  body .topbar #v32-settings-open{padding:4px!important;min-width:43px}
+  body .arcade-nav .arcade-nav-btn{padding:4px 1px!important}
+  #play-screen .v46-what-links button{font-size:9px!important}
+}
+/* 작은 화면에서 프로필은 공간을 적게 차지하는 아이콘 버튼으로 유지합니다. */
+@media(max-width:720px){
+ body .topbar .v26-profile-chip{display:inline-flex!important;align-items:center;justify-content:center;flex:0 0 38px!important;width:38px!important;min-width:38px!important;max-width:38px!important;height:38px!important;padding:3px!important}
+ body .topbar .v26-profile-text{display:none!important}
+ body .topbar .v26-avatar{width:30px;height:30px;flex:0 0 30px}
+}
+@media(max-width:720px){body .topbar>.brand{min-width:126px!important}}
+/* CSS zoom은 표시 너비를 자동 보정합니다. 역수로 넓히면 작은 배율에서 오히려 가로 넘침이 생깁니다. */
+body .site-shell{width:100%!important}
+@media(max-width:720px){
+  body{overflow-x:clip}
+  .hero-carousel,.hero-slides,.hero-slide,.game-card,.card-preview{max-width:100%;overflow:hidden}
+}
+@media(max-width:720px){
+  .v26-view .v19-welcome>div:first-child{min-width:0!important;flex:1 1 100%;max-width:100%;overflow-wrap:anywhere}
+  .v26-view .v19-welcome>div:first-child h2{white-space:normal!important;overflow-wrap:anywhere}
+  .hero-slide-art,.hero-device{display:none!important}
+}
+/* 모바일 배율·게임판 크기: 조절 컨트롤을 접고 필요할 때만 펼치기 */
+.v48-size-fold>summary{display:none;cursor:pointer}
+@media(max-width:720px){
+  .v48-size-fold{margin:2px 0 4px;border:1px solid #496e70;border-radius:9px;background:#20343c;min-width:0}
+  .v48-size-fold>summary{display:flex!important;align-items:center;min-height:28px;padding:4px 10px;font-size:calc(10px * var(--v48-font-scale));color:#d9f5ed;font-weight:750;list-style-position:inside}
+  .v48-size-fold[open]>.v42-size-tools{margin:4px!important}
+  .v32-audio-slot .music-player{display:flex!important;flex-wrap:wrap!important;width:100%!important;min-width:0!important}
+  .v32-audio-slot .music-picker{flex:1 0 100%!important;width:100%!important;max-width:100%!important;min-width:0!important}
+  .v32-audio-slot .music-picker-button{width:100%!important;max-width:100%!important;min-width:0!important}
+  .v32-audio-slot .music-track-menu{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+  #panel-blocks .block-piece-zone{padding:5px 6px!important}
+}
+
+/* v48: 작은 설정 창에서도 여섯 BGM의 이름/상태가 겹치지 않게 정렬 */
+@media(max-width:720px){
+ .v32-audio-slot .music-track-options{display:grid!important;gap:5px;padding:6px!important;min-width:0}
+ .v32-audio-slot .music-track-item{display:grid!important;grid-template-columns:36px minmax(0,1fr)!important;grid-template-rows:auto auto!important;align-items:center!important;gap:2px 8px!important;min-width:0!important;width:100%!important;max-width:100%!important;min-height:60px!important;height:auto!important;padding:7px 8px!important}
+ .v32-audio-slot .music-track-art{grid-column:1;grid-row:1 / 3;width:35px!important;height:35px!important;font-size:19px!important}
+ .v32-audio-slot .music-track-meta{grid-column:2;grid-row:1;min-width:0!important;width:100%;flex:initial!important}
+ .v32-audio-slot .music-track-name{font-size:12px!important;line-height:1.25!important;white-space:normal!important;overflow-wrap:anywhere}
+ .v32-audio-slot .music-track-description{font-size:10px!important;line-height:1.25!important;white-space:normal!important;overflow-wrap:anywhere}
+ .v32-audio-slot .music-track-state{grid-column:2;grid-row:2;min-width:0!important;width:100%;justify-content:flex-start!important;font-size:9px!important;line-height:1.15;align-self:start!important}
+ .v32-audio-slot .music-selected-indicator{font-size:9px!important}
+ .v32-audio-slot .music-menu-heading{flex-wrap:wrap!important;justify-content:flex-start!important;gap:4px!important}
+ .v32-audio-slot .music-menu-heading strong{font-size:clamp(13px,calc(15px * var(--v48-font-scale)),19px)!important;white-space:normal!important}
+ .v32-audio-slot .music-menu-heading span{font-size:9px!important;white-space:normal!important}
+ .v32-audio-slot .music-menu-header{padding:11px 10px 9px!important}
+}
+
+
+/* ==================== v49: 눈에 띄는 도움말과 외부 빠른 글씨·화면 조절 ==================== */
+:root{--v49-font-scale:1}
+html body .site-shell [data-v49-font-base],html body #play-screen [data-v49-font-base],html body #home-screen [data-v49-font-base],html body dialog:not(#v49-display-panel) [data-v49-font-base]{font-size:calc(var(--v49-base-px) * var(--v49-font-scale))!important}
+.v49-header-display{flex:0 0 auto;min-height:38px;border:1px solid #82b7b0;background:#274c52;color:#ecfff8;border-radius:10px;padding:7px 10px;font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+.v49-header-display:hover,.v49-float-display:hover{filter:brightness(1.13)}
+.v49-float-display{display:none;position:fixed;bottom:max(12px,env(safe-area-inset-bottom));right:12px;z-index:4500;border-radius:100px;min-height:42px;padding:9px 12px;border:2px solid #b4e4d7;background:#274a50;color:#fffbe7;box-shadow:0 5px 20px #0009;font-size:13px;font-weight:850;cursor:pointer;touch-action:manipulation;white-space:nowrap}
+.v49-display-panel{position:fixed;z-index:4550;right:14px;bottom:68px;width:min(400px,calc(100vw - 28px));max-height:min(70dvh,355px);overflow:auto;box-sizing:border-box;padding:15px;background:#172f37;border:2px solid #8dbbb2;color:#f2faf7;border-radius:16px;box-shadow:0 18px 48px #000b;-webkit-text-size-adjust:100%;text-size-adjust:100%;font-size:14px;line-height:1.45;overscroll-behavior:contain}
+.v49-display-panel[hidden]{display:none!important}
+.v49-display-panel *{box-sizing:border-box;letter-spacing:normal;min-width:0}
+.v49-display-head{display:flex;align-items:center;justify-content:space-between;gap:9px}.v49-display-head strong{font-size:16px;font-weight:850;line-height:1.35}.v49-display-head button{width:36px;height:36px;flex-shrink:0;background:#34515f;color:white;border:1px solid #98b2b7;border-radius:9px;font-size:18px}
+.v49-display-panel p{font-size:12px;line-height:1.45;margin:7px 0 11px;color:#c5e7e0}
+.v49-display-control{margin:10px 0 11px}.v49-display-control label{display:flex;justify-content:space-between;font-size:14px;font-weight:800;align-items:center;margin-bottom:5px}.v49-display-control output{font-size:15px;color:#ffdda1;font-variant-numeric:tabular-nums}
+.v49-display-inputs{display:grid;grid-template-columns:42px minmax(0,1fr) 42px;align-items:center;gap:8px}.v49-display-inputs button{min-height:39px;border-radius:10px;font-size:21px;font-weight:900;background:#315763;border:1px solid #81b5ac;color:#fff}.v49-display-inputs input{width:100%;height:28px;accent-color:#b6f2d2;touch-action:pan-y}
+.v49-display-footer{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}.v49-display-footer button{flex:1 1 90px;min-height:36px;border:1px solid #689f95;border-radius:9px;background:#2a504e;color:#f3fff6;font-size:12px;font-weight:700}
+body[data-theme=light] .v49-display-panel{background:#f4f8f5;color:#254149;border-color:#438c86}body[data-theme=light] .v49-display-panel p{color:#3e6366}body[data-theme=light] .v49-display-inputs button,body[data-theme=light] .v49-display-footer button{background:#e5f0ee;color:#244951}body[data-theme=light] .v49-display-head button{background:#e6eeef;color:#285059}body[data-theme=light] .v49-display-control output{color:#8a5112}
+.v49-help-menu{position:relative;flex:0 0 auto;z-index:60}.v49-help-menu>summary{list-style:none;border:1px solid #90b8b1;border-radius:11px;background:#2d5959;color:#f6fff8;padding:9px 11px;min-height:40px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:850;cursor:pointer;white-space:nowrap;touch-action:manipulation}.v49-help-menu>summary::-webkit-details-marker{display:none}.v49-help-menu[open]>summary{background:#386e65}
+.v49-help-menu-links{position:absolute;z-index:90;top:calc(100% + 5px);right:0;width:min(300px,calc(100vw - 36px));display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;background:#233d48;border:1px solid #7cafac;box-shadow:0 16px 35px #0009;border-radius:13px;padding:10px;max-height:min(54dvh,265px);overflow-y:auto;overscroll-behavior:contain}.v49-help-menu-links button{font-size:13px;min-height:40px;text-align:center;padding:7px 5px;white-space:normal;background:#345663;color:#f3fffe;border:1px solid #6c9fa0;border-radius:9px;cursor:pointer}
+body[data-theme=light] .v49-help-menu>summary{background:#ecfaf2;color:#244c49}body[data-theme=light] .v49-help-menu-links{background:#e4f3f1}body[data-theme=light] .v49-help-menu-links button{background:#fff;color:#244b49}
+#play-screen .game-title-line{display:flex;align-items:center;flex-wrap:wrap;gap:8px 11px}#play-screen .game-title-line h1{min-width:0;overflow-wrap:anywhere}
+/* 기본 100% 화면은 유지하고 글씨 확대 시 버튼·카드가 줄바꿈할 공간을 확보합니다. */
+.site-shell .toolbar,.site-shell .panel-actions,.site-shell .v26-page-heading,.site-shell .score-grid,.site-shell .game-heading,.site-shell .v32-setting-row,.site-shell .v32-setting-toggle,.site-shell .stage-quick{min-width:0;max-width:100%;flex-wrap:wrap}
+.site-shell button:not(.mine-cell):not(.pipe-cell):not(.shikaku-cell):not(.block-cell),.site-shell select,.site-shell input:not([type=range]){overflow-wrap:anywhere}
+.v46-home-guide-links button span{width:auto!important;min-width:49px!important;height:auto!important;min-height:25px!important;padding:3px 5px;border-radius:9px!important;line-height:1.2;white-space:nowrap}
+@media(max-width:720px){
+ .v49-header-display{display:none!important}.v49-float-display{display:block}
+ .v49-display-panel{bottom:max(61px,calc(env(safe-area-inset-bottom) + 58px));max-height:min(61dvh,330px);padding:12px}
+ #play-screen .game-title-line{width:100%;gap:6px}#play-screen .v49-help-menu{margin-left:auto}#play-screen .v49-help-menu>summary{min-height:36px;padding:7px 10px;font-size:12px}
+ #play-screen .game-title-line h1{flex:1 1 auto}
+ .v49-help-menu-links{right:0;top:calc(100% + 4px)}
+ .v49-float-display{opacity:.92}
+}
+@media(max-width:330px){.v49-float-display{font-size:11px;padding:8px 10px}.v49-display-panel{width:calc(100vw - 16px);right:8px}.v49-help-menu>summary{padding:7px 8px!important}}
+
+
+/* ===== v50: 설정 외부 빠른 조절, 모바일 BGM 선택 독립 다이얼로그 ===== */
+/* 음악 버튼에는 선택된 곡 이름을 생략 없이 보여 줍니다. */
+#music-picker-button.music-picker-button{width:100%;min-width:0;max-width:100%;height:auto;min-height:54px;box-sizing:border-box;align-items:center;white-space:normal;cursor:pointer}
+#music-picker-button .music-current-info{min-width:0;flex:1 1 auto;width:auto;overflow:visible;align-items:flex-start}
+#music-picker-button #music-current-name{display:block;width:100%;max-width:100%;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;overflow-wrap:anywhere;line-height:1.35}
+#music-picker-button #music-current-sub{white-space:normal;overflow-wrap:anywhere;line-height:1.35}
+#music-picker-button .music-current-chevron{flex:0 0 auto}
+/* showModal()은 상위 설정창 안에서 열려도 top layer로 올라오므로 잘리지 않습니다. */
+#music-track-menu.music-track-menu,
+.v32-audio-slot #music-track-menu.music-track-menu{
+  position:fixed!important;
+  inset:0!important;
+  margin:auto!important;
+  display:block;
+  box-sizing:border-box!important;
+  width:min(540px,calc(100vw - 24px))!important;
+  min-width:0!important;
+  max-width:calc(100vw - 24px)!important;
+  max-height:min(84dvh,690px)!important;
+  max-height:min(84svh,690px)!important;
+  height:auto!important;
+  padding:0!important;
+  border:1px solid #8c83c7!important;
+  border-radius:20px!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  background:#151a31;
+  color:#edf1ff;
+  box-shadow:0 24px 70px #030719e8;
+  z-index:15000!important;
+  overscroll-behavior:contain;
+  transform:none!important;
+  animation:none!important;
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
+#music-track-menu.music-track-menu[hidden],#music-track-menu.music-track-menu:not([open]){display:none!important}
+#music-track-menu::backdrop{background:rgba(3,7,18,.82)}
+#music-track-menu .v50-music-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#music-track-menu #v50-music-close{flex:0 0 auto;min-height:40px;padding:8px 12px;border:1px solid #8884bc;border-radius:11px;background:#333a66;color:#fff;font-size:13px;cursor:pointer}
+#music-track-menu .music-menu-header{padding:15px 17px 12px}
+#music-track-menu .v50-music-active{display:block;max-width:100%;margin:9px 0 0;padding:7px 10px;border:1px solid #585988;border-radius:9px;background:#303154;color:#f5dc96;font-size:13px;line-height:1.5;overflow-wrap:anywhere;white-space:normal}
+#music-track-menu .music-menu-heading{flex-wrap:wrap;justify-content:flex-start}
+#music-track-menu .music-menu-heading strong{font-size:19px;line-height:1.35;white-space:normal}
+#music-track-menu .music-track-options{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:7px!important;min-width:0!important;padding:12px!important}
+#music-track-menu .music-track-item,
+.v32-audio-slot #music-track-menu .music-track-item{
+  display:grid!important;
+  grid-template-columns:46px minmax(0,1fr)!important;
+  grid-template-rows:auto auto!important;
+  align-items:center!important;
+  column-gap:11px!important;
+  row-gap:3px!important;
+  min-width:0!important;width:100%!important;max-width:100%!important;
+  min-height:70px!important;height:auto!important;
+  padding:10px 12px!important;
+  overflow:visible!important;
+  white-space:normal!important;
+  border:1px solid #485473;
+  border-radius:12px;
+  text-align:left;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+#music-track-menu .music-track-item[aria-selected="true"]{border-color:var(--track-color);background:#343558}
+#music-track-menu .music-track-art{grid-column:1!important;grid-row:1/3!important;width:42px!important;height:42px!important}
+#music-track-menu .music-track-meta{grid-column:2!important;grid-row:1!important;width:100%!important;min-width:0!important;flex:1 1 auto!important}
+#music-track-menu .music-track-name{display:block!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;overflow-wrap:anywhere!important;line-height:1.35!important;font-size:14px!important}
+#music-track-menu .music-track-description{display:block!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;overflow-wrap:anywhere!important;line-height:1.4!important;font-size:12px!important}
+#music-track-menu .music-track-state{grid-column:2!important;grid-row:2!important;min-width:0!important;max-width:100%!important;width:auto!important;justify-content:flex-start!important;overflow:visible!important;white-space:normal!important;line-height:1.5!important}
+#music-track-menu .music-selected-indicator{display:flex!important;flex-wrap:wrap;align-items:center;gap:6px;font-size:12px!important;font-weight:850;color:#f8db98}
+#music-track-menu .music-menu-foot{padding:12px;font-size:12px;line-height:1.5;color:#b9c8dc}
+@media(max-width:420px){
+ #music-track-menu.music-track-menu{width:calc(100vw - 16px)!important;max-width:calc(100vw - 16px)!important;max-height:calc(100dvh - 32px)!important;max-height:calc(100svh - 32px)!important;border-radius:14px!important}
+ #music-track-menu .music-menu-header{padding:12px!important}
+ #music-track-menu .music-track-options{padding:8px!important}
+ #music-track-menu .music-track-item{min-height:65px!important;padding:8px!important;column-gap:8px!important}
+ #music-track-menu .music-track-name{font-size:13px!important}
+ #music-track-menu .music-track-description{font-size:11px!important}
+}

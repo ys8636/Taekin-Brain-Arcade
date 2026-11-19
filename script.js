@@ -860,6 +860,12 @@ function v42FitBoardZoom(game){
       (parseFloat(style.borderLeftWidth)||0)+(parseFloat(style.borderRightWidth)||0);
     desired=(viewport.clientWidth-5-gap*(size-1)-extras)/(v42BoardBase(game)*size);
   }else desired=(viewport.clientWidth-5)/v42BoardNaturalWidth(game);
+  if(game==='blocks' && innerWidth<=720 && document.body.classList.contains('v48-compact-game')){
+    // 트레이와 10×10 판을 한 화면에 넣기 위한 세로 공간까지 고려합니다.
+    const shellZoom=Number.parseFloat(getComputedStyle(document.querySelector('.site-shell')).zoom)||1;
+    const availableHeight=(window.visualViewport?.height||innerHeight)*.31/shellZoom;
+    desired=Math.min(desired,availableHeight/v42BoardBase(game));
+  }
   // Expert 16×16 mines need a smaller scale to actually fit a 320px phone.
   v42SetBoardZoom(game,Math.max(V42_ZOOM_MIN,Math.min(V42_ZOOM_MAX,desired)),{keepCenter:false});
   viewport.scrollLeft=0;
@@ -1225,10 +1231,14 @@ function renderPipes(){
   const wetSet=(pipeGame.state==="flowing"&&pipeGame.animatedSeen)?pipeGame.animatedSeen:info.seen;
   const goalId=end.r*size+end.c;
   const goalWet=wetSet.has(goalId)&&info.outletOpen;
-  const el=$("pipe-board");el.style.setProperty("--pipe-size",String(size));el.innerHTML="";
+  const el=$("pipe-board");el.style.setProperty("--pipe-size",String(size));
+  const rebuild=el.children.length!==size*size || [...el.children].some(node=>!node.classList.contains('pipe-cell'));
+  if(rebuild)el.replaceChildren();
+  const fragment=rebuild?document.createDocumentFragment():null;
   for(let r=0;r<size;r++)for(let c=0;c<size;c++){
-    const id=r*size+c,btn=document.createElement("button");
-    btn.type="button";btn.className="pipe-cell";
+    const id=r*size+c,btn=rebuild?document.createElement("button"):el.children[id];
+    if(rebuild)btn.type="button";
+    btn.className="pipe-cell";
     const startCell=r===start.r&&c===start.c,endCell=r===end.r&&c===end.c;
     if(startCell)btn.classList.add("start","fixed");
     if(endCell)btn.classList.add("end");
@@ -1239,13 +1249,17 @@ function renderPipes(){
     const waterMask=wetSet.has(id)?info.matched[r][c]|
       (startCell&&info.intakeOpen?start.port:0)|
       (endCell&&goalWet?end.port:0):0;
-    btn.innerHTML=makePipeSvg(board[r][c],waterMask,startCell,endCell);
+    const renderKey=`${board[r][c]}:${waterMask}:${Number(startCell)}:${Number(endCell)}`;
+    if(btn.dataset.pipeVisual!==renderKey){
+      btn.innerHTML=makePipeSvg(board[r][c],waterMask,startCell,endCell);
+      btn.dataset.pipeVisual=renderKey;
+    }
     btn.disabled=pipeGame.state!=="playing"||startCell;
     // 게임 칸은 네이티브 button 역할을 유지합니다.
     btn.setAttribute("aria-label",`${r+1}행 ${c+1}열, ${pipeBits(board[r][c])}방향 파이프, ${wetSet.has(id)?"물이 흐름":"아직 물이 없음"}. 클릭하면 ${pipeGame.turnDirection===-1?'반시계':'시계'} 방향으로 90도 회전`);
-    btn.addEventListener("click",()=>rotatePipeAt(r,c));
-    el.appendChild(btn);
+    if(rebuild){btn.addEventListener("click",()=>rotatePipeAt(r,c));fragment.appendChild(btn);}
   }
+  if(rebuild)el.appendChild(fragment);
   $("pipe-moves").textContent=`${pipeGame.rotations}회`;
   $("pipe-wet-count").textContent=`${wetSet.size} / ${size*size}`;
   $("pipe-leaks").textContent=`${info.leaks}곳`;
@@ -2612,15 +2626,17 @@ const musicCurrentIcon=$('music-current-icon');
 const musicCurrentName=$('music-current-name');
 const musicCurrentSub=$('music-current-sub');
 function closeMusicMenu(returnFocus=false){
+  if(musicMenu.open)musicMenu.close();
   musicMenu.hidden=true;
   musicPickerButton.setAttribute('aria-expanded','false');
-  if(returnFocus)musicPickerButton.focus();
+  if(returnFocus)musicPickerButton.focus({preventScroll:true});
 }
 function openMusicMenu(){
   musicMenu.hidden=false;
   musicPickerButton.setAttribute('aria-expanded','true');
+  if(!musicMenu.open)musicMenu.showModal();
   const selected=musicOptions.querySelector('[aria-selected="true"]');
-  if(selected)selected.focus({preventScroll:true});
+  (selected||$('v50-music-close')).focus({preventScroll:true});
 }
 function syncMusicPicker(){
   const id=musicTrack.value;
@@ -2629,7 +2645,8 @@ function syncMusicPicker(){
   const isPlaying=!musicAudio.paused;
   musicCurrentIcon.textContent=visual.icon;
   musicCurrentName.textContent=track.name;
-  musicCurrentSub.textContent=isPlaying?'● 재생 중':'탭해서 곡 변경';
+  musicCurrentSub.textContent=isPlaying?'● 재생 중':'누르면 곡 선택';
+  $('v50-music-active').textContent='현재 선택: '+track.name;
   musicPickerButton.setAttribute('aria-label','배경음악 선택: '+track.name+'. 목록 열기');
   for(const option of musicOptions.querySelectorAll('.music-track-item')){
     const selected=option.dataset.track===id;
@@ -2663,7 +2680,10 @@ for(const [id,track] of Object.entries(BGM_TRACKS)){
   });
   musicOptions.appendChild(option);
 }
-musicPickerButton.addEventListener('click',()=>musicMenu.hidden?openMusicMenu():closeMusicMenu());
+musicPickerButton.addEventListener('click',()=>musicMenu.open?closeMusicMenu(true):openMusicMenu());
+$('v50-music-close').addEventListener('click',()=>closeMusicMenu(true));
+musicMenu.addEventListener('cancel',event=>{event.preventDefault();closeMusicMenu(true);});
+musicMenu.addEventListener('click',event=>{if(event.target===musicMenu)closeMusicMenu(true);});
 document.addEventListener('pointerdown',event=>{
   if(!musicMenu.hidden&&!musicPicker.contains(event.target))closeMusicMenu();
 });
@@ -2772,12 +2792,12 @@ function setHero(index,userAction=false){
 function stopHeroTimer(){if(heroTimer){clearInterval(heroTimer);heroTimer=null;}}
 function resetHeroTimer(){
   stopHeroTimer();
-  // 약 1초마다 자동 전환. 마우스를 배너 위에 올려둬도 재생이 멈추지 않습니다.
+  // 약 2초마다 자동 전환. 배너가 너무 빠르게 지나가지 않도록 조정합니다.
   // 일시정지 버튼 또는 브라우저 탭 숨김 상태에서만 전환을 중단합니다.
   if(!heroPaused && !document.hidden && !heroRoot.contains(document.activeElement) && !document.body.classList.contains('v19-reduced-motion')){
     heroTimer=setInterval(()=>{
       if(!$('home-screen').classList.contains('hidden')) setHero(heroIndex+1);
-    },1000);
+    },2000);
   }
 }
 $('hero-prev').addEventListener('click',()=>setHero(heroIndex-1,true));
@@ -4909,11 +4929,13 @@ function v31FinalResetCheck(subject){
   const KEY='taekin_arcade_preferences_v32';
   const AUTO='taekin_arcade_auto_guide_v32';
   const SEEN='taekin_arcade_onboarding_v31';
-  const defaults={font:'normal',largeTargets:false,showGameTutorial:true,leaveConfirm:true,touchSpacing:true};
+  const defaults={font:'normal',largeTargets:false,showGameTutorial:true,leaveConfirm:true,touchSpacing:true,fontPct:100,uiPct:100,compactGame:true,autoFit:true};
   function safeRead(k){try{return localStorage.getItem(k);}catch(_){return null;}}
   function safeWrite(k,v){try{localStorage.setItem(k,v);window.TaekinV32Save?.record(true);return true;}catch(_){window.TaekinV32Save?.record(false);return false;}}
   function obj(k){try{return JSON.parse(safeRead(k)||'null');}catch(_){return null;}}
   const raw=obj(KEY);let prefs={...defaults,...(raw&&typeof raw==='object'?raw:{})};
+  if(raw && raw.fontPct==null && raw.font==='large')prefs.fontPct=115;
+  const bounded=(n,lo,hi,step,fallback)=>Number.isFinite(Number(n))?Math.round(Math.max(lo,Math.min(hi,Number(n)))/step)*step:fallback;
   const modal=$('v32-settings-dialog');
   const top=$('v32-save-status'),detail=$('v32-save-detail-text');
   let lastSave=0, failed=false;
@@ -4926,7 +4948,16 @@ function v31FinalResetCheck(subject){
   catch(_){window.TaekinV32Save.record(false);}
   top.addEventListener('click',()=>openSettings(true));
   function applyPrefs(){
-    document.body.dataset.v32Font=prefs.font==='large'?'large':'normal';
+    prefs.fontPct=bounded(prefs.fontPct,25,200,5,100);
+    prefs.uiPct=bounded(prefs.uiPct,70,130,5,100);
+    document.body.dataset.v32Font='normal'; // 구버전 두 단계 스타일 대신 정확한 배율 이용
+    document.documentElement.style.setProperty('--v48-font-scale','1'); // v49: 개별 고정 px 문구도 공통 배율로 처리
+    document.documentElement.style.setProperty('--v48-ui-scale',String(prefs.uiPct/100));
+    window.dispatchEvent(new CustomEvent('taekin-v49-display-sync',{detail:{fontPct:prefs.fontPct,uiPct:prefs.uiPct}}));
+    document.body.classList.toggle('v48-compact-game',!!prefs.compactGame);
+    document.body.classList.toggle('v48-auto-fit',!!prefs.autoFit);
+    $('v48-compact-game').checked=!!prefs.compactGame;
+    $('v48-auto-fit').checked=!!prefs.autoFit;
     document.body.classList.toggle('v32-large-targets',!!prefs.largeTargets);
     document.body.classList.toggle('v32-touch-spacing',!!prefs.touchSpacing);
     document.body.classList.toggle('v32-hide-game-tutorial',!prefs.showGameTutorial);
@@ -4953,7 +4984,12 @@ function v31FinalResetCheck(subject){
   modal.addEventListener('click',event=>{if(event.target===modal)closeSettings();});
   // 기존 오디오 DOM을 옮기므로 기존 재생 이벤트/선택 값/저장 키 모두 그대로 사용
   $('v32-audio-slot').appendChild($('audio-settings'));
-  for(const name of ['font'])document.querySelectorAll(`[data-v32-${name}]`).forEach(b=>b.addEventListener('click',()=>{prefs[name]=b.dataset.v32Font;savePrefs();}));
+  // 글씨/화면 배율은 외부 빠른 조절 버튼 하나에서 관리하며 기존 저장 키는 유지합니다.
+  for(const [id,key] of [['v48-compact-game','compactGame'],['v48-auto-fit','autoFit']]){
+    $(id).addEventListener('change',e=>{prefs[key]=e.target.checked;savePrefs();
+      if(key==='autoFit' && prefs[key] && activeGame && window.matchMedia('(max-width:720px)').matches){requestAnimationFrame(()=>v42FitBoardZoom(activeGame));}
+    });
+  }
   for(const name of ['theme','density'])document.querySelectorAll(`[data-v32-${name}]`).forEach(b=>b.addEventListener('click',()=>{
     document.querySelector(`[data-${name}-option="${b.dataset['v32'+name[0].toUpperCase()+name.slice(1)]}"]`)?.click();
     applyPrefs();
@@ -4995,6 +5031,7 @@ function v31FinalResetCheck(subject){
     applyPrefs();
     $('backup-message').textContent='백업 복원 완료. 테마·꾸미기·사운드까지 즉시 적용하려면 새로고침하세요.';
   }
+  window.TaekinV49SetDisplay=(name,value)=>{if(!['fontPct','uiPct'].includes(name))return; prefs[name]=bounded(value,name==='fontPct'?25:70,name==='fontPct'?200:130,5,100);savePrefs();};
   window.TaekinV32={getPreference:key=>prefs[key],exportSettings,importSettings,openSettings};
   applyPrefs();
 })();
@@ -5027,7 +5064,7 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
   let focusedBefore=null,helpGame='baseball';
   const textByGame={
     baseball:{goal:'서로 다른 숫자로 이루어진 정답을 추리해 입력하세요. 단계에 따라 자릿수와 기회 수가 달라져요.',controls:'입력창에 중복되지 않는 숫자를 입력하고 결과 확인을 누르세요. S는 숫자·자리 모두 일치, B는 숫자만 일치해요.',hint:'힌트는 추리에 필요한 정보를 알려주지만 사용 횟수에 따라 별점이 달라질 수 있어요. 정답 보기는 연습용이며 정상 클리어로 기록되지 않아요.'},
-    '2048':{goal:'같은 숫자 타일을 합쳐 목표 숫자 타일을 만들고, 단계에 표시된 점수 조건도 충족하세요.',controls:'PC에서는 방향키나 WASD, 스마트폰에서는 게임판 아래 방향 버튼을 누르세요. 같은 숫자 타일이 만나면 합쳐져요.',hint:'힌트는 추천 이동 방향을 알려줘요. 되돌리기는 횟수 제한 없이 이전 수로 돌아갈 수 있어요.'},
+    '2048':{goal:'같은 숫자 타일을 합쳐 목표 숫자 타일을 만들고, 단계에 표시된 점수 조건도 충족하세요.',controls:'PC에서는 방향키나 WASD, 스마트폰에서는 타일판을 위·아래·왼쪽·오른쪽으로 밀거나, 게임판 아래 방향 버튼을 누르세요. 같은 숫자 타일이 만나면 합쳐져요.',hint:'힌트는 추천 이동 방향을 알려줘요. 되돌리기는 횟수 제한 없이 이전 수로 돌아갈 수 있어요.'},
     mines:{goal:'숫자가 알려주는 주변 8칸의 지뢰 개수를 추리하며, 지뢰가 없는 칸을 모두 열면 성공해요.',controls:'PC는 왼쪽 클릭으로 열기, 오른쪽 클릭으로 깃발 표시. 스마트폰은 게임판 위의 「칸 열기 / 깃발 놓기」를 먼저 선택하세요.',hint:'첫 칸을 열기 전에는 지뢰가 배치되지 않으므로 먼저 한 칸을 열어야 해요. 이후 힌트가 논리적으로 확인한 안전 칸을 알려줘요.'},
     pipes:{goal:'시작점에서 나온 물이 모든 배관을 지나 출구로 흐르도록 파이프를 연결하세요. 열린 배관 끝도 없어야 해요.',controls:'파이프를 터치하거나 클릭해 90도 회전하세요. 회전 방향 버튼으로 시계·반시계를 선택하고 필요하면 되돌리세요.',hint:'힌트는 파이프 하나의 올바른 방향을 알려주거나 맞춰 줘요. 힌트 사용 뒤 이전 회전의 되돌리기 기록이 초기화될 수 있어요.'},
     shikaku:{goal:'게임판 전체를 직사각형으로 나누세요. 각 영역에 숫자 하나만 포함하고 넓이가 그 숫자와 같아야 해요.',controls:'시작 칸과 끝 칸을 차례로 누르거나, 손가락·마우스로 드래그해 직사각형을 지정하세요. 지우개로 잘못 만든 영역을 지울 수 있어요.',hint:'힌트로 영역의 위치를 확인할 수 있어요. 영역이 겹치거나 숫자가 둘 이상 포함되면 유효한 선택이 아니에요.'},
@@ -5048,6 +5085,8 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
   }
   function closeHelp(){if(dialog.open)dialog.close();}
   document.addEventListener('click',event=>{
+    const fold=document.getElementById('v49-help-menu');
+    if(event.target.closest('.v49-help-menu-links') && fold)fold.open=false;
     const target=event.target.closest('[data-v46-help]');
     if(!target)return;
     const game=target.dataset.v46Game||activeGame||'baseball';
@@ -5084,4 +5123,171 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
   };
   document.addEventListener('DOMContentLoaded',reveal,{once:true});
   window.addEventListener('taekin-achievements-updated',()=>queueMicrotask(reveal));
+})();
+
+/* ==================== v48: 모바일 화면 맞춤, 터치 조작 ==================== */
+(() => {
+  'use strict';
+  const $=id=>document.getElementById(id);
+  function isMobile(){return matchMedia('(max-width:720px)').matches;}
+  // 게임별 수동 배율은 그대로 두고, 화면 맞춤 옵션이 활성화되면 게임 진입시에만 적용합니다.
+  // 게임판 크기 버튼은 모바일에서 접어 높이를 절약합니다. 버튼은 언제든 다시 펼칠 수 있습니다.
+  const screenMedia=matchMedia('(max-width:720px)');
+  const sizeFolds=[];
+  for(const tools of document.querySelectorAll('#play-screen .v42-size-tools')){
+    const details=document.createElement('details');details.className='v48-size-fold';
+    const summary=document.createElement('summary');summary.textContent='🔍 게임판 확대 · 축소';
+    details.appendChild(summary);
+    tools.parentNode.insertBefore(details,tools);
+    details.appendChild(tools);
+    sizeFolds.push(details);
+  }
+  const syncFolds=()=>{sizeFolds.forEach(d=>{if(!screenMedia.matches)d.open=true;else d.open=false;});};
+  syncFolds();screenMedia.addEventListener?.('change',syncFolds);
+  const originalShowGame=showGame;
+  showGame=function(...args){
+    originalShowGame(...args);
+    if(isMobile() && window.TaekinV32?.getPreference?.('autoFit')!==false){
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        if(activeGame && document.getElementById('play-screen')?.classList.contains('hidden')===false){
+          v42FitBoardZoom(activeGame);
+        }
+      }));
+    }
+  };
+  // 시카쿠: 터치 스크롤에 의해 포인터가 취소되지 않도록 게임판이 포인터를 붙잡습니다.
+  const shikakuBoard=$('shikaku-board');
+  shikakuBoard.addEventListener('pointerdown',e=>{
+    if(e.isPrimary && e.button===0 && e.target.closest('.shikaku-cell')){
+      try{shikakuBoard.setPointerCapture(e.pointerId);}catch(_){}
+    }
+  });
+  // 블록 퍼즐: 트레이에서 손가락을 떼지 않고 판까지 움직여도 포인터를 유지합니다.
+  const tray=$('block-tray');
+  tray.addEventListener('pointerdown',e=>{
+    if(e.isPrimary && e.button===0 && e.target.closest('.block-piece:not(:disabled)')){
+      try{tray.setPointerCapture(e.pointerId);}catch(_){}
+    }
+  });
+  // 2048: 버튼 조작과 별개로 게임판을 스와이프하면 한 수를 움직입니다.
+  const board=$('g2048-board');
+  let swipe=null;
+  board.addEventListener('pointerdown',e=>{
+    if(!e.isPrimary || e.button!==0 || activeGame!=='2048')return;
+    swipe={id:e.pointerId,x:e.clientX,y:e.clientY};
+    try{board.setPointerCapture(e.pointerId);}catch(_){}
+  });
+  board.addEventListener('pointerup',e=>{
+    if(!swipe || swipe.id!==e.pointerId)return;
+    const dx=e.clientX-swipe.x,dy=e.clientY-swipe.y;
+    swipe=null;
+    if(Math.max(Math.abs(dx),Math.abs(dy))<23 || activeGame!=='2048')return;
+    move2048(Math.abs(dx)>Math.abs(dy)?(dx>0?'right':'left'):(dy>0?'down':'up'));
+    e.preventDefault();
+  });
+  board.addEventListener('pointercancel',()=>{swipe=null;});
+  // v50: 음악 선택은 화면 중앙의 독립 팝업에서 진행하여 설정창 스크롤과 분리합니다.
+})();
+
+
+/* ==================== v49: 모든 화면에서 사용하는 글씨 배율 + 바로 조절 ====================
+   기존 taekin_arcade_preferences_v32의 fontPct/uiPct만 이용합니다.
+   글씨 크기 대상은 요소별 원래 글씨 크기를 기억하여 100% 화면을 유지합니다.
+   게임판 숫자·이모지·음악 그림 등은 퍼즐 레이아웃을 보호하기 위해 제외합니다. */
+(() => {
+  'use strict';
+  const $=id=>document.getElementById(id);
+  const pref=window.TaekinV32;
+  if(!pref)return;
+  const root=document.documentElement, panel=$('v49-display-panel');
+  const launchers=[$('v49-header-display'),$('v49-float-display')];
+  const textSelector='button,a,h1,h2,h3,h4,h5,h6,p,small,label,summary,output,select,textarea,input,li,td,th,strong,b,em,blockquote,div,span';
+  const skip=':is(#mine-board,#pipe-board,#shikaku-board,#g2048-board,#block-board,#block-tray,.secret-slots,.card-preview,.hero-slide-art,.v47-perk-icon,.clear-emblem,.v19-profile-mark,.v26-nav-icon,.v26-avatar,.brand-mark,.game-icon,.music-track-art,.v25-cert-seal,.preview-tag)';
+  const measured=new Set();
+  function candidates(target){
+    if(target.nodeType!==1)return [];
+    const found=[];
+    if(target.matches(textSelector))found.push(target);
+    target.querySelectorAll(textSelector).forEach(el=>found.push(el));
+    return found;
+  }
+  function eligible(el){
+    if(el.closest('#v49-display-panel,#v49-float-display'))return false;
+    if(el.closest(skip))return false;
+    if(el.matches('div,span') && el.childElementCount>0)return false;
+    if(el.matches('input')&&!['text','number','password','search','email',''].includes(el.type))return false;
+    if(el.matches('.brand-mark,.game-icon,.v26-nav-icon,.v26-avatar,.arrow-main,.music-track-art,.clear-emblem'))return false;
+    if(!el.matches('input,select,textarea')&&!el.textContent.trim())return false;
+    return !!el.closest('.site-shell,dialog:not(#v49-display-panel)');
+  }
+  function measure(el){
+    if(measured.has(el)||!eligible(el))return;
+    const font=parseFloat(getComputedStyle(el).fontSize);
+    if(!Number.isFinite(font)||font<=0)return;
+    el.style.setProperty('--v49-base-px',font+'px');
+    el.dataset.v49FontBase='';
+    measured.add(el);
+  }
+  function scan(target){
+    const prior=root.style.getPropertyValue('--v49-font-scale')||'1';
+    root.style.setProperty('--v49-font-scale','1');
+    try{for(const el of candidates(target))measure(el);}
+    finally{root.style.setProperty('--v49-font-scale',prior);}
+  }
+  // v48에서 제한된 CSS 규칙 대신 하나의 공통 배율을 적용합니다.
+  root.style.setProperty('--v48-font-scale','1');
+  root.style.setProperty('--v49-font-scale',String((pref.getPreference('fontPct')||100)/100));
+  scan(document.body);
+  let pending=[],scheduled=false;
+  const observer=new MutationObserver(mutations=>{
+    for(const change of mutations)for(const node of change.addedNodes){
+      if(node.nodeType!==1)continue;
+      if(node.closest('#mine-board,#pipe-board,#shikaku-board,#g2048-board,#block-board,#block-tray'))continue;
+      pending.push(node);
+    }
+    if(!scheduled&&pending.length){scheduled=true;requestAnimationFrame(()=>{
+      scheduled=false;const nodes=pending;pending=[];for(const node of nodes)if(node.isConnected)scan(node);
+    });}
+  });
+  observer.observe(document.body,{childList:true,subtree:true});
+  const clamp=(x,lo,hi)=>Math.min(hi,Math.max(lo,Math.round(Number(x)/5)*5));
+  function sync(){
+    const font=pref.getPreference('fontPct')||100,ui=pref.getPreference('uiPct')||100;
+    root.style.setProperty('--v49-font-scale',String(font/100));
+    $('v49-font-range').value=font;$('v49-font-value').textContent=font+'%';
+    $('v49-ui-range').value=ui;$('v49-ui-value').textContent=ui+'%';
+  }
+  function update(key,v){window.TaekinV49SetDisplay?.(key,clamp(v,key==='fontPct'?25:70,key==='fontPct'?200:130));}
+  $('v49-font-range').addEventListener('input',e=>update('fontPct',e.target.value));
+  $('v49-ui-range').addEventListener('input',e=>update('uiPct',e.target.value));
+  document.querySelectorAll('[data-v49-target][data-v49-step]').forEach(b=>b.addEventListener('click',()=>{
+    const font=b.dataset.v49Target==='font';update(font?'fontPct':'uiPct',Number(pref.getPreference(font?'fontPct':'uiPct'))+Number(b.dataset.v49Step));
+  }));
+  $('v49-font-reset').addEventListener('click',()=>update('fontPct',100));
+  $('v49-ui-reset').addEventListener('click',()=>update('uiPct',100));
+  $('v49-reset-both').addEventListener('click',()=>{update('fontPct',100);update('uiPct',100);});
+  function hide(){panel.hidden=true;launchers.forEach(b=>b.setAttribute('aria-expanded','false'));}
+  function show(){panel.hidden=false;launchers.forEach(b=>b.setAttribute('aria-expanded','true'));sync();$('v49-font-range').focus({preventScroll:true});}
+  launchers.forEach(b=>b.addEventListener('click',()=>panel.hidden?show():hide()));
+  $('v49-panel-close').addEventListener('click',hide);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden){hide();e.stopPropagation();}});
+  document.addEventListener('pointerdown',e=>{
+    if(!panel.hidden&&!panel.contains(e.target)&&!launchers.some(b=>b.contains(e.target)))hide();
+  });
+  window.addEventListener('taekin-v49-display-sync',sync);
+  // CSS 미디어쿼리 변경 시 원래 글씨 크기를 다시 측정해 기기 회전 대응.
+  let resizeHandle;
+  window.addEventListener('resize',()=>{
+    clearTimeout(resizeHandle);
+    resizeHandle=setTimeout(()=>{
+      const old=[...measured].filter(el=>el.isConnected);
+      const previous=root.style.getPropertyValue('--v49-font-scale')||'1';
+      root.style.setProperty('--v49-font-scale','1');
+      for(const el of old)el.removeAttribute('data-v49-font-base');
+      for(const el of old){const font=parseFloat(getComputedStyle(el).fontSize);if(font>0)el.style.setProperty('--v49-base-px',font+'px');el.dataset.v49FontBase='';}
+      root.style.setProperty('--v49-font-scale',previous);
+    },180);
+  });
+  sync();
+  window.TaekinV49Display={sync,scan,measuredCount:()=>measured.size};
 })();

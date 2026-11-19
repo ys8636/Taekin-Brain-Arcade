@@ -5,7 +5,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="dark light" name="color-scheme"/>
-<title>TAEKIN BRAIN ARCADE | v47</title>
+<title>TAEKIN BRAIN ARCADE | v50</title>
 <meta name="description" content="TAEKIN BRAIN ARCADE에서 숫자야구, 2048, 지뢰찾기, 파이프 연결, 시카쿠, 블록 퍼즐 6종과 총 1,500단계를 즐겨보세요.">
 <meta name="theme-color" content="#172124">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -26,7 +26,7 @@
 <span class="brand-text">TAEKIN <strong>BRAIN ARCADE</strong><small>A PUZZLE COLLECTION</small></span>
 </button><nav aria-label="사이트 주요 메뉴" class="arcade-nav"><button aria-current="page" class="arcade-nav-btn active" data-destination="games" type="button"><span aria-hidden="true" class="v26-nav-icon">🎮</span><span class="v26-nav-label">게임</span></button><button aria-current="false" class="arcade-nav-btn" data-destination="challenges" type="button"><span aria-hidden="true" class="v26-nav-icon">🎯</span><span class="v26-nav-label">도전</span></button><button aria-current="false" class="arcade-nav-btn" data-destination="records" type="button"><span aria-hidden="true" class="v26-nav-icon">📊</span><span class="v26-nav-label">내 기록</span></button><button aria-current="false" class="arcade-nav-btn" data-destination="profile" type="button"><span aria-hidden="true" class="v26-nav-icon">👤</span><span class="v26-nav-label">프로필</span></button><button aria-current="false" class="arcade-nav-btn" data-destination="more" type="button"><span aria-hidden="true" class="v26-nav-icon">🏆</span><span class="v26-nav-label">더보기</span></button></nav>
 <div class="top-actions"><button class="v26-profile-chip" id="v26-header-profile" title="내 프로필" type="button"><span class="sr-only">프로필 · </span><span aria-hidden="true" class="v26-avatar">✦</span><span class="v26-profile-text"><b id="v26-header-level">플레이어 · LV. 1</b><small id="v26-header-title">견습 탐험가</small></span></button>
-<button id="v32-save-status" class="v32-save-status" type="button" aria-label="기록 저장 상태와 백업 메뉴 보기" title="내 기록 저장 상태">◌ 확인 중</button><button id="v32-settings-open" class="v32-settings-button" type="button" aria-haspopup="dialog" aria-controls="v32-settings-dialog">⚙ 설정</button><div class="display-settings-wrap">
+<button id="v32-save-status" class="v32-save-status" type="button" aria-label="기록 저장 상태와 백업 메뉴 보기" title="내 기록 저장 상태">◌ 확인 중</button><button id="v49-header-display" class="v49-header-display" type="button" aria-controls="v49-display-panel" aria-expanded="false">🔠 글씨·화면</button><button id="v32-settings-open" class="v32-settings-button" type="button" aria-haspopup="dialog" aria-controls="v32-settings-dialog">⚙ 설정</button><div class="display-settings-wrap">
 <button aria-controls="display-settings" aria-expanded="false" class="display-settings-toggle" id="display-settings-toggle" type="button">화면 설정</button>
 <div class="display-settings" hidden="" id="display-settings">
 <div class="display-settings-head"><strong>화면 설정</strong><button aria-label="화면 설정 닫기" id="display-settings-close" type="button">✕</button></div>
@@ -55,7 +55,7 @@
 <option value="space_lounge">스페이스 라운지</option>
 </select>
 <div class="music-picker" id="music-picker">
-<button aria-controls="music-track-menu" aria-expanded="false" aria-haspopup="listbox" aria-label="배경음악 곡 선택창 열기" class="music-picker-button" id="music-picker-button" type="button">
+<button aria-controls="music-track-menu" aria-expanded="false" aria-haspopup="dialog" aria-label="배경음악 선택 창 열기" class="music-picker-button" id="music-picker-button" type="button">
 <span aria-hidden="true" class="music-current-icon" id="music-current-icon">🎮</span>
 <span class="music-current-info">
 <strong id="music-current-name">기본 아케이드</strong>
@@ -63,15 +63,16 @@
 </span>
 <span aria-hidden="true" class="music-current-chevron">⌄</span>
 </button>
-<div aria-label="배경음악 목록" class="music-track-menu" hidden="" id="music-track-menu" role="listbox">
+<dialog class="music-track-menu" hidden="" id="music-track-menu" aria-labelledby="v50-music-heading">
 <div class="music-menu-header">
-<span class="music-menu-overline">SOUNDTRACK LIBRARY</span>
-<div class="music-menu-heading"><strong>🎧 음악 라이브러리</strong><span>6 TRACKS</span></div>
-<p>게임 분위기에 맞는 음악을 골라보세요.</p>
+<div class="v50-music-top"><span class="music-menu-overline">SOUNDTRACK LIBRARY</span><button type="button" id="v50-music-close" aria-label="음악 선택 창 닫기">✕ 닫기</button></div>
+<div class="music-menu-heading"><strong id="v50-music-heading">🎧 음악 선택</strong><span>6곡</span></div>
+<p>원하는 음악을 누르면 바로 선택돼요.</p>
+<p class="v50-music-active" id="v50-music-active" aria-live="polite">현재 선택: 기본 아케이드</p>
 </div>
-<div class="music-track-options" id="music-track-options"></div>
-<div class="music-menu-foot">곡을 선택하면 재생 중일 때 즉시 전환돼요.</div>
-</div>
+<div class="music-track-options" id="music-track-options" role="listbox" aria-label="배경음악 6곡"></div>
+<div class="music-menu-foot">곡을 선택하면 창이 닫히고 음악이 변경됩니다.</div>
+</dialog>
 </div>
 <button aria-pressed="false" class="music-toggle" id="music-toggle" title="배경음악 켜기/끄기" type="button">♪ 음악 켜기</button>
 <label class="sr-only" for="music-volume">배경음악 음량</label>
@@ -104,7 +105,7 @@
 <div aria-label="게임" class="v26-view" data-v26-page="games" id="v26-view-games" role="region"><h1 class="sr-only">TAEKIN BRAIN ARCADE — 게임 선택</h1>
 <section aria-label="체험 및 이어하기" class="v19-welcome">
 <div><span class="eyebrow">QUICK START</span><h2>바로 플레이하기</h2><p>처음 방문했다면 6종 체험 모드부터, 이어서 하고 싶다면 저장한 게임을 선택하세요.</p></div>
-<div class="v19-welcome-actions"><button class="btn btn-primary" id="v19-demo-start" type="button">▶ 게임 6종 체험하기</button><button class="btn btn-secondary" id="v19-resume-last" type="button">마지막 게임 이어하기</button><button class="btn btn-secondary v31-help-btn" id="v31-help-open" type="button">❔ 처음 이용 가이드</button></div>
+<div class="v19-welcome-actions"><button class="btn btn-primary" id="v19-demo-start" type="button">▶ 게임 6종 체험하기</button><button class="btn btn-secondary" id="v19-resume-last" type="button">마지막 게임 이어하기</button><button class="btn btn-secondary v31-help-btn" id="v31-help-open" type="button">📖 처음 이용 가이드</button></div>
 <div aria-live="polite" class="v19-saves" id="v19-save-list"></div>
 </section><div class="v47-showcase-label"><strong>🎞 오늘의 추천 게임</strong><span>자동으로 게임이 바뀌어요 · 일시정지 가능</span></div><section aria-label="게임 소개 슬라이드" aria-roledescription="캐러셀" class="hero-carousel" id="hero-carousel">
 <div aria-live="off" class="hero-slides" id="hero-slides"></div>
@@ -151,17 +152,17 @@
 </button>
 </div>
 <section class="v46-home-guides" aria-label="게임 설명 바로 보기">
-  <div class="v46-home-guides-head"><strong>❔ 이 게임은 뭔가요?</strong><span>설명 버튼을 눌러 규칙을 알아보고 게임을 시작하세요.</span></div>
+  <div class="v46-home-guides-head"><strong>📖 게임별 도움말</strong><span>설명 버튼을 눌러 규칙을 알아보고 게임을 시작하세요.</span></div>
   <div class="v46-home-guide-links">
-    <button type="button" data-v46-help="game" data-v46-game="baseball">⚾ 숫자야구 <span>?</span></button>
-    <button type="button" data-v46-help="game" data-v46-game="2048">🔢 2048 <span>?</span></button>
-    <button type="button" data-v46-help="game" data-v46-game="mines">💣 지뢰찾기 <span>?</span></button>
-    <button type="button" data-v46-help="game" data-v46-game="pipes">🔧 파이프 <span>?</span></button>
-    <button type="button" data-v46-help="game" data-v46-game="shikaku">▦ 시카쿠 <span>?</span></button>
-    <button type="button" data-v46-help="game" data-v46-game="blocks">🧩 블록 퍼즐 <span>?</span></button>
+    <button type="button" data-v46-help="game" data-v46-game="baseball">⚾ 숫자야구 <span>도움말</span></button>
+    <button type="button" data-v46-help="game" data-v46-game="2048">🔢 2048 <span>도움말</span></button>
+    <button type="button" data-v46-help="game" data-v46-game="mines">💣 지뢰찾기 <span>도움말</span></button>
+    <button type="button" data-v46-help="game" data-v46-game="pipes">🔧 파이프 <span>도움말</span></button>
+    <button type="button" data-v46-help="game" data-v46-game="shikaku">▦ 시카쿠 <span>도움말</span></button>
+    <button type="button" data-v46-help="game" data-v46-game="blocks">🧩 블록 퍼즐 <span>도움말</span></button>
   </div>
-</section><div aria-label="내 진행 상황" class="v26-home-summary"><div class="v26-home-summary-text"><span class="v26-mini-overline">나의 진행 상황</span><strong id="v26-home-progress">0 / 1,500단계</strong><span id="v26-home-goal">오늘의 목표는 도전 메뉴에서 확인할 수 있어요.</span></div><button class="v26-jump" data-v26-jump="records" type="button">기록 자세히 보기</button></div><details class="v26-guide-fold"><summary>❔ 처음 이용하시나요? 게임 방법 3단계 보기</summary><section aria-label="사이트 이용 방법" class="quick-guide">
-<div class="quick-guide-title"><strong>처음 이용하시나요?</strong><span>처음 방문하셨다면 아래 순서로 진행하세요.</span><button class="tour-entry" id="tour-first" type="button">? 게임 체험 가이드</button></div>
+</section><div aria-label="내 진행 상황" class="v26-home-summary"><div class="v26-home-summary-text"><span class="v26-mini-overline">나의 진행 상황</span><strong id="v26-home-progress">0 / 1,500단계</strong><span id="v26-home-goal">오늘의 목표는 도전 메뉴에서 확인할 수 있어요.</span></div><button class="v26-jump" data-v26-jump="records" type="button">기록 자세히 보기</button></div><details class="v26-guide-fold"><summary>📖 처음 이용하시나요? 게임 방법 3단계 보기</summary><section aria-label="사이트 이용 방법" class="quick-guide">
+<div class="quick-guide-title"><strong>처음 이용하시나요?</strong><span>처음 방문하셨다면 아래 순서로 진행하세요.</span><button class="tour-entry" id="tour-first" type="button">📖 게임 체험 가이드</button></div>
 <div class="quick-guide-steps">
 <div><b>01</b><span><strong>게임 선택</strong><small>아래 6개 게임 중 하나를 클릭</small></span></div>
 <div><b>02</b><span><strong>단계 또는 난이도 선택</strong><small>단계 도전·자유 플레이 지원</small></span></div>
@@ -246,8 +247,13 @@
 </section></div></section>
 <section aria-live="off" class="screen hidden" id="play-screen">
 <div class="game-heading">
-<div><button class="back-link" id="back-to-home" type="button">전체 게임으로 돌아가기</button><div class="game-title-line"><span id="active-emoji">⚾</span><h1 id="active-title">숫자야구</h1></div><p class="game-description" id="active-description"></p></div>
-<div class="play-title-tools"><button class="btn btn-secondary v41-jump-board" id="v41-jump-board" type="button">🎮 게임판 바로가기</button><button class="tour-entry" id="game-tutorial" type="button">❔ 3단계 튜토리얼</button><button class="btn btn-secondary v19-pause-btn" id="v19-pause" type="button">Ⅱ 일시정지</button><button class="btn btn-secondary" id="v19-save-now" type="button">▣ 현재 판 저장</button><button class="btn btn-secondary" id="v19-resume-game" type="button">이어하기</button><span class="game-index" id="game-counter">01 / 06</span></div>
+<div><button class="back-link" id="back-to-home" type="button">전체 게임으로 돌아가기</button><div class="game-title-line"><span id="active-emoji">⚾</span><h1 id="active-title">숫자야구</h1>
+<details class="v49-help-menu" id="v49-help-menu"><summary>📖 도움말</summary><div class="v49-help-menu-links" aria-label="게임 도움말 목록">
+<button type="button" data-v46-help="game">게임 소개</button><button type="button" data-v46-help="controls">조작 방법</button>
+<button type="button" data-v46-help="goal">단계 목표</button><button type="button" data-v46-help="hint">힌트 안내</button>
+<button type="button" data-v46-help="stages">단계 선택</button><button type="button" data-v46-help="zoom">게임판 크기</button>
+</div></details></div><p class="game-description" id="active-description"></p></div>
+<div class="play-title-tools"><button class="btn btn-secondary v41-jump-board" id="v41-jump-board" type="button">🎮 게임판 바로가기</button><button class="tour-entry" id="game-tutorial" type="button">📖 조작 튜토리얼</button><button class="btn btn-secondary v19-pause-btn" id="v19-pause" type="button">Ⅱ 일시정지</button><button class="btn btn-secondary" id="v19-save-now" type="button">▣ 현재 판 저장</button><button class="btn btn-secondary" id="v19-resume-game" type="button">이어하기</button><span class="game-index" id="game-counter">01 / 06</span></div>
 </div>
 
 <div class="play-layout">
@@ -260,22 +266,14 @@
 </section>
 <details class="v41-tier-fold" id="v41-tier-fold"><summary>🎯 난이도 선택 펼치기 · 5개 난이도</summary><section aria-label="난이도 선택 · 난이도마다 50단계" class="v29-tier-switch" id="v29-tier-switch"><div class="v29-tier-heading"><strong>난이도를 선택하세요</strong><small>어떤 난이도든 바로 시작 · 각 난이도 1~50단계 별도 기록</small></div><div class="v29-tier-buttons"><button data-tier="easy" type="button"><b>🌱 쉬움</b><small>0/50</small></button><button data-tier="normal" type="button"><b>🔷 보통</b><small>0/50</small></button><button data-tier="hard" type="button"><b>⚡ 어려움</b><small>0/50</small></button><button data-tier="extreme" type="button"><b>💜 매우 어려움</b><small>0/50</small></button><button data-tier="expert" type="button"><b>🔥 전문가</b><small>0/50</small></button></div></section></details><div aria-live="polite" class="stage-quick" id="stage-quick">
 <div><strong id="stage-quick-name">1단계 · 입문</strong><span id="stage-quick-goal">현재 단계의 목표를 확인하세요.</span></div>
-<button type="button" class="v46-help-icon v46-stage-help" data-v46-help="stages" aria-label="단계 선택과 난이도가 뭔가요?">?</button><button class="btn btn-secondary" id="stage-open-button" type="button">전체 단계 선택 ↓</button>
+<button class="btn btn-secondary" id="stage-open-button" type="button">전체 단계 선택 ↓</button>
 </div>
-<section class="v46-what-bar" aria-label="게임 도움말">
-  <div class="v46-what-intro"><span class="v46-what-mark" aria-hidden="true">?</span><strong>이건 뭔가요?</strong><small>궁금한 버튼을 눌러 설명을 확인하세요.</small></div>
-  <div class="v46-what-links">
-    <button type="button" data-v46-help="game">게임 소개</button>
-    <button type="button" data-v46-help="controls">🎮 조작 방법</button>
-    <button type="button" data-v46-help="goal">🎯 단계 목표</button>
-    <button type="button" data-v46-help="hint">💡 힌트</button>
-  </div>
-</section>
+
 <!-- 숫자야구 -->
 <section aria-label="숫자야구" class="game-panel hidden" id="panel-baseball">
 <div class="toolbar"><label for="bb-difficulty">난이도</label><select aria-label="숫자야구 난이도" id="bb-difficulty"><option value="easy">쉬움 · 50단계</option><option selected="" value="normal">보통 · 50단계</option><option value="hard">어려움 · 50단계</option><option value="extreme">매우 어려움 · 50단계</option><option value="expert">전문가 · 50단계</option></select><span class="stat-chip" id="bb-attempts">도전 0회</span></div>
 <div class="v42-size-tools" data-v42-game="baseball" role="group" aria-label="숫자야구 게임판 크기 조절">
-  <span class="v42-size-title">🔍 게임판 크기 <small>게임별로 따로 기억</small></span><button type="button" class="v46-help-icon" data-v46-help="zoom" aria-label="게임판 크기 조절이 뭔가요?" title="화면 크기 조절 도움말">?</button>
+  <span class="v42-size-title">🔍 게임판 크기 <small>게임별로 따로 기억</small></span>
   <div class="v42-size-buttons">
     <button type="button" data-v42-action="out" aria-label="숫자야구 축소">−</button>
     <output data-v42-output="baseball" aria-live="polite">100%</output>
@@ -298,7 +296,7 @@
 <div class="toolbar"><label for="g2048-difficulty">난이도</label><select id="g2048-difficulty"><option value="easy">쉬움 · 50단계</option><option selected="" value="normal">보통 · 50단계</option><option value="hard">어려움 · 50단계</option><option value="extreme">매우 어려움 · 50단계</option><option value="expert">전문가 · 50단계</option></select></div>
 <div class="score-grid"><div class="score-card"><span>SCORE</span><strong id="g2048-score">0</strong></div><div class="score-card"><span>BEST</span><strong id="g2048-best">0</strong></div><div class="score-card"><span>되돌리기</span><strong id="g2048-undo-count">0</strong></div></div>
 <div class="v42-size-tools" data-v42-game="2048" role="group" aria-label="2048 게임판 크기 조절">
-  <span class="v42-size-title">🔍 게임판 크기 <small>게임별로 따로 기억</small></span><button type="button" class="v46-help-icon" data-v46-help="zoom" aria-label="게임판 크기 조절이 뭔가요?" title="화면 크기 조절 도움말">?</button>
+  <span class="v42-size-title">🔍 게임판 크기 <small>게임별로 따로 기억</small></span>
   <div class="v42-size-buttons">
     <button type="button" data-v42-action="out" aria-label="2048 축소">−</button>
     <output data-v42-output="2048" aria-live="polite">100%</output>
@@ -319,7 +317,7 @@
 <div aria-label="지뢰찾기 조작 모드" class="mode-switch" role="group"><button class="mode-btn active" id="mine-mode-open" type="button">☝ 칸 열기</button><button class="mode-btn" id="mine-mode-flag" type="button">⚑ 깃발 놓기</button></div>
 <p class="v41-mine-mode-note" id="v41-mine-mode-note" aria-live="polite">☝ 열기 모드: 칸을 누르면 열려요.</p>
 <div class="v42-size-tools" data-v42-game="mines" role="group" aria-label="지뢰찾기 게임판 크기 조절">
-  <span class="v42-size-title">🔍 게임판 크기 <small>게임별로 따로 기억</small></span><button type="button" class="v46-help-icon" data-v46-help="zoom" aria-label="게임판 크기 조절이 뭔가요?" title="화면 크기 조절 도움말">?</button>
+  <span class="v42-size-title">🔍 게임판 크기 <small>게임별로 따로 기억</small></span>
   <div class="v42-size-buttons">
     <button type="button" data-v42-action="out" aria-label="지뢰찾기 축소">−</button>
     <output data-v42-output="mines" aria-live="polite">100%</output>
@@ -343,7 +341,7 @@
 </div>
 <div aria-label="물이 도달한 파이프 비율" class="pipe-progress"><div class="pipe-progress-fill" id="pipe-progress-fill"></div></div>
 <div class="v42-size-tools" data-v42-game="pipes" role="group" aria-label="파이프 게임판 크기 조절">
-  <span class="v42-size-title">🔍 게임판 크기 <small>게임별로 따로 기억</small></span><button type="button" class="v46-help-icon" data-v46-help="zoom" aria-label="게임판 크기 조절이 뭔가요?" title="화면 크기 조절 도움말">?</button>
+  <span class="v42-size-title">🔍 게임판 크기 <small>게임별로 따로 기억</small></span>
   <div class="v42-size-buttons">
     <button type="button" data-v42-action="out" aria-label="파이프 축소">−</button>
     <output data-v42-output="pipes" aria-live="polite">100%</output>
@@ -368,7 +366,7 @@
 <div class="score-grid"><div class="score-card"><span>완성 영역</span><strong id="shikaku-count">0 / 6</strong></div><div class="score-card"><span>힌트 사용</span><strong id="shikaku-hints">0</strong></div></div>
 <div class="v19-shikaku-preview" id="v19-shikaku-preview">영역 선택: 시작 칸을 클릭하거나 드래그하세요.</div>
 <div class="v42-size-tools" data-v42-game="shikaku" role="group" aria-label="시카쿠 게임판 크기 조절">
-  <span class="v42-size-title">🔍 게임판 크기 <small>게임별로 따로 기억</small></span><button type="button" class="v46-help-icon" data-v46-help="zoom" aria-label="게임판 크기 조절이 뭔가요?" title="화면 크기 조절 도움말">?</button>
+  <span class="v42-size-title">🔍 게임판 크기 <small>게임별로 따로 기억</small></span>
   <div class="v42-size-buttons">
     <button type="button" data-v42-action="out" aria-label="시카쿠 축소">−</button>
     <output data-v42-output="shikaku" aria-live="polite">100%</output>
@@ -398,7 +396,7 @@
 <!-- 125% 확대에서도 게임판과 선택 블록을 동시에 볼 수 있는 전용 레이아웃 -->
 <div class="block-play-area">
 <div class="block-board-zone"><div class="v42-size-tools" data-v42-game="blocks" role="group" aria-label="블록 퍼즐 게임판 크기 조절">
-  <span class="v42-size-title">🔍 게임판 크기 <small>게임별로 따로 기억</small></span><button type="button" class="v46-help-icon" data-v46-help="zoom" aria-label="게임판 크기 조절이 뭔가요?" title="화면 크기 조절 도움말">?</button>
+  <span class="v42-size-title">🔍 게임판 크기 <small>게임별로 따로 기억</small></span>
   <div class="v42-size-buttons">
     <button type="button" data-v42-action="out" aria-label="블록 퍼즐 축소">−</button>
     <output data-v42-output="blocks" aria-live="polite">100%</output>
@@ -411,7 +409,7 @@
 <div aria-label="블록 퍼즐 10x10 게임판" class="block-board" id="block-board" role="group"></div></div>
 </div>
 <div class="block-piece-zone">
-<div class="block-piece-heading"><h3>놓을 블록 3개</h3><span>드래그하거나 선택 후 게임판 클릭</span></div>
+<div class="block-piece-heading"><h3>놓을 블록 3개</h3><span>손가락으로 끌어 놓거나 블록 선택 → 게임판 터치</span></div>
 <p class="v41-block-preview-note" id="v41-block-preview-note" role="status">블록을 먼저 선택하세요. 초록 칸은 배치 가능, 빨간 칸은 배치 불가입니다.</p>
 <div aria-label="블록 선택" class="block-tray" id="block-tray"></div>
 </div>
@@ -445,8 +443,23 @@
 </div>
 </section>
 </main>
-<footer class="footer"><span>TAEKIN BRAIN ARCADE · 플레이어 닉네임 설정 지원</span><span>HTML · CSS · JavaScript · v47</span></footer>
+<footer class="footer"><span>TAEKIN BRAIN ARCADE · 플레이어 닉네임 설정 지원</span><span>HTML · CSS · JavaScript · v49</span></footer>
 </div>
+<!-- 빠른 글씨·화면 조절: 설정 팝업을 열지 않아도 즉시 조절 가능 -->
+<button type="button" id="v49-float-display" class="v49-float-display" aria-controls="v49-display-panel" aria-expanded="false" aria-label="글씨 크기와 화면 배율 조절">🔠 글씨·화면</button>
+<aside id="v49-display-panel" class="v49-display-panel" role="region" aria-labelledby="v49-panel-title" hidden>
+  <div class="v49-display-head"><strong id="v49-panel-title">🔠 글씨·화면 바로 조절</strong><button type="button" id="v49-panel-close" aria-label="조절창 닫기">✕</button></div>
+  <p>게임 화면을 보면서 바로 조절할 수 있어요. 이 조절창의 글씨는 항상 읽을 수 있는 크기로 유지됩니다.</p>
+  <div class="v49-display-control">
+    <label for="v49-font-range">글씨 크기 <output id="v49-font-value" for="v49-font-range">100%</output></label>
+    <div class="v49-display-inputs"><button type="button" data-v49-target="font" data-v49-step="-10" aria-label="글씨 10퍼센트 축소">−</button><input id="v49-font-range" type="range" min="25" max="200" step="5" value="100"/><button type="button" data-v49-target="font" data-v49-step="10" aria-label="글씨 10퍼센트 확대">＋</button></div>
+  </div>
+  <div class="v49-display-control">
+    <label for="v49-ui-range">전체 화면 배율 <output id="v49-ui-value" for="v49-ui-range">100%</output></label>
+    <div class="v49-display-inputs"><button type="button" data-v49-target="ui" data-v49-step="-5" aria-label="전체 화면 5퍼센트 축소">−</button><input id="v49-ui-range" type="range" min="70" max="130" step="5" value="100"/><button type="button" data-v49-target="ui" data-v49-step="5" aria-label="전체 화면 5퍼센트 확대">＋</button></div>
+  </div>
+  <div class="v49-display-footer"><button type="button" id="v49-font-reset">글씨 100%</button><button type="button" id="v49-ui-reset">화면 100%</button><button type="button" id="v49-reset-both">모두 기본</button></div>
+</aside>
 <dialog aria-labelledby="tutorial-title" class="tutorial-dialog" id="tutorial-dialog">
 <div class="tutorial-shell">
 <div class="tutorial-head"><span class="eyebrow">HOW TO PLAY · INTERACTIVE GUIDE</span><button aria-label="튜토리얼 닫기" class="tutorial-close" id="tutorial-close" type="button">✕</button></div>
@@ -460,7 +473,7 @@
 </dialog>
 <dialog class="v46-help-dialog" id="v46-help-dialog" aria-labelledby="v46-help-title" aria-describedby="v46-help-text">
   <div class="v46-help-shell">
-    <div class="v46-help-head"><span>❔ 이건 뭔가요?</span><button type="button" id="v46-help-close" aria-label="설명 닫기">✕</button></div>
+    <div class="v46-help-head"><span>📖 게임 도움말</span><button type="button" id="v46-help-close" aria-label="설명 닫기">✕</button></div>
     <h2 id="v46-help-title">도움말</h2>
     <p id="v46-help-text"></p>
     <p class="v46-help-extra" id="v46-help-extra"></p>
@@ -536,7 +549,8 @@
         <h3 id="v32-visual-title">🎨 화면과 가독성</h3>
         <div class="v32-setting-row"><div><strong>화면 테마</strong><small>밝고 어두운 배경 전환</small></div><div class="v32-segments"><button type="button" data-v32-theme="dark">🌙 다크</button><button type="button" data-v32-theme="light">☀ 라이트</button></div></div>
         <div class="v32-setting-row"><div><strong>화면 밀도</strong><small>카드와 콘텐츠 사이 간격</small></div><div class="v32-segments"><button type="button" data-v32-density="compact">좁게</button><button type="button" data-v32-density="normal">기본</button><button type="button" data-v32-density="wide">넓게</button></div></div>
-        <div class="v32-setting-row"><div><strong>글씨 크기</strong><small>설명과 버튼을 편하게 읽기</small></div><div class="v32-segments"><button type="button" data-v32-font="normal">기본</button><button type="button" data-v32-font="large">크게</button></div></div>
+<label class="v32-setting-toggle"><span><strong>모바일 게임 집중 배치</strong><small>설명과 여백을 줄이고 블록 퍼즐의 블록 선택판을 게임판 바로 위에 표시합니다.</small></span><input type="checkbox" id="v48-compact-game" role="switch" checked></label>
+<label class="v32-setting-toggle"><span><strong>게임 시작 시 화면 맞춤</strong><small>작은 화면에서 게임판이 잘리지 않게 자동으로 크기를 조정합니다. 게임별 수동 확대도 계속 사용할 수 있어요.</small></span><input type="checkbox" id="v48-auto-fit" role="switch" checked></label>
         <label class="v32-setting-toggle"><span><strong>큰 조작 버튼</strong><small>스마트폰에서 버튼을 더 쉽게 누르기</small></span><input type="checkbox" id="v32-large-targets" role="switch"></label>
         <label class="v32-setting-toggle"><span><strong>색상 구분 강화</strong><small>기호와 테두리로 상태 구분</small></span><input type="checkbox" id="v32-colorblind" role="switch"></label>
         <label class="v32-setting-toggle"><span><strong>움직임 줄이기</strong><small>반짝임·전환 애니메이션 최소화</small></span><input type="checkbox" id="v32-motion" role="switch"></label>
@@ -547,7 +561,7 @@
         <label class="v32-setting-toggle"><span><strong>게임 조작 튜토리얼 버튼</strong><small>불필요하면 플레이 화면에서 숨기기</small></span><input type="checkbox" id="v32-show-game-tutorial" role="switch"></label>
         <label class="v32-setting-toggle"><span><strong>게임 나가기 확인</strong><small>플레이 도중 메뉴 이동을 실수로 누르는 것 방지</small></span><input type="checkbox" id="v32-leave-confirm" role="switch"></label>
         <label class="v32-setting-toggle"><span><strong>모바일 버튼 여유 공간</strong><small>큰 터치 영역과 스크롤 충돌 감소</small></span><input type="checkbox" id="v32-touch-spacing" role="switch"></label>
-        <button class="v32-action-link" id="v32-guide-reopen" type="button">❔ 첫 방문 가이드 다시 보기</button>
+        <button class="v32-action-link" id="v32-guide-reopen" type="button">📖 첫 방문 가이드 다시 보기</button>
       </section>
       <section class="v32-setting-section" aria-labelledby="v32-sound-title">
         <h3 id="v32-sound-title">🎵 배경음악과 효과음</h3>
