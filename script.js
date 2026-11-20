@@ -1920,6 +1920,11 @@ window.addEventListener('pointermove',event=>{
 window.addEventListener('pointerup',event=>{
   if(!blockPointer||event.pointerId!==blockPointer.id)return;
   const drag=blockPointer;blockPointer=null;
+  // 화면 전환/게임 종료 중 남아 있는 포인터가 다른 게임판에 적용되지 않게 합니다.
+  if(activeGame!=='blocks'||blockGame.state!=='playing'){
+    clearBlockGhost();blockGame.hover=null;
+    return;
+  }
   // 마지막 pointermove가 생략되어도 손을 놓은 위치로 판정합니다.
   const target=v51BlockTarget(event.clientX,event.clientY,drag.index,drag.pointerType);
   clearBlockGhost();
@@ -1940,6 +1945,14 @@ window.addEventListener('pointercancel',()=>{
   blockPointer=null;clearBlockGhost();blockGame.hover=null;
   if(activeGame==='blocks')updateBlockPreview();
 });
+// 모바일에서 앱을 전환하거나 브라우저가 포커스를 잃으면 남은 드래그 그림을 정리합니다.
+function v53CancelBlockDrag(){
+  if(!blockPointer&&!blockGhost)return;
+  blockPointer=null;clearBlockGhost();blockGame.hover=null;
+  if(activeGame==='blocks')updateBlockPreview();
+}
+window.addEventListener('blur',v53CancelBlockDrag);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)v53CancelBlockDrag();});
 
 /* ====================== 난이도별 50단계 + 6종 통합 100라운드 ====================== */
 const ARCADE_ORDER=['baseball','2048','mines','pipes','shikaku','blocks'];
@@ -2517,8 +2530,13 @@ document.addEventListener("pointerup", (event) => {
   const drag = shikaku.dragging;
   if (!drag || drag.pointer !== event.pointerId) return;
   shikaku.dragging = null;
-  if (drag.moved) {
-    shikakuCommit(normalizeRect(drag.start, drag.last));
+  // 터치 기기는 마지막 pointermove를 합치거나 건너뛸 수 있습니다.
+  // 실제로 손을 뗀 칸을 우선 사용하여 빠른 드래그의 끝점 누락을 막습니다.
+  // 판 밖에서 놓았다면 마지막으로 지나간 유효 칸을 유지합니다.
+  const released = shikakuCellFromPoint(event.clientX, event.clientY);
+  const end = released || drag.last;
+  if (drag.moved || end.r !== drag.start.r || end.c !== drag.start.c) {
+    shikakuCommit(normalizeRect(drag.start, end));
   } else handleShikakuClick(drag.start);
 });
 document.addEventListener("pointercancel", () => { shikaku.dragging = null; shikaku.preview = null; if (activeGame === "shikaku") refreshShikakuPreview(); });
@@ -5194,6 +5212,8 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
   // 수동 확대/축소는 플레이 중 유지하고, 게임을 새로 열 때만 화면 맞춤을 적용합니다.
   const originalShowGame=showGame;
   showGame=function(...args){
+    // 블록 드래그 도중 다른 게임을 열 때 미리보기 잔상을 즉시 지웁니다.
+    if(activeGame==='blocks' && args[0]!=='blocks')v53CancelBlockDrag();
     originalShowGame(...args);
     let hasManualZoom=false;
     try{hasManualZoom=localStorage.getItem('taekin.arcade.v42.boardZoom.'+activeGame)!==null;}catch(_){}
@@ -5343,7 +5363,7 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
 })();
 
 
-/* ==================== v52 · GitHub Pages 업데이트 안내 ====================
+/* ==================== v53 · GitHub Pages 업데이트 안내 ====================
    version.json을 동일 출처에서 캐시 우회로 확인합니다.
    - 자동으로 새로고침하지 않습니다 (플레이 중 상태 보호).
    - 기존 저장 키, 경험치, 백업/복원 형식은 건드리지 않습니다.
@@ -5351,7 +5371,7 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
 */
 (() => {
   'use strict';
-  const VERSION=52;
+  const VERSION=54;
   const notice=document.getElementById('v52-update-notice');
   const detail=document.getElementById('v52-update-detail');
   const now=document.getElementById('v52-update-now');
