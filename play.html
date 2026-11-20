@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="color-scheme" content="dark light">
+  <title>TAEKIN BRAIN ARCADE · 게임 바로가기</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <style>
+    :root{font-family:system-ui,-apple-system,"Malgun Gothic",sans-serif;color-scheme:dark}
+    *{box-sizing:border-box}
+    body{min-height:100dvh;display:grid;place-items:center;margin:0;background:#142129;color:#eff8fc;padding:24px}
+    main{text-align:center;max-width:440px;width:100%;padding:26px 22px;border:1px solid #496976;border-radius:18px;background:#20333e}
+    h1{font-size:clamp(20px,5vw,29px);margin:0 0 12px}
+    p{line-height:1.65;font-size:16px;color:#cee0e8}
+    a{display:inline-block;margin-top:12px;padding:14px 20px;background:#55c3a6;color:#0b2321;font-size:16px;font-weight:700;text-decoration:none;border-radius:10px;min-height:48px}
+    a:focus-visible{outline:3px solid white;outline-offset:4px}
+  </style>
+</head>
+<body>
+<main>
+  <h1>🎮 TAEKIN BRAIN ARCADE</h1>
+  <p>최신 게임 화면을 여는 중입니다.</p>
+  <p>자동으로 이동하지 않으면 아래 버튼을 눌러 주세요.</p>
+  <a id="play-link" href="./">게임 시작하기</a>
+</main>
+<script>
+  // 이 파일은 버전이 바뀌어도 그대로 유지합니다.
+  // 매 방문마다 새로운 URL로 index.html을 요청하여 오래된 HTML 캐시를 피합니다.
+  // URL의 경로와 오리진은 그대로여서 게임 기록(localStorage)을 변경하지 않습니다.
+  (() => {
+    const target = new URL('./', window.location.href);
+    target.searchParams.set('fresh', Date.now().toString(36));
+    document.getElementById('play-link').href = target.href;
+    window.location.replace(target.href);
+  })();
+</script>
+</body>
+</html>
