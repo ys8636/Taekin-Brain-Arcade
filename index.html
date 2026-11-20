@@ -5,15 +5,16 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="dark light" name="color-scheme"/>
-<title>TAEKIN BRAIN ARCADE | v51</title>
+<meta name="taekin-version" content="52"/>
+<title>TAEKIN BRAIN ARCADE | v52</title>
 <meta name="description" content="TAEKIN BRAIN ARCADE에서 숫자야구, 2048, 지뢰찾기, 파이프 연결, 시카쿠, 블록 퍼즐 6종과 총 1,500단계를 즐겨보세요.">
 <meta name="theme-color" content="#172124">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link href="style.css?v=51" rel="stylesheet"/>
+<link href="style.css?v=52" rel="stylesheet"/>
 
 
 
-<script defer="" src="script.js?v=51"></script>
+<script defer="" src="script.js?v=52"></script>
 
 
 
@@ -443,7 +444,7 @@
 </div>
 </section>
 </main>
-<footer class="footer"><span>TAEKIN BRAIN ARCADE · 플레이어 닉네임 설정 지원</span><span>HTML · CSS · JavaScript · v49</span></footer>
+<footer class="footer"><span>TAEKIN BRAIN ARCADE · 플레이어 닉네임 설정 지원</span><span>HTML · CSS · JavaScript · <span id="site-version" data-app-version>v52</span></span></footer>
 </div>
 <!-- 빠른 글씨·화면 조절: 설정 팝업을 열지 않아도 즉시 조절 가능 -->
 <button type="button" id="v49-float-display" class="v49-float-display" aria-controls="v49-display-panel" aria-expanded="false" aria-label="글씨 크기와 화면 배율 조절">🔠 글씨·화면</button>
@@ -550,7 +551,7 @@
         <div class="v32-setting-row"><div><strong>화면 테마</strong><small>밝고 어두운 배경 전환</small></div><div class="v32-segments"><button type="button" data-v32-theme="dark">🌙 다크</button><button type="button" data-v32-theme="light">☀ 라이트</button></div></div>
         <div class="v32-setting-row"><div><strong>화면 밀도</strong><small>카드와 콘텐츠 사이 간격</small></div><div class="v32-segments"><button type="button" data-v32-density="compact">좁게</button><button type="button" data-v32-density="normal">기본</button><button type="button" data-v32-density="wide">넓게</button></div></div>
 <label class="v32-setting-toggle"><span><strong>모바일 게임 집중 배치</strong><small>설명과 여백을 줄이고 블록 퍼즐의 블록 선택판을 게임판 바로 위에 표시합니다.</small></span><input type="checkbox" id="v48-compact-game" role="switch" checked></label>
-<label class="v32-setting-toggle"><span><strong>게임 시작 시 화면 맞춤</strong><small>작은 화면에서 게임판이 잘리지 않게 자동으로 크기를 조정합니다. 게임별 수동 확대도 계속 사용할 수 있어요.</small></span><input type="checkbox" id="v48-auto-fit" role="switch" checked></label>
+<label class="v32-setting-toggle"><span><strong>게임 시작 시 화면 맞춤</strong><small>PC·모바일 모두 게임 시작 시 게임판이 화면에 맞게 조절됩니다. 게임 중에는 직접 확대·축소할 수 있어요.</small></span><input type="checkbox" id="v48-auto-fit" role="switch" checked></label>
         <label class="v32-setting-toggle"><span><strong>큰 조작 버튼</strong><small>스마트폰에서 버튼을 더 쉽게 누르기</small></span><input type="checkbox" id="v32-large-targets" role="switch"></label>
         <label class="v32-setting-toggle"><span><strong>색상 구분 강화</strong><small>기호와 테두리로 상태 구분</small></span><input type="checkbox" id="v32-colorblind" role="switch"></label>
         <label class="v32-setting-toggle"><span><strong>움직임 줄이기</strong><small>반짝임·전환 애니메이션 최소화</small></span><input type="checkbox" id="v32-motion" role="switch"></label>
@@ -578,5 +579,11 @@
     <div class="v32-settings-footer"><span>변경 내용은 자동으로 저장됩니다.</span><button type="button" id="v32-settings-done">설정 완료</button></div>
   </div>
 </dialog>
+
+<!-- 배포된 새 버전 안내: 새로고침은 사용자가 선택하며 기록을 삭제하지 않습니다. -->
+<div id="v52-update-notice" class="v52-update-notice" role="status" aria-live="polite" hidden>
+  <div class="v52-update-copy"><strong>새 버전이 준비됐어요</strong><span id="v52-update-detail">게임을 업데이트할 수 있어요.</span></div>
+  <div class="v52-update-actions"><button type="button" id="v52-update-now">최신 버전 열기</button><button type="button" id="v52-update-later">나중에</button></div>
+</div>
 </body>
 </html>

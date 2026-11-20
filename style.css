@@ -2636,3 +2636,53 @@ body[data-theme=light] .v49-help-menu>summary{background:#ecfaf2;color:#244c49}b
   box-shadow:inset 0 -3px 0 #872532,0 0 0 1px #ffd1d5!important;
 }
 .block-drag-ghost.v51-block-ghost.v51-snapped .block-mini-tile{filter:brightness(1.12)}
+
+
+/* ===== v52: 드래그 안내 가로 흔들림 방지 / 게임판 크기 버튼 상시 표시 ===== */
+#play-screen .v42-size-tools{display:flex!important;visibility:visible!important;min-width:0;max-width:100%;box-sizing:border-box}
+#play-screen .v42-size-buttons{min-width:0;max-width:100%}
+/* 과거 v48 접기 컨테이너에서 업데이트된 브라우저까지 안전하게 처리 */
+#play-screen .v48-size-fold>summary{display:none!important}
+#play-screen .v48-size-fold>.v42-size-tools{display:flex!important}
+@media(max-width:720px){
+  #play-screen .v42-size-tools{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:5px!important;padding:7px!important;margin:6px 0!important}
+  #play-screen .v42-size-title{flex-direction:row;justify-content:space-between;font-size:12px!important}
+  #play-screen .v42-size-title small{display:none!important}
+  #play-screen .v42-size-buttons{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(40px,1.25fr) minmax(0,1fr) minmax(0,1.1fr) minmax(0,1.6fr)!important;gap:3px!important;width:100%!important}
+  #play-screen .v42-size-buttons>*{width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+  #play-screen .v42-size-buttons button{padding:5px 2px!important;min-height:36px!important;font-size:11px!important;white-space:normal!important;line-height:1.2!important}
+  #play-screen .v42-size-buttons output{font-size:12px!important;align-self:center}
+}
+/* 고정된 표시 영역의 글자 길이·경고색 변화가 가로 레이아웃을 재계산하지 않도록 지정 */
+#panel-shikaku #v19-shikaku-preview,
+#panel-shikaku #shikaku-status,
+#panel-blocks #v41-block-preview-note,
+#panel-blocks #block-status{
+  display:block!important;
+  inline-size:100%!important;width:100%!important;min-inline-size:0!important;min-width:0!important;
+  max-inline-size:100%!important;max-width:100%!important;
+  box-sizing:border-box!important;
+  overflow-x:hidden!important;overflow-wrap:anywhere!important;word-break:break-word!important;
+  contain:inline-size;
+  scrollbar-gutter:stable;
+}
+@media(max-width:720px){
+  #panel-shikaku #v19-shikaku-preview,#panel-shikaku #shikaku-status,
+  #panel-blocks #v41-block-preview-note,#panel-blocks #block-status{
+    overflow-y:auto!important;scrollbar-width:none!important;scrollbar-gutter:stable both-edges;
+  }
+}
+/* 새 버전 확인 시 표시되는 작은 알림. 게임판을 가리지 않도록 상단에 배치. */
+.v52-update-notice:not([hidden]){
+  position:fixed;z-index:20000;top:max(10px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  box-sizing:border-box;width:min(560px,calc(100vw - 20px));max-width:calc(100vw - 20px);
+  background:#183c45;color:#f5fffe;border:2px solid #70d8cc;border-radius:14px;
+  padding:12px 14px;box-shadow:0 10px 32px #091b2cbb;
+}
+.v52-update-copy{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1 1 150px;line-height:1.45;font-size:13px}
+.v52-update-copy strong{font-size:15px}
+.v52-update-actions{display:flex;gap:6px;flex:0 1 auto;flex-wrap:wrap}
+.v52-update-actions button{border:1px solid #8fded3;border-radius:8px;padding:9px 11px;min-height:40px;background:#2a5963;color:#f6ffff;font-weight:800;cursor:pointer;font-size:12px}
+#v52-update-now{background:#aeeadd;border-color:#aeeadd;color:#123b38}
+@media(max-width:380px){.v52-update-notice:not([hidden]){padding:9px}.v52-update-actions{width:100%}.v52-update-actions button{flex:1}}

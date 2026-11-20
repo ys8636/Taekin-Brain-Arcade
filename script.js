@@ -848,7 +848,7 @@ function v42SetBoardZoom(game,next,{save=true,keepCenter=true}={}){
   if(save){try{localStorage.setItem('taekin.arcade.v42.boardZoom.'+game,String(v42Zoom[game]));}
     catch(_){/* Zoom remains usable if preferences cannot be saved. */}}
 }
-function v42FitBoardZoom(game){
+function v42FitBoardZoom(game,{save=true,shrinkOnly=false}={}){
   const viewport=v42BoardViewport(game);if(!viewport)return;
   let desired;
   if(game==='mines'){
@@ -867,7 +867,7 @@ function v42FitBoardZoom(game){
     desired=Math.min(desired,availableHeight/v42BoardBase(game));
   }
   // Expert 16×16 mines need a smaller scale to actually fit a 320px phone.
-  v42SetBoardZoom(game,Math.max(V42_ZOOM_MIN,Math.min(V42_ZOOM_MAX,desired)),{keepCenter:false});
+  v42SetBoardZoom(game,Math.max(V42_ZOOM_MIN,Math.min(V42_ZOOM_MAX,shrinkOnly?Math.min(1,desired):desired)),{save,keepCenter:false});
   viewport.scrollLeft=0;
 }
 function v39UpdateMinePosition(){
@@ -5190,28 +5190,17 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
 (() => {
   'use strict';
   const $=id=>document.getElementById(id);
-  function isMobile(){return matchMedia('(max-width:720px)').matches;}
-  // 게임별 수동 배율은 그대로 두고, 화면 맞춤 옵션이 활성화되면 게임 진입시에만 적용합니다.
-  // 게임판 크기 버튼은 모바일에서 접어 높이를 절약합니다. 버튼은 언제든 다시 펼칠 수 있습니다.
-  const screenMedia=matchMedia('(max-width:720px)');
-  const sizeFolds=[];
-  for(const tools of document.querySelectorAll('#play-screen .v42-size-tools')){
-    const details=document.createElement('details');details.className='v48-size-fold';
-    const summary=document.createElement('summary');summary.textContent='🔍 게임판 확대 · 축소';
-    details.appendChild(summary);
-    tools.parentNode.insertBefore(details,tools);
-    details.appendChild(tools);
-    sizeFolds.push(details);
-  }
-  const syncFolds=()=>{sizeFolds.forEach(d=>{if(!screenMedia.matches)d.open=true;else d.open=false;});};
-  syncFolds();screenMedia.addEventListener?.('change',syncFolds);
+  // v52: 크기 조절 버튼은 PC·모바일 모두 상시 표시합니다.
+  // 수동 확대/축소는 플레이 중 유지하고, 게임을 새로 열 때만 화면 맞춤을 적용합니다.
   const originalShowGame=showGame;
   showGame=function(...args){
     originalShowGame(...args);
-    if(isMobile() && window.TaekinV32?.getPreference?.('autoFit')!==false){
+    let hasManualZoom=false;
+    try{hasManualZoom=localStorage.getItem('taekin.arcade.v42.boardZoom.'+activeGame)!==null;}catch(_){}
+    if(!hasManualZoom && window.TaekinV32?.getPreference?.('autoFit')!==false){
       requestAnimationFrame(()=>requestAnimationFrame(()=>{
         if(activeGame && document.getElementById('play-screen')?.classList.contains('hidden')===false){
-          v42FitBoardZoom(activeGame);
+          v42FitBoardZoom(activeGame,{save:false,shrinkOnly:true});
         }
       }));
     }
@@ -5351,4 +5340,67 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
   });
   sync();
   window.TaekinV49Display={sync,scan,measuredCount:()=>measured.size};
+})();
+
+
+/* ==================== v52 · GitHub Pages 업데이트 안내 ====================
+   version.json을 동일 출처에서 캐시 우회로 확인합니다.
+   - 자동으로 새로고침하지 않습니다 (플레이 중 상태 보호).
+   - 기존 저장 키, 경험치, 백업/복원 형식은 건드리지 않습니다.
+   - 오래된 v51 이하 클라이언트에는 이 검사 기능이 없어 v52를 최초 한 번 게시해야 합니다.
+*/
+(() => {
+  'use strict';
+  const VERSION=52;
+  const notice=document.getElementById('v52-update-notice');
+  const detail=document.getElementById('v52-update-detail');
+  const now=document.getElementById('v52-update-now');
+  const later=document.getElementById('v52-update-later');
+  const foot=document.getElementById('site-version');
+  if(foot)foot.textContent='v'+VERSION;
+  if(!notice||!detail||!now||!later)return;
+  let latest=null,checking=false,lastCheck=0,ignored=null;
+  const projectVersion=raw=>{
+    const n=Number(typeof raw==='object'&&raw!==null?raw.version:raw);
+    return Number.isSafeInteger(n)&&n>0&&n<100000?n:null;
+  };
+  const shouldCheck=()=>/^https?:$/.test(location.protocol) && !document.hidden;
+  async function check(force=false){
+    if(!shouldCheck()||checking||(!force&&Date.now()-lastCheck<60000))return false;
+    checking=true;lastCheck=Date.now();
+    try{
+      const url=new URL('version.json',document.baseURI);
+      url.searchParams.set('check',String(Date.now()));
+      const response=await fetch(url.href,{cache:'no-store',credentials:'same-origin'});
+      if(!response.ok)return false;
+      const remote=projectVersion(await response.json());
+      if(remote===null||remote<=VERSION)return false;
+      latest=remote;
+      if(ignored!==remote){
+        detail.textContent=`v${VERSION} → v${remote} · 플레이 기록은 유지돼요.`;
+        notice.hidden=false;
+      }
+      return true;
+    }catch(_){return false;}finally{checking=false;}
+  }
+  function doUpdate(){
+    if(!latest)return;
+    try{
+      if(typeof v19StoreSnapshot==='function' && v19StoreSnapshot()==='failed'){
+        detail.textContent='현재 게임 저장에 실패했어요. 기록을 백업하거나 저장 문제를 해결한 뒤 다시 시도하세요.';
+        return;
+      }
+    }catch(_){/* 저장 함수가 없는 화면에서는 기존 기록을 그대로 유지합니다. */}
+    const url=new URL(location.href);
+    url.searchParams.set('v',String(latest));
+    url.searchParams.set('reload',String(Date.now()));
+    location.assign(url.href);
+  }
+  now.addEventListener('click',doUpdate);
+  later.addEventListener('click',()=>{ignored=latest;notice.hidden=true;});
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)void check(true);});
+  window.addEventListener('focus',()=>void check());
+  setTimeout(()=>void check(true),4000);
+  setInterval(()=>void check(),240000);
+  window.TaekinUpdate={version:VERSION,check};
 })();
