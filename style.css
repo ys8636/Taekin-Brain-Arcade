@@ -2686,3 +2686,52 @@ body[data-theme=light] .v49-help-menu>summary{background:#ecfaf2;color:#244c49}b
 .v52-update-actions button{border:1px solid #8fded3;border-radius:8px;padding:9px 11px;min-height:40px;background:#2a5963;color:#f6ffff;font-weight:800;cursor:pointer;font-size:12px}
 #v52-update-now{background:#aeeadd;border-color:#aeeadd;color:#123b38}
 @media(max-width:380px){.v52-update-notice:not([hidden]){padding:9px}.v52-update-actions{width:100%}.v52-update-actions button{flex:1}}
+
+/* v54 · 모바일 실기기 점검: 크기 조절 버튼의 불필요한 세로 180px 늘어남 방지.
+   v48의 flex:1 1 180px가 flex-direction:column에서 높이로 해석되어
+   게임판을 150px 이상 아래로 밀던 문제를 해결합니다. */
+@media (max-width:720px){
+  #play-screen .v42-size-tools .v42-size-buttons{
+    flex:0 0 auto!important;
+    flex-basis:auto!important;
+    min-height:0!important;
+    height:auto!important;
+    grid-template-rows:minmax(36px,auto)!important;
+    grid-auto-rows:minmax(36px,auto)!important;
+    align-content:start!important;
+  }
+  #play-screen .v42-size-tools .v42-size-title{
+    flex:0 0 auto!important;
+  }
+  /* 큰 시스템 글씨+사이트 배율에서 2048 방향키가 패널 밖으로 넘어가지 않게. */
+  #panel-2048 .arrow-pad{
+    box-sizing:border-box!important;
+    width:min(100%,250px)!important;
+    max-width:100%!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    grid-template-rows:repeat(2,minmax(52px,auto))!important;
+    gap:6px!important;
+    margin:10px auto 0!important;
+  }
+  #panel-2048 .arrow-pad button{min-width:0!important;min-height:52px!important;}
+  /* 200% 글씨+130% 화면 배율에서도 단계 이동 버튼이 수평 넘침을 만들지 않도록. */
+  #play-screen .stage-pager{
+    min-width:0!important;
+    max-width:100%!important;
+    flex-wrap:wrap!important;
+    justify-content:center!important;
+    gap:5px!important;
+  }
+  #play-screen .stage-pager button{
+    flex:0 1 70px!important;
+    min-width:0!important;
+    max-width:95px!important;
+    padding:7px 5px!important;
+  }
+  #play-screen .stage-pager strong{
+    flex:1 1 100px!important;
+    min-width:0!important;
+    text-align:center!important;
+    overflow-wrap:anywhere!important;
+  }
+}
