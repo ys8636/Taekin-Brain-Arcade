@@ -5,16 +5,16 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="dark light" name="color-scheme"/>
-<meta name="taekin-version" content="55"/>
-<title>TAEKIN BRAIN ARCADE | v55</title>
+<meta name="taekin-version" content="56"/>
+<title>TAEKIN BRAIN ARCADE | v56</title>
 <meta name="description" content="TAEKIN BRAIN ARCADE에서 숫자야구, 2048, 지뢰찾기, 파이프 연결, 시카쿠, 블록 퍼즐 6종과 총 1,500단계를 즐겨보세요.">
 <meta name="theme-color" content="#172124">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link href="style.css?v=55" rel="stylesheet"/>
+<link href="style.css?v=56" rel="stylesheet"/>
 
 
 
-<script defer="" src="script.js?v=55"></script>
+<script defer="" src="script.js?v=56"></script>
 
 
 
@@ -444,10 +444,10 @@
 </div>
 </section>
 </main>
-<footer class="footer"><span>TAEKIN BRAIN ARCADE · 플레이어 닉네임 설정 지원</span><span>HTML · CSS · JavaScript · <span id="site-version" data-app-version>v55</span></span></footer>
+<footer class="footer"><span>TAEKIN BRAIN ARCADE · 플레이어 닉네임 설정 지원</span><span>HTML · CSS · JavaScript · <span id="site-version" data-app-version>v56</span></span></footer>
 </div>
 <!-- 빠른 글씨·화면 조절: 설정 팝업을 열지 않아도 즉시 조절 가능 -->
-<button type="button" id="v49-float-display" class="v49-float-display" aria-controls="v49-display-panel" aria-expanded="false" aria-label="글씨 크기와 화면 배율 조절. 길게 누르면 숨기고 드래그로 이동할 수 있습니다.">🔠 글씨·화면</button>
+<button type="button" id="v49-float-display" class="v49-float-display" aria-controls="v49-display-panel" aria-expanded="false" aria-label="글씨 크기와 화면 배율 조절. 드래그로 이동하거나 3초 이상 누르면 숨기기 확인창이 열립니다.">🔠 글씨·화면</button>
 <aside id="v49-display-panel" class="v49-display-panel" role="region" aria-labelledby="v49-panel-title" hidden>
   <div class="v49-display-head"><strong id="v49-panel-title">🔠 글씨·화면 바로 조절</strong><button type="button" id="v49-panel-close" aria-label="조절창 닫기">✕</button></div>
   <p>게임 화면을 보면서 바로 조절할 수 있어요. 이 조절창의 글씨는 항상 읽을 수 있는 크기로 유지됩니다.</p>
@@ -483,6 +483,17 @@
     <div class="v55-dialog-actions">
       <button type="button" class="v55-button-primary" id="v55-leave-stay">▶ 계속 플레이</button>
       <button type="button" class="v55-button-outline" id="v55-leave-go">▣ 저장하고 나가기</button>
+    </div>
+  </div>
+</dialog>
+<dialog class="v55-dialog v56-hide-dialog" id="v56-hide-display-confirm" aria-labelledby="v56-hide-title" aria-describedby="v56-hide-description" aria-modal="true">
+  <div class="v55-dialog-card">
+    <span class="v55-kicker">🔠 DISPLAY CONTROL</span>
+    <h2 id="v56-hide-title">글씨·화면 버튼을 숨기시겠습니까?</h2>
+    <p id="v56-hide-description">버튼을 숨겨도 <strong>⚙ 설정 → 글씨·화면 버튼 다시 표시하기</strong>에서 언제든 다시 표시할 수 있습니다.</p>
+    <div class="v55-dialog-actions">
+      <button type="button" class="v55-button-primary" id="v56-hide-cancel">아니요 · 유지하기</button>
+      <button type="button" class="v55-button-outline" id="v56-hide-confirm">네 · 버튼 숨기기</button>
     </div>
   </div>
 </dialog>

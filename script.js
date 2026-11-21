@@ -5416,7 +5416,7 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
 */
 (() => {
   'use strict';
-  const VERSION=55;
+  const VERSION=56;
   const notice=document.getElementById('v52-update-notice');
   const detail=document.getElementById('v52-update-detail');
   const now=document.getElementById('v52-update-now');
@@ -5542,7 +5542,7 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
 })();
 
 /* ====================== v55 · 모바일 글씨·화면 버튼 이동/숨기기 ======================
- * 짧게 탭: 조절창 열기 / 드래그: 위치 이동 / 길게 누르기: 숨김
+ * 짧게 탭: 조절창 열기 / 드래그: 위치 이동 / 3초 이상 누르기: 숨기기 확인창
  * 설정에서 버튼을 다시 표시할 수 있습니다. */
 (() => {
   'use strict';
@@ -5551,6 +5551,9 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
   const restore=document.getElementById('v55-restore-display');
   const HIDE_KEY='taekin.arcade.v55.hideDisplayButton';
   const POSITION_KEY='taekin.arcade.v55.displayPosition';
+  const hideDialog=document.getElementById('v56-hide-display-confirm');
+  const cancelHide=document.getElementById('v56-hide-cancel');
+  const confirmHide=document.getElementById('v56-hide-confirm');
   let dragging=false, longPress=false, suppressClick=false, pointerId=null;
   let startX=0,startY=0,rect=null,hold=null,last={x:0,y:0};
   const screen=()=>({w:innerWidth,h:innerHeight});
@@ -5571,7 +5574,7 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
   }
   try{const pos=JSON.parse(localStorage.getItem(POSITION_KEY)||'null');if(pos&&Number.isFinite(pos.x)&&Number.isFinite(pos.y))requestAnimationFrame(()=>moveTo(pos.x,pos.y,false));}catch(_){}
   syncHidden();
-  btn.setAttribute('title','짧게 누르기: 글씨·화면 설정 / 끌기: 위치 이동 / 길게 누르기: 숨기기');
+  btn.setAttribute('title','짧게 누르기: 글씨·화면 설정 / 끌기: 위치 이동 / 3초 이상 누르기: 숨기기 확인');
   // 기존 클릭 이벤트보다 먼저 실행하도록 캡처 단계에서 드래그/길게누르기 클릭을 차단합니다.
   btn.addEventListener('click',e=>{
     if(!suppressClick)return;
@@ -5584,12 +5587,15 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
     // 시작 즉시 포인터를 붙잡아 손가락이 버튼 밖으로 나가도 이동을 계속 추적합니다.
     try{btn.setPointerCapture(pointerId);}catch(_){}
     hold=setTimeout(()=>{
-      if(dragging)return;
+      // 손가락이 실제로 3초 이상 같은 자리에서 눌린 경우에만 확인창을 띄웁니다.
+      if(dragging||pointerId===null||!rect)return;
       longPress=true;suppressClick=true;
-      persist(HIDE_KEY,'1');syncHidden();panel.hidden=true;
-      document.getElementById('v49-panel-close')?.click();
-      // 버튼 숨김은 저장 기록/설정을 건드리지 않습니다.
-    },850);
+      if(!hideDialog.open){
+        hideDialog.showModal();
+        cancelHide.focus({preventScroll:true});
+      }
+      // 확인을 누르기 전에는 버튼 위치·표시·저장값을 변경하지 않습니다.
+    },3000);
   });
   btn.addEventListener('pointermove',e=>{
     if(e.pointerId!==pointerId||!rect||longPress)return;
@@ -5609,6 +5615,16 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
   }
   btn.addEventListener('pointerup',endPointer);btn.addEventListener('pointercancel',endPointer);
   window.addEventListener('resize',()=>{if(btn.style.left)moveTo(last.x,last.y,false);});
+  // 모바일 브라우저의 길게 누르기 메뉴가 확인창을 가리지 않도록 합니다.
+  btn.addEventListener('contextmenu',e=>e.preventDefault());
+  cancelHide.addEventListener('click',()=>hideDialog.close());
+  confirmHide.addEventListener('click',()=>{
+    persist(HIDE_KEY,'1');
+    syncHidden();
+    panel.hidden=true;
+    document.getElementById('v49-panel-close')?.click();
+    hideDialog.close();
+  });
   restore.addEventListener('click',()=>{
     try{localStorage.removeItem(HIDE_KEY);}catch(_){}
     syncHidden();

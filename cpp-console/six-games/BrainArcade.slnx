@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="BrainArcade/BrainArcade.vcxproj" Id="e52cd978-52d5-46a9-a930-133b3391400e" />
+</Solution>
