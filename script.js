@@ -1,3 +1,29 @@
+/* v55 · 공개 기념 새 출발: 방문한 브라우저의 게임 진행/업적을 1회만 초기화합니다.
+   개별 사용자의 로컬 저장소만 다룹니다. 설정, 닉네임, 음원, 접근성은 유지합니다.
+   기존 기록을 무한히 초기화하지 않도록 성공했을 때만 마커를 저장합니다. */
+(() => {
+  const marker='taekin.arcade.v55.progressResetDone';
+  try {
+    if(localStorage.getItem(marker)==='1')return;
+    const keys=[
+      'taekin-brain-arcade-v13-progress','taein-brain-arcade-v4-progress',
+      'taekin_arcade_sessions_v19','taekin_arcade_playlog_v19',
+      'taekin.arcade.v25.progress','taekin_arcade_best_v13',
+      'taekin.arcade.v20.bonus','taekin.arcade.v22.featuredBadge',
+      'taekin.arcade.v34.masterAll'
+    ];
+    // 플레이어 이름은 진행도가 아니라 개인 표시 설정이므로 가능한 경우 유지합니다.
+    let nickname='';
+    try{
+      const previous=JSON.parse(localStorage.getItem('taekin.arcade.v25.progress')||'null');
+      if(typeof previous?.name==='string')nickname=previous.name.slice(0,20);
+    }catch(_){}
+    for(const key of keys)localStorage.removeItem(key);
+    if(nickname)localStorage.setItem('taekin.arcade.v25.progress',JSON.stringify({name:nickname}));
+    localStorage.setItem(marker,'1');
+  }catch(error){console.warn('진행 기록 초기화에 실패했습니다. 브라우저 저장소 설정을 확인해 주세요.',error);}
+})();
+
 /* TAEKIN BRAIN ARCADE v47 — 초보자 안내 · 게임 소개 배너 · 레벨 보상 가시화 */
 
 /* ==========================================================================
@@ -2894,12 +2920,12 @@ renderHero();resetHeroTimer();
 
 /* ======================= 게임별 조작 튜토리얼 ======================= */
 const ARCADE_TOURS={
-  baseball:['숫자야구는 숨겨진 서로 다른 숫자를 맞히는 추리 게임입니다.','숫자를 입력하고 확인을 누르세요. 스트라이크(S)는 자리까지 일치, 볼(B)은 숫자만 일치합니다.','기록 표를 보고 다시 추리하세요. 힌트는 숫자 일부, 정답 보기는 전체를 공개하지만 클리어로 인정되지 않습니다.'],
-  '2048':['같은 숫자를 더해 목표 블록을 만드는 전략 퍼즐입니다.','키보드 방향키 또는 W/A/S/D로 모든 블록을 밀어요. 같은 숫자 둘은 합쳐집니다.','되돌리기(U)와 힌트 버튼을 활용하세요. 모든 난이도에서 되돌리기 횟수 제한은 없습니다.'],
-  mines:['지뢰가 없는 칸을 모두 여는 게임입니다.','왼쪽 클릭으로 칸을 열고, 오른쪽 클릭으로 지뢰가 의심되는 칸에 깃발을 꽂아요. 모바일은 깃발 모드를 선택합니다.','숫자는 주변 8칸의 지뢰 개수입니다. 첫 클릭과 주변 칸은 안전하고, 힌트는 안전한 칸을 표시해 줍니다.'],
-  pipes:['파이프가 이어져 물이 모든 칸에 도달하도록 만드는 퍼즐입니다.','파이프를 클릭하면 시계 방향으로 90도 회전합니다. 연결된 파이프에는 파란 물이 흐릅니다.','열린 배관이나 누수 없이 전체 칸이 연결되면 승리해요. 힌트는 파이프 하나를 올바르게 돌려 줍니다.'],
-  shikaku:['숫자가 적힌 게임판을 직사각형들로 정확히 나누세요.','시작 칸과 끝 칸을 클릭하거나 드래그해 영역을 만드세요. 영역 넓이는 적힌 숫자와 같아야 합니다.','각 직사각형엔 숫자가 하나만 있어야 하고 서로 겹칠 수 없어요. 힌트는 영역 위치를, 지우개는 선택 영역 삭제를 지원합니다.'],
-  blocks:['10×10 게임판에 블록 세 개를 놓는 점수 퍼즐입니다.','선택판의 블록을 마우스로 끌거나, 블록을 선택한 뒤 게임판 칸을 클릭하세요.','가로 또는 세로 한 줄이 차면 사라지고 점수를 얻습니다. 힌트는 추천 위치를, 되돌리기는 마지막 배치를 취소합니다.']
+  baseball:['숫자야구는 숨겨진 서로 다른 숫자를 맞히는 추리 게임입니다.','PC와 스마트폰 모두 숫자를 입력하고 확인을 누르세요. 스트라이크(S)는 자리까지 일치, 볼(B)은 숫자만 일치합니다.','기록 표를 보고 다시 추리하세요. 힌트는 숫자 일부, 정답 보기는 전체를 공개하지만 클리어로 인정되지 않습니다.'],
+  '2048':['같은 숫자를 더해 목표 블록을 만드는 전략 퍼즐입니다.','PC에서는 방향키 또는 W/A/S/D, 스마트폰에서는 게임판을 상하좌우로 밀거나 방향 버튼을 누르세요. 같은 숫자끼리 합쳐집니다.','되돌리기(U)와 힌트 버튼을 활용하세요. 모든 난이도에서 되돌리기 횟수 제한은 없습니다.'],
+  mines:['지뢰가 없는 칸을 모두 여는 게임입니다.','PC에서는 왼쪽 클릭으로 열고 오른쪽 클릭으로 깃발을 꽂아요. 스마트폰은 열기/깃발 모드를 선택한 뒤 칸을 터치하세요.','숫자는 주변 8칸의 지뢰 개수입니다. 첫 클릭과 주변 칸은 안전하고, 힌트는 안전한 칸을 표시해 줍니다.'],
+  pipes:['파이프가 이어져 물이 모든 칸에 도달하도록 만드는 퍼즐입니다.','PC에서는 파이프를 클릭하고 스마트폰에서는 터치해 회전시킵니다. 열린 끝이 이웃 파이프를 향하게 맞추세요.','열린 배관이나 누수 없이 전체 칸이 연결되면 승리해요. 힌트는 파이프 하나를 올바르게 돌려 줍니다.'],
+  shikaku:['숫자가 적힌 게임판을 직사각형들로 정확히 나누세요.','PC에서는 시작·끝 칸을 클릭하거나 드래그하세요. 스마트폰은 두 칸을 차례로 터치하거나 손가락으로 영역을 드래그하세요.','각 직사각형엔 숫자가 하나만 있어야 하고 서로 겹칠 수 없어요. 힌트는 영역 위치를, 지우개는 선택 영역 삭제를 지원합니다.'],
+  blocks:['10×10 게임판에 블록 세 개를 놓는 점수 퍼즐입니다.','PC는 블록을 마우스로 끌거나 선택 후 칸을 클릭하세요. 스마트폰은 블록을 손가락으로 끌어 놓거나 선택 후 칸을 터치하세요.','가로 또는 세로 한 줄이 차면 사라지고 점수를 얻습니다. 힌트는 추천 위치를, 되돌리기는 마지막 배치를 취소합니다.']
 };
 let tutorialGame='baseball',tutorialStep=0;
 const tourDialog=$('tutorial-dialog');
@@ -4977,16 +5003,35 @@ function v41StyleShikakuPreview(){
       if(document.visibilityState!=='hidden'&&!activeGame)openGuide();
     }));
   }
-  // 취소하는 경우 이전 화면과 게임 상태는 그대로 유지됩니다.
-  document.addEventListener('click',event=>{
-    const leaving=event.target.closest('#back-to-home,#header-back,#brand-home,.arcade-nav-btn[data-destination],#v19-pause-home');
-    if(!leaving || leaving.matches('.arcade-nav-btn[data-destination="more"]') || !activeGame || !v19IsPlaying() || window.TaekinV32?.getPreference?.('leaveConfirm')===false)return;
-    if(!window.confirm('진행 중인 게임을 나갈까요? 현재 게임판은 자동 저장되어 홈에서 이어할 수 있어요.')){
-      event.preventDefault();event.stopImmediatePropagation();
+  // 브라우저의 기본 confirm 대신 사이트 디자인에 맞춘 나가기 확인창.
+  // 브라우저가 붙이는 출처 주소는 변경할 수 없지만, 앱 내부 확인창에는 표시되지 않습니다.
+  const v55LeaveDialog=document.getElementById('v55-leave-dialog');
+  const v55LeaveMessage=document.getElementById('v55-leave-message');
+  let v55PendingDestination=null;
+  let v55BypassLeave=false;
+  function v55CloseLeave(){if(v55LeaveDialog.open)v55LeaveDialog.close();v55PendingDestination=null;}
+  document.getElementById('v55-leave-stay').addEventListener('click',v55CloseLeave);
+  document.getElementById('v55-leave-go').addEventListener('click',()=>{
+    const destination=v55PendingDestination;
+    if(!destination){v55CloseLeave();return;}
+    if(!v19Paused && v19StoreSnapshot()==='failed'){
+      v55LeaveMessage.textContent='현재 판을 저장하지 못했어요. 저장 공간을 확인하거나 게임 화면에서 다시 시도해 주세요.';
       return;
     }
-    // 잠깐 일시정지 중인 경우는 일시정지 전에 생성된 자동 저장본이 있습니다.
-    if(!v19Paused)v19StoreSnapshot();
+    v55CloseLeave();
+    v55BypassLeave=true;
+    try{destination.click();}finally{v55BypassLeave=false;}
+  });
+  v55LeaveDialog.addEventListener('click',e=>{if(e.target===v55LeaveDialog)v55CloseLeave();});
+  document.addEventListener('click',event=>{
+    if(v55BypassLeave)return;
+    const leaving=event.target.closest('#back-to-home,#header-back,#brand-home,.arcade-nav-btn[data-destination],#v19-pause-home');
+    if(!leaving || !activeGame || !v19IsPlaying() || window.TaekinV32?.getPreference?.('leaveConfirm')===false)return;
+    event.preventDefault();event.stopImmediatePropagation();
+    v55PendingDestination=leaving;
+    v55LeaveMessage.textContent=`${gameInfo[activeGame]?.name||'게임'} 진행 중이에요. 나가면 현재 게임판을 저장하고 게임 선택 화면으로 이동해요.`;
+    if(!v55LeaveDialog.open)v55LeaveDialog.showModal();
+    document.getElementById('v55-leave-stay').focus({preventScroll:true});
   }, true);
   window.TaekinV31 = {openGuide};
 })();
@@ -5371,7 +5416,7 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
 */
 (() => {
   'use strict';
-  const VERSION=54;
+  const VERSION=55;
   const notice=document.getElementById('v52-update-notice');
   const detail=document.getElementById('v52-update-detail');
   const now=document.getElementById('v52-update-now');
@@ -5423,4 +5468,151 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
   setTimeout(()=>void check(true),4000);
   setInterval(()=>void check(),240000);
   window.TaekinUpdate={version:VERSION,check};
+})();
+
+/* ====================== v55 · 게임 첫 방문 튜토리얼 ======================
+ * 한 게임당 한 번만 질문합니다. 거절하거나 설명을 본 뒤에는 다시 묻지 않고,
+ * 수동 도움말과 기존 3단계 튜토리얼은 계속 사용할 수 있습니다. */
+(() => {
+  'use strict';
+  const info={
+    baseball:{rule:'서로 다른 숫자를 추리해 정답을 맞히세요. S는 숫자·자리 일치, B는 숫자만 일치!',mobile:'숫자 입력칸을 터치해 번호를 입력하고 「확인」을 눌러요.',pc:'키보드로 숫자를 입력하고 「확인」을 누르세요.'},
+    '2048':{rule:'같은 숫자 타일을 합쳐 목표 타일과 점수를 달성하세요.',mobile:'게임판을 상하좌우로 쓸어 움직여요. 방향 버튼도 사용할 수 있어요.',pc:'방향키 또는 W/A/S/D로 타일을 움직여요.'},
+    mines:{rule:'숫자가 뜻하는 주변 지뢰 개수를 보고 안전한 칸을 모두 열면 성공!',mobile:'「열기 / 깃발」 모드를 선택한 뒤 칸을 터치해요.',pc:'왼쪽 클릭으로 열고, 오른쪽 클릭으로 깃발을 표시해요.'},
+    pipes:{rule:'파이프를 돌려 시작점부터 끝점까지 누수 없이 물길을 연결해요.',mobile:'연결하려는 파이프를 손가락으로 톡톡 눌러 회전해요.',pc:'파이프 칸을 마우스로 클릭해 회전하세요.'},
+    shikaku:{rule:'각 직사각형 안에 숫자를 하나만 넣고, 그 숫자만큼 칸을 차지하게 나눠요.',mobile:'처음·끝 칸을 차례로 누르거나, 손가락으로 드래그해 사각형을 선택해요.',pc:'두 모서리 칸을 클릭하거나 드래그해 직사각형을 선택해요.'},
+    blocks:{rule:'블록을 놓아 가로·세로 한 줄을 완성하면 줄이 사라지고 점수를 얻어요.',mobile:'블록을 터치하고 게임판 칸을 누르거나, 손가락으로 끌어서 놓아요.',pc:'블록을 선택해 게임판을 클릭하거나, 마우스로 끌어서 배치하세요.'}
+  };
+  const dialog=document.getElementById('v55-first-guide');
+  const heading=document.getElementById('v55-guide-heading');
+  const summary=document.getElementById('v55-guide-summary');
+  const controls=document.getElementById('v55-guide-controls');
+  const reject=document.getElementById('v55-guide-skip');
+  const agree=document.getElementById('v55-guide-show');
+  const done=document.getElementById('v55-guide-done');
+  const touchHint=document.getElementById('v55-mobile-hint');
+  let shownFor=null;
+  const visitedKey=key=>'taekin.arcade.v55.guideSeen.'+key;
+  function markSeen(){if(shownFor){try{localStorage.setItem(visitedKey(shownFor),'1');}catch(_){}}}
+  function dismiss(){markSeen();if(dialog.open)dialog.close();shownFor=null;}
+  reject.addEventListener('click',dismiss);
+  done.addEventListener('click',dismiss);
+  agree.addEventListener('click',()=>{
+    if(!shownFor)return;
+    summary.hidden=false;controls.hidden=false;
+    reject.hidden=true;agree.hidden=true;done.hidden=false;
+    done.focus({preventScroll:true});
+  });
+  dialog.addEventListener('cancel',()=>markSeen());
+  dialog.addEventListener('close',()=>{shownFor=null;});
+  dialog.addEventListener('click',e=>{if(e.target===dialog)dismiss();});
+  function schedulePrompt(key){
+    if(!info[key])return;
+    const mobile=window.matchMedia('(max-width:720px)').matches;
+    touchHint.textContent='📱 '+info[key].mobile;
+    let seen=false;
+    try{seen=localStorage.getItem(visitedKey(key))==='1';}catch(_){}
+    if(seen||dialog.open)return;
+    const openWhenReady=()=>{
+      if(activeGame!==key||document.getElementById('play-screen').classList.contains('hidden'))return;
+      // 첫 방문 가이드나 다른 팝업이 열렸다면 종료 후 게임 설명을 보여줍니다.
+      if([...document.querySelectorAll('dialog[open]')].some(d=>d!==dialog)){
+        setTimeout(openWhenReady,250);
+        return;
+      }
+      shownFor=key;
+      heading.textContent=`${gameInfo[key].name} · 게임 방법이 필요하신가요?`;
+      summary.textContent=info[key].rule;
+      controls.textContent=mobile?'📱 '+info[key].mobile:'🖥️ '+info[key].pc;
+      summary.hidden=true;controls.hidden=true;
+      reject.hidden=false;agree.hidden=false;done.hidden=true;
+      dialog.showModal();
+      agree.focus({preventScroll:true});
+    };
+    setTimeout(openWhenReady,140);
+  }
+  const priorShowGame=showGame;
+  showGame=function(...args){priorShowGame(...args);if(info[args[0]])schedulePrompt(args[0]);};
+  window.TaekinV55Guide={info,visitedKey,open:key=>{
+    const chosen=info[key]?key:activeGame;
+    if(!info[chosen])return;
+    try{localStorage.removeItem(visitedKey(chosen));}catch(_){}
+    schedulePrompt(chosen);
+  }};
+})();
+
+/* ====================== v55 · 모바일 글씨·화면 버튼 이동/숨기기 ======================
+ * 짧게 탭: 조절창 열기 / 드래그: 위치 이동 / 길게 누르기: 숨김
+ * 설정에서 버튼을 다시 표시할 수 있습니다. */
+(() => {
+  'use strict';
+  const btn=document.getElementById('v49-float-display');
+  const panel=document.getElementById('v49-display-panel');
+  const restore=document.getElementById('v55-restore-display');
+  const HIDE_KEY='taekin.arcade.v55.hideDisplayButton';
+  const POSITION_KEY='taekin.arcade.v55.displayPosition';
+  let dragging=false, longPress=false, suppressClick=false, pointerId=null;
+  let startX=0,startY=0,rect=null,hold=null,last={x:0,y:0};
+  const screen=()=>({w:innerWidth,h:innerHeight});
+  function persist(key,value){try{localStorage.setItem(key,value);}catch(_){}}
+  function syncHidden(){
+    let hidden=false;try{hidden=localStorage.getItem(HIDE_KEY)==='1';}catch(_){}
+    btn.classList.toggle('v55-quick-hidden',hidden);
+    restore.hidden=!hidden;
+    restore.setAttribute('aria-hidden',String(!hidden));
+  }
+  function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
+  function moveTo(x,y,save=true){
+    const {w,h}=screen(),width=btn.offsetWidth||110,height=btn.offsetHeight||44;
+    x=clamp(x,5,Math.max(5,w-width-5));
+    y=clamp(y,5,Math.max(5,h-height-5));
+    btn.style.left=x+'px';btn.style.top=y+'px';btn.style.right='auto';btn.style.bottom='auto';
+    last={x,y};if(save)persist(POSITION_KEY,JSON.stringify(last));
+  }
+  try{const pos=JSON.parse(localStorage.getItem(POSITION_KEY)||'null');if(pos&&Number.isFinite(pos.x)&&Number.isFinite(pos.y))requestAnimationFrame(()=>moveTo(pos.x,pos.y,false));}catch(_){}
+  syncHidden();
+  btn.setAttribute('title','짧게 누르기: 글씨·화면 설정 / 끌기: 위치 이동 / 길게 누르기: 숨기기');
+  // 기존 클릭 이벤트보다 먼저 실행하도록 캡처 단계에서 드래그/길게누르기 클릭을 차단합니다.
+  btn.addEventListener('click',e=>{
+    if(!suppressClick)return;
+    e.preventDefault();e.stopImmediatePropagation();suppressClick=false;
+  },true);
+  btn.addEventListener('pointerdown',e=>{
+    if(e.button!==0||e.isPrimary===false)return;
+    startX=e.clientX;startY=e.clientY;pointerId=e.pointerId;
+    rect=btn.getBoundingClientRect();dragging=false;longPress=false;
+    // 시작 즉시 포인터를 붙잡아 손가락이 버튼 밖으로 나가도 이동을 계속 추적합니다.
+    try{btn.setPointerCapture(pointerId);}catch(_){}
+    hold=setTimeout(()=>{
+      if(dragging)return;
+      longPress=true;suppressClick=true;
+      persist(HIDE_KEY,'1');syncHidden();panel.hidden=true;
+      document.getElementById('v49-panel-close')?.click();
+      // 버튼 숨김은 저장 기록/설정을 건드리지 않습니다.
+    },850);
+  });
+  btn.addEventListener('pointermove',e=>{
+    if(e.pointerId!==pointerId||!rect||longPress)return;
+    const dx=e.clientX-startX,dy=e.clientY-startY;
+    if(!dragging&&Math.hypot(dx,dy)>8){
+      dragging=true;clearTimeout(hold);suppressClick=true;
+      try{btn.setPointerCapture(pointerId);}catch(_){}
+    }
+    if(dragging){e.preventDefault();moveTo(rect.left+dx,rect.top+dy,false);}
+  });
+  function endPointer(e){
+    if(e&&pointerId!==null&&e.pointerId!==pointerId)return;
+    clearTimeout(hold);
+    if(dragging)persist(POSITION_KEY,JSON.stringify(last));
+    if(dragging||longPress){suppressClick=true;setTimeout(()=>{suppressClick=false;},550);}
+    dragging=false;longPress=false;pointerId=null;rect=null;
+  }
+  btn.addEventListener('pointerup',endPointer);btn.addEventListener('pointercancel',endPointer);
+  window.addEventListener('resize',()=>{if(btn.style.left)moveTo(last.x,last.y,false);});
+  restore.addEventListener('click',()=>{
+    try{localStorage.removeItem(HIDE_KEY);}catch(_){}
+    syncHidden();
+    // 설정 팝업 뒤에 숨지 않도록 조절 버튼 위치를 유지한 채 다시 표시합니다.
+  });
+  window.TaekinV55Display={syncHidden,moveTo};
 })();

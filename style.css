@@ -2735,3 +2735,33 @@ body[data-theme=light] .v49-help-menu>summary{background:#ecfaf2;color:#244c49}b
     overflow-wrap:anywhere!important;
   }
 }
+
+/* ====================== v55 · 게임별 첫 설명/나가기 확인/이동 버튼 ====================== */
+.v55-dialog{width:min(440px,calc(100vw - 24px));max-width:100%;max-height:min(85dvh,640px);padding:0;border:1px solid #7cc1af;border-radius:22px;box-shadow:0 24px 80px #000b;background:#1b333f;color:#eef8fb;overscroll-behavior:contain;overflow-y:auto}
+.v55-dialog::backdrop{background:rgba(4,10,18,.7);backdrop-filter:blur(4px)}
+.v55-dialog-card{box-sizing:border-box;padding:clamp(16px,4vw,26px);min-width:0}
+.v55-dialog-card *{box-sizing:border-box;overflow-wrap:anywhere}
+.v55-kicker{display:block;color:#a1ecd1;font-size:11px;letter-spacing:1px;font-weight:850;margin-bottom:8px}
+.v55-dialog h2{font-size:clamp(19px,4.4vw,25px);margin:0 0 14px;line-height:1.3;color:#fff7e6}
+.v55-dialog p{line-height:1.6;margin:10px 0;font-size:15px}
+.v55-dialog .v55-controls{background:#27515d;border:1px solid #78a9a2;border-radius:12px;padding:12px;color:#e9fffa}
+.v55-dialog .v55-footnote{font-size:12px;opacity:.8;margin-bottom:0}
+.v55-dialog-actions{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}
+.v55-dialog-actions button{flex:1 1 156px;min-width:0;min-height:48px;font-size:14px;font-weight:800;white-space:normal;line-height:1.4;padding:10px;border-radius:11px;cursor:pointer}
+.v55-button-primary{border:1px solid #b6f0da;background:#36a98d;color:#052522}
+.v55-button-outline{border:1px solid #86aaa9;background:#304d58;color:#f3fffb}
+.v55-dialog-actions button[hidden]{display:none!important}
+.v55-dialog-actions button:focus-visible{outline:3px solid #ffe391;outline-offset:2px}
+body[data-theme=light] .v55-dialog{background:#edf9f5;color:#193d47}
+body[data-theme=light] .v55-dialog h2{color:#153e42}
+body[data-theme=light] .v55-dialog .v55-controls{background:#d6ece6;color:#224747}
+body[data-theme=light] .v55-button-outline{background:#dcece9;color:#204447}
+.v55-mobile-hint{display:none;max-width:100%;padding:7px 11px;margin:6px 0 0;line-height:1.4;background:#275a5d;color:#e2fff9;border-left:3px solid #94f5db;border-radius:8px;overflow-wrap:anywhere;font-size:12px}
+.v49-float-display.v55-quick-hidden{display:none!important}
+@media(max-width:720px){
+  .v55-mobile-hint{display:block}
+  .v49-float-display{touch-action:none!important;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;max-width:calc(100vw - 12px)}
+  .v55-dialog{font-size:15px;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  .v55-dialog-actions{flex-direction:column}
+  .v55-dialog-actions button{flex:0 0 auto;width:100%;min-height:45px}
+}

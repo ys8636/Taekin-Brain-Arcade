@@ -5,16 +5,16 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="dark light" name="color-scheme"/>
-<meta name="taekin-version" content="54"/>
-<title>TAEKIN BRAIN ARCADE | v54</title>
+<meta name="taekin-version" content="55"/>
+<title>TAEKIN BRAIN ARCADE | v55</title>
 <meta name="description" content="TAEKIN BRAIN ARCADE에서 숫자야구, 2048, 지뢰찾기, 파이프 연결, 시카쿠, 블록 퍼즐 6종과 총 1,500단계를 즐겨보세요.">
 <meta name="theme-color" content="#172124">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link href="style.css?v=54" rel="stylesheet"/>
+<link href="style.css?v=55" rel="stylesheet"/>
 
 
 
-<script defer="" src="script.js?v=54"></script>
+<script defer="" src="script.js?v=55"></script>
 
 
 
@@ -253,7 +253,7 @@
 <button type="button" data-v46-help="game">게임 소개</button><button type="button" data-v46-help="controls">조작 방법</button>
 <button type="button" data-v46-help="goal">단계 목표</button><button type="button" data-v46-help="hint">힌트 안내</button>
 <button type="button" data-v46-help="stages">단계 선택</button><button type="button" data-v46-help="zoom">게임판 크기</button>
-</div></details></div><p class="game-description" id="active-description"></p></div>
+</div></details></div><p class="game-description" id="active-description"></p><p class="v55-mobile-hint" id="v55-mobile-hint" aria-label="스마트폰 조작 방법"></p></div>
 <div class="play-title-tools"><button class="btn btn-secondary v41-jump-board" id="v41-jump-board" type="button">🎮 게임판 바로가기</button><button class="tour-entry" id="game-tutorial" type="button">📖 조작 튜토리얼</button><button class="btn btn-secondary v19-pause-btn" id="v19-pause" type="button">Ⅱ 일시정지</button><button class="btn btn-secondary" id="v19-save-now" type="button">▣ 현재 판 저장</button><button class="btn btn-secondary" id="v19-resume-game" type="button">이어하기</button><span class="game-index" id="game-counter">01 / 06</span></div>
 </div>
 
@@ -444,10 +444,10 @@
 </div>
 </section>
 </main>
-<footer class="footer"><span>TAEKIN BRAIN ARCADE · 플레이어 닉네임 설정 지원</span><span>HTML · CSS · JavaScript · <span id="site-version" data-app-version>v54</span></span></footer>
+<footer class="footer"><span>TAEKIN BRAIN ARCADE · 플레이어 닉네임 설정 지원</span><span>HTML · CSS · JavaScript · <span id="site-version" data-app-version>v55</span></span></footer>
 </div>
 <!-- 빠른 글씨·화면 조절: 설정 팝업을 열지 않아도 즉시 조절 가능 -->
-<button type="button" id="v49-float-display" class="v49-float-display" aria-controls="v49-display-panel" aria-expanded="false" aria-label="글씨 크기와 화면 배율 조절">🔠 글씨·화면</button>
+<button type="button" id="v49-float-display" class="v49-float-display" aria-controls="v49-display-panel" aria-expanded="false" aria-label="글씨 크기와 화면 배율 조절. 길게 누르면 숨기고 드래그로 이동할 수 있습니다.">🔠 글씨·화면</button>
 <aside id="v49-display-panel" class="v49-display-panel" role="region" aria-labelledby="v49-panel-title" hidden>
   <div class="v49-display-head"><strong id="v49-panel-title">🔠 글씨·화면 바로 조절</strong><button type="button" id="v49-panel-close" aria-label="조절창 닫기">✕</button></div>
   <p>게임 화면을 보면서 바로 조절할 수 있어요. 이 조절창의 글씨는 항상 읽을 수 있는 크기로 유지됩니다.</p>
@@ -461,6 +461,31 @@
   </div>
   <div class="v49-display-footer"><button type="button" id="v49-font-reset">글씨 100%</button><button type="button" id="v49-ui-reset">화면 100%</button><button type="button" id="v49-reset-both">모두 기본</button></div>
 </aside>
+<dialog class="v55-dialog" id="v55-first-guide" aria-labelledby="v55-guide-heading" aria-modal="true">
+  <div class="v55-dialog-card">
+    <span class="v55-kicker">🎮 HOW TO PLAY</span>
+    <h2 id="v55-guide-heading">게임 방법이 필요하신가요?</h2>
+    <p class="v55-brief" id="v55-guide-summary" hidden></p>
+    <p class="v55-controls" id="v55-guide-controls" hidden></p>
+    <div class="v55-dialog-actions">
+      <button type="button" id="v55-guide-skip" class="v55-button-outline">괜찮아요 · 다시 묻지 않기</button>
+      <button type="button" id="v55-guide-show" class="v55-button-primary">📖 짧게 설명 보기</button>
+      <button type="button" id="v55-guide-done" class="v55-button-primary" hidden>게임 시작하기 ✓</button>
+    </div>
+    <p class="v55-footnote">나중에도 게임 제목 옆 「📖 도움말」에서 볼 수 있어요.</p>
+  </div>
+</dialog>
+<dialog class="v55-dialog v55-leave-dialog" id="v55-leave-dialog" aria-labelledby="v55-leave-title" aria-modal="true">
+  <div class="v55-dialog-card">
+    <span class="v55-kicker">⏸️ GAME IN PROGRESS</span>
+    <h2 id="v55-leave-title">진행 중인 게임을 나갈까요?</h2>
+    <p id="v55-leave-message">현재 게임판을 저장하고 이동할 수 있어요.</p>
+    <div class="v55-dialog-actions">
+      <button type="button" class="v55-button-primary" id="v55-leave-stay">▶ 계속 플레이</button>
+      <button type="button" class="v55-button-outline" id="v55-leave-go">▣ 저장하고 나가기</button>
+    </div>
+  </div>
+</dialog>
 <dialog aria-labelledby="tutorial-title" class="tutorial-dialog" id="tutorial-dialog">
 <div class="tutorial-shell">
 <div class="tutorial-head"><span class="eyebrow">HOW TO PLAY · INTERACTIVE GUIDE</span><button aria-label="튜토리얼 닫기" class="tutorial-close" id="tutorial-close" type="button">✕</button></div>
@@ -563,6 +588,7 @@
         <label class="v32-setting-toggle"><span><strong>게임 나가기 확인</strong><small>플레이 도중 메뉴 이동을 실수로 누르는 것 방지</small></span><input type="checkbox" id="v32-leave-confirm" role="switch"></label>
         <label class="v32-setting-toggle"><span><strong>모바일 버튼 여유 공간</strong><small>큰 터치 영역과 스크롤 충돌 감소</small></span><input type="checkbox" id="v32-touch-spacing" role="switch"></label>
         <button class="v32-action-link" id="v32-guide-reopen" type="button">📖 첫 방문 가이드 다시 보기</button>
+        <button class="v32-action-link" id="v55-restore-display" type="button" hidden aria-hidden="true">🔠 글씨·화면 버튼 다시 표시하기</button>
       </section>
       <section class="v32-setting-section" aria-labelledby="v32-sound-title">
         <h3 id="v32-sound-title">🎵 배경음악과 효과음</h3>
