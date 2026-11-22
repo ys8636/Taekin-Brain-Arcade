@@ -2970,6 +2970,7 @@ $('hero-pause').addEventListener('click',()=>{
   heroPaused=!heroPaused;
   $('hero-pause').setAttribute('aria-pressed',String(heroPaused));
   $('hero-pause').textContent=heroPaused?'▶ 다시 재생':'Ⅱ 일시정지';
+  $('hero-pause').setAttribute('aria-label',heroPaused?'소개 슬라이드 자동 재생':'소개 슬라이드 자동 넘김 일시정지');
   resetHeroTimer();
 });
 heroRoot.addEventListener('focusin',stopHeroTimer);
@@ -5502,7 +5503,7 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
 */
 (() => {
   'use strict';
-  const VERSION=66;
+  const VERSION=67;
   const notice=document.getElementById('v52-update-notice');
   const detail=document.getElementById('v52-update-detail');
   const now=document.getElementById('v52-update-now');
