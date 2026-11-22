@@ -1,0 +1,49 @@
+/* v62 · 판타지형 성장 테두리 + 게임 안의 확인창 + 모바일 키보드 */
+.v62-dialog{color:#f6f8f4;width:min(470px,calc(100vw - 24px));max-width:470px;max-height:82dvh;border:1px solid #78d6b9;border-radius:20px;padding:0;background:linear-gradient(145deg,#213b45,#172c39 75%,#253344);box-shadow:0 25px 85px #000b;overflow:auto;overscroll-behavior:contain}
+.v62-dialog::backdrop{background:rgba(2,9,17,.76);backdrop-filter:blur(4px)}
+.v62-dialog-panel{padding:clamp(18px,4vw,28px)}
+.v62-dialog-eyebrow{font-size:11px;font-weight:850;letter-spacing:2px;color:#90edca;margin-bottom:13px}
+.v62-dialog h2{font-size:clamp(19px,5vw,26px);line-height:1.35;margin:0 0 12px;overflow-wrap:anywhere}
+.v62-dialog-detail{white-space:pre-line;font-size:14px;line-height:1.75;color:#d2e4e9;overflow-wrap:anywhere;margin:0 0 18px}
+.v62-dialog-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}
+.v62-dialog-actions button{width:100%;min-width:0;min-height:49px;border-radius:11px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;overflow-wrap:anywhere;padding:10px 8px}
+.v62-dialog-cancel{color:#eff8f4;background:#33505a;border:1px solid #73939e}
+.v62-dialog-accept{color:#112920;background:#68d9b3;border:1px solid #9aefd3}
+.v62-dialog-accept.danger{color:#392018;background:#efb389;border-color:#ffdab4}
+.v62-dialog-accept:disabled{opacity:.4;cursor:not-allowed}
+.v62-dialog-phrase-label{display:grid;gap:8px;font-size:13px;color:#f0e3ca;font-weight:800}
+.v62-dialog-phrase{border:1px solid #7897aa;border-radius:9px;background:#162b35;color:white;padding:12px;min-height:44px;width:100%;font:inherit;font-size:16px}
+.v62-dialog :focus-visible{outline:3px solid #ffeca5;outline-offset:3px}
+.v27-nickname-edit .v62-nickname-apply{min-height:44px;width:100%;border-radius:11px;border:1px solid #9aefc9;background:linear-gradient(120deg,#278c72,#43c6a0);color:white;font:inherit;font-size:14px;font-weight:900;cursor:pointer;padding:10px}
+.v27-nickname-edit .v62-nickname-apply:disabled{opacity:.5;cursor:default}
+.v62-keyboard-dismiss{position:fixed;right:10px;bottom:70px;z-index:20001;border:2px solid #83e4c8;border-radius:999px;background:#21483e;color:white;font:inherit;font-size:13px;font-weight:850;padding:9px 16px;min-height:42px;box-shadow:0 4px 20px #0007;cursor:pointer;white-space:nowrap}
+.v62-keyboard-dismiss[hidden]{display:none!important}
+@media(hover:hover) and (pointer:fine){.v62-keyboard-dismiss{display:none!important}}
+#v26-header-profile.v61-player{overflow:visible!important;isolation:isolate}
+#v26-header-profile.v61-player .v62-head-crest{position:absolute;left:-10px;top:-13px;width:77px;height:90px;z-index:1;pointer-events:none;filter:drop-shadow(0 0 6px var(--v61-glow))}
+#v26-header-profile.v61-player>.v26-avatar{position:relative!important;z-index:2!important;margin-left:7px!important;background:linear-gradient(135deg,#23383b,#263c45)!important;color:#e7f9ed!important;border-radius:12px!important;box-shadow:0 0 0 2px #132932!important}
+#v26-header-profile.v61-player .v62-head-crest svg,.v61-mobile .v62-head-crest svg,.v62-preview-crest svg{width:100%;height:100%;overflow:visible;display:block}
+#v26-header-profile.v61-player .v61-rank-name,#v26-header-profile.v61-player .v61-progress{z-index:3}
+#v26-header-profile.v61-player .v61-head-detail{z-index:2}
+.v61-mobile{overflow:visible!important;isolation:isolate}
+.v61-mobile .v62-head-crest{position:absolute;left:-12px;top:-13px;width:77px;height:82px;pointer-events:none;z-index:1;filter:drop-shadow(0 0 5px var(--v61-glow))}
+.v61-mobile .v61-mobile-avatar{position:relative!important;z-index:2!important;margin-left:8px!important;background:#1e3137!important;color:#e5f8ef!important}
+.v61-mobile .v61-mobile-detail,.v61-mobile .v61-mobile-badge,.v61-mobile .v61-mobile-rank{position:relative;z-index:2}
+.v61-rank-grid{gap:11px!important}
+.v61-rank-card{position:relative;display:flex!important;flex-direction:column!important;align-items:center!important;min-height:157px;gap:5px!important;text-align:center;padding:11px 8px 10px!important;overflow:visible!important;isolation:isolate}
+.v61-rank-card .v61-rank-icon{display:none!important}
+.v61-rank-card .v62-preview-crest{display:block;width:min(100%,112px);height:98px;position:relative;z-index:1;filter:drop-shadow(0 0 9px var(--v61-glow))}
+.v61-rank-card .v61-rank-desc{display:flex;align-items:center!important;flex-direction:column!important;gap:4px!important;width:100%;white-space:normal}
+.v61-rank-card .v61-rank-desc strong{font-size:12px!important;max-width:100%;white-space:normal!important;line-height:1.25;overflow-wrap:anywhere}
+.v61-rank-card .v61-rank-desc small{font-size:11px!important}
+.v61-rank-card .v62-preview-detail{font-size:10px;color:#cfe4da;line-height:1.3;overflow-wrap:anywhere}
+.v61-rank-card.is-locked{opacity:1!important;filter:none!important;background:rgba(9,18,26,.4)!important}
+.v61-rank-card.is-locked .v62-preview-crest{filter:saturate(.65) brightness(.85)}
+.v61-rank-card.is-current{background:linear-gradient(160deg,var(--v61-glow),rgba(255,255,255,.08))!important;box-shadow:0 0 20px var(--v61-glow)!important}
+[data-v61-rank=legend] .v62-preview-crest,[data-v61-rank=legend] .v62-head-crest{filter:drop-shadow(0 0 10px #ffc36aa8)!important}
+[data-v61-rank=aurora] .v62-preview-crest,[data-v61-rank=aurora] .v62-head-crest{filter:drop-shadow(0 0 12px #bb94ff8b)!important}
+body[data-theme=light] .v61-rank-card .v62-preview-detail{color:#354f4b}
+@media(max-width:1140px){.v61-rank-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:720px){.v61-mobile{min-height:63px!important}.v61-rank-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.v61-rank-card{min-height:150px;padding:7px 5px 10px!important}.v61-rank-card .v62-preview-crest{height:92px;width:100px}#v26-header-profile.v61-player{display:none!important}.v62-dialog-panel{padding:18px}}
+@media(max-width:340px){.v61-mobile .v62-head-crest{width:68px;left:-7px}.v61-mobile .v61-mobile-avatar{margin-left:4px!important}.v61-rank-card .v62-preview-crest{width:88px;height:88px}}
+@media(prefers-reduced-motion:reduce){.v62-dialog::backdrop{backdrop-filter:none}}

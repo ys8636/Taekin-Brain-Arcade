@@ -22,7 +22,7 @@ function init(){
  box.append(h,p,grid,foot);growth.after(box);
  let pending=false;
  function render(){
-   const n=$("v27-nickname-input")?.value.trim().slice(0,20)||"플레이어",level=realLevel(),rank=stages.reduce((v,t)=>level>=t[0]?t:v,stages[0]),next=stages.find(t=>t[0]>level);
+   const n=$("v25-player-name")?.value.trim().slice(0,20)||"플레이어",level=realLevel(),rank=stages.reduce((v,t)=>level>=t[0]?t:v,stages[0]),next=stages.find(t=>t[0]>level);
    const t=$("v22-title")?.textContent.trim()||"견습 탐험가",b=$("v22-featured-badge"),icon=b?.querySelector(".v22-featured-icon")?.textContent.trim()||"",bn=icon?b.textContent.trim().slice(icon.length).trim():"";
    const symbol=$("v19-profile-mark")?.textContent.trim()||"T.",frame=$("v19-profile-mark")?.dataset.frame||"default";
    const xp=Math.max(0,Math.min(100,parseFloat($("v22-xp-bar")?.style.width)||0));

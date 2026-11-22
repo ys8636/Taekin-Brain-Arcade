@@ -387,7 +387,7 @@ function resetBaseball() {
   setStatus("bb-status", `0~9에서 서로 다른 숫자 ${baseball.digits}개를 입력하세요.${Number.isFinite(baseball.maxAttempts) ? ` · 최대 ${baseball.maxAttempts}회` : ""}`);
   renderBaseballJudgeCard(null);
   v19UpdateBaseballCandidates();
-  $("bb-input").focus();
+  if(!matchMedia('(pointer:coarse)').matches && innerWidth>720)$("bb-input").focus();
 }
 function submitBaseball(event) {
   event.preventDefault();
@@ -420,7 +420,8 @@ function submitBaseball(event) {
     const remain = Number.isFinite(baseball.maxAttempts) ? ` · 남은 기회 ${baseball.maxAttempts - baseball.guesses.length}회` : "";
     setStatus("bb-status", (result.text === "OUT" ? "OUT! 일치하는 숫자가 없어요." : `${result.text} · 다음 숫자를 추리해 보세요.`) + remain);
     input.value = "";
-    input.focus();
+    if(matchMedia('(pointer:coarse)').matches||innerWidth<=720)input.blur();
+    else input.focus();
   }
 }
 
@@ -2124,12 +2125,12 @@ function selectTierAndLaunch(tier){
   stageTier=tier;stagePage=0;saveSelectedTier(activeGame,tier);
   launchStage(tierBase(tier)+Math.min(49,completedTierStages(activeGame,tier)));
 }
-function skipCurrentStage(){
+async function skipCurrentStage(){
   if(!activeGame||challenge.mode!=='stage'||challenge.reported)return;
   const index=challenge.stage,used=skippedStages(activeGame),tier=tierOf(index),local=localStage(index)-1;
   const tierSkips=used.filter(i=>tierOf(i)===tier);
   if(local>=49||tierSkips.length>=MAX_SKIPS||local!==completedTierStages(activeGame,tier))return;
-  if(!window.confirm(`${difficultyName(tier)} ${local+1}단계를 건너뛰고 다음 단계로 이동할까요? 별과 보상 없이 진행합니다. 난이도별 최대 ${MAX_SKIPS}회입니다.`))return;
+  if(!(await window.TaekinDialog.confirm(`${difficultyName(tier)} ${local+1}단계를 건너뛰고 다음 단계로 이동할까요? 별과 보상 없이 진행합니다. 난이도별 최대 ${MAX_SKIPS}회입니다.`)))return;
   arcadeProgress.skipped[activeGame]=[...used,index];
   arcadeProgress.tierStages[activeGame][tier]=local+1;
   arcadeProgress.stages[activeGame]=completedStages(activeGame);
@@ -2324,9 +2325,9 @@ function launchMarathonRound(round=arcadeProgress.arcadeRun.round,practice=false
   RESTART_ACTIONS[key]();renderStageChallenge();
 }
 // 모든 도전 진행도를 초기화합니다. BGM과 효과음 설정은 보존합니다.
-function resetAllProgress(){
-  if(!window.confirm('개별 1,500단계·별·도전 모드·미션 기록을 모두 초기화할까요? 이 작업은 되돌릴 수 없습니다.'))return;
-  if(!v31FinalResetCheck('모든 진행 기록'))return;
+async function resetAllProgress(){
+  if(!(await window.TaekinDialog.confirm('개별 1,500단계·별·도전 모드·미션 기록을 모두 초기화할까요? 이 작업은 되돌릴 수 없습니다.')))return;
+  if(!(await v31FinalResetCheck('모든 진행 기록')))return;
   arcadeProgress=upgradeProgressV29({
     stages:{},stars:{},skipped:{},tierStages:{},selectedTiers:{},stageVersion:29,
     daily:{date:localDateKey(),selected:'easy',records:{}},
@@ -2339,9 +2340,9 @@ function resetAllProgress(){
   saveArcadeProgress();
   showHome();
 }
-function resetMarathonProgress(){
-  if(!window.confirm('도전 모드 100라운드 기록만 초기화할까요? 개별 게임 1,500단계는 유지됩니다.'))return;
-  if(!window.confirm('마지막 확인: 도전 100라운드 기록을 초기화합니다. 계속할까요?'))return;
+async function resetMarathonProgress(){
+  if(!(await window.TaekinDialog.confirm('도전 모드 100라운드 기록만 초기화할까요? 개별 게임 1,500단계는 유지됩니다.')))return;
+  if(!(await window.TaekinDialog.confirm('마지막 확인: 도전 100라운드 기록을 초기화합니다. 계속할까요?')))return;
   arcadeProgress.arcadeRun={round:0,step:0};
   saveArcadeProgress();renderHomeProgress();
 }
@@ -2503,18 +2504,18 @@ function advanceChallenge(){
   }else selectTierAndLaunch(stageTier);
 }
 // 선택한 난이도의 50단계 기록만 초기화합니다. 도전 모드 라운드는 유지됩니다.
-function resetAllStageProgress(){
-  if(!window.confirm('6개 게임의 모든 난이도 1,500단계와 별 기록을 초기화할까요? 종합 도전 100라운드는 유지됩니다.'))return;
-  if(!v31FinalResetCheck('전체 단계 및 별 기록'))return;
+async function resetAllStageProgress(){
+  if(!(await window.TaekinDialog.confirm('6개 게임의 모든 난이도 1,500단계와 별 기록을 초기화할까요? 종합 도전 100라운드는 유지됩니다.')))return;
+  if(!(await v31FinalResetCheck('전체 단계 및 별 기록')))return;
   arcadeProgress.stages={};arcadeProgress.tierStages={};arcadeProgress.stars={};arcadeProgress.skipped={};
   upgradeProgressV29(arcadeProgress);
   saveArcadeProgress();showHome();renderHomeProgress();
 }
-function resetCurrentStageProgress(){
+async function resetCurrentStageProgress(){
   if(!activeGame)return;
   const key=activeGame,tier=stageTier,base=tierBase(tier);
-  if(!window.confirm(`${gameInfo[key].name}의 ${difficultyName(tier)} 50단계 기록만 초기화할까요? 다른 난이도는 유지됩니다.`))return;
-  if(!window.confirm('마지막 확인: 선택한 난이도의 50단계 기록을 지웁니다. 계속할까요?'))return;
+  if(!(await window.TaekinDialog.confirm(`${gameInfo[key].name}의 ${difficultyName(tier)} 50단계 기록만 초기화할까요? 다른 난이도는 유지됩니다.`)))return;
+  if(!(await window.TaekinDialog.confirm('마지막 확인: 선택한 난이도의 50단계 기록을 지웁니다. 계속할까요?')))return;
   arcadeProgress.tierStages[key][tier]=0;
   arcadeProgress.stages[key]=completedStages(key);
   for(let i=base;i<base+50;i++)delete arcadeProgress.stars?.[key]?.[i];
@@ -3356,7 +3357,7 @@ $('import-progress-file').addEventListener('change',async event=>{
     const root=JSON.parse(await file.text());
     const imported=validateImportedProgress(root);
     const extra=v39ValidateImportExtras(root.extra);
-    if(!confirm('현재 기록을 백업 파일의 기록으로 바꿀까요? 진행·닉네임·꾸미기·설정까지 포함됩니다. 중요한 기록은 먼저 내보내기를 권장합니다.'))return;
+    if(!(await window.TaekinDialog.confirm('현재 기록을 백업 파일의 기록으로 바꿀까요? 진행·닉네임·꾸미기·설정까지 포함됩니다. 중요한 기록은 먼저 내보내기를 권장합니다.')))return;
     v39ImportSafely(imported,extra);
     window.TaekinV32Save?.record(true);
     $('backup-message').textContent='✓ 기록 복원 완료. 설정·꾸미기는 새로고침 후에도 유지됩니다.';
@@ -4082,15 +4083,15 @@ function v41StyleShikakuPreview(){
       authorized=true;$v('v20-master-tools').hidden=false;window.TaekinMaster.setUnlocked(true);showMasterMessage('인증 성공! 모든 해금 요소가 열렸어요. 실제 기록·XP·별은 변경되지 않습니다.');masterCode.value='';
     }catch(error){showMasterMessage(error.message);}
   });
-  $v('v20-master-unlock').addEventListener('click',()=>{
+  $v('v20-master-unlock').addEventListener('click',async()=>{
     if(!authorized)return;
-    if(!window.confirm('모든 잠금 요소를 특별 해금할까요? 실제 게임 기록·별·경험치는 변경되지 않습니다.'))return;
+    if(!(await window.TaekinDialog.confirm('모든 잠금 요소를 특별 해금할까요? 실제 게임 기록·별·경험치는 변경되지 않습니다.')))return;
     extraUnlocks=new Set(BADGES.map(a=>a.id));safeSet(BONUS_KEY,[...extraUnlocks]);window.TaekinMaster.setUnlocked(true);renderAll();
     showMasterMessage('모든 해금 요소를 열었습니다. 실제 클리어 기록·경험치는 그대로입니다.');
   });
-  $v('v20-master-relock').addEventListener('click',()=>{
+  $v('v20-master-relock').addEventListener('click',async()=>{
     if(!authorized)return;
-    if(!window.confirm('특별 해금만 해제할까요? 플레이로 달성한 업적은 유지됩니다.'))return;
+    if(!(await window.TaekinDialog.confirm('특별 해금만 해제할까요? 플레이로 달성한 업적은 유지됩니다.')))return;
     extraUnlocks.clear();safeSet(BONUS_KEY,[]);window.TaekinMaster.setUnlocked(false);renderAll();showMasterMessage('마스터 특별 해금을 해제했습니다. 실제 플레이로 얻은 보상은 유지돼요.');
   });
   // 명예의 전당에 업적 상태를 제공합니다. 비밀 코드 관련 정보는 제공하지 않습니다.
@@ -4676,7 +4677,7 @@ function v41StyleShikakuPreview(){
     const l=$('v22-level')?.textContent || 'LV. 1';
     const t=$('v22-title')?.textContent || '견습 탐험가';
     const emblem=$('v19-profile-mark')?.textContent?.trim() || '✦';
-    $('v26-header-level').textContent=($('v27-nickname-input')?.value.trim()||'플레이어')+' · '+l;
+    $('v26-header-level').textContent=($('v25-player-name')?.value.trim()||'플레이어')+' · '+l;
     $('v26-header-title').textContent=t;
     const avatar=document.querySelector('.v26-avatar');
     avatar.textContent=emblem;
@@ -4828,9 +4829,9 @@ function v41StyleShikakuPreview(){
     window.TaekinV26Navigation?.refresh?.();
   }
   nickname?.addEventListener('input',()=>{
-    // 닉네임 변경은 통합 저장·백업 처리와 연동됩니다.
-    certificateNickname.value=nickname.value;
-    certificateNickname.dispatchEvent(new Event('input',{bubbles:true}));
+    // 입력 중에는 저장하지 않습니다. v62의 닉네임 확인창으로 적용을 확정합니다.
+    const note=$('v27-nickname-status');
+    if(note)note.textContent='변경 예정인 닉네임이에요. 아래 변경 버튼을 누른 뒤 확인해 주세요.';
   });
   window.addEventListener('taekin-nickname-updated',syncNickname);
   window.addEventListener('storage',()=>window.requestAnimationFrame(syncNickname));
@@ -5126,9 +5127,8 @@ function v41StyleShikakuPreview(){
 })();
 
 // 전체 초기화는 2회 확인 + 정확한 문구 입력으로 보호합니다.
-function v31FinalResetCheck(subject){
-  const answer=window.prompt(`${subject}을(를) 영구 삭제하려면 '초기화'를 입력하세요.\n취소하거나 다른 글자를 입력하면 현재 기록은 유지됩니다.\n권장: 내 기록 → 기록 백업(JSON) 먼저 저장`, '');
-  return answer === '초기화';
+async function v31FinalResetCheck(subject){
+  return await window.TaekinDialog.requirePhrase('초기화',subject);
 }
 
 
