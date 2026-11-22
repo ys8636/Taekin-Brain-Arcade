@@ -2956,14 +2956,14 @@ function setHero(index,userAction=false){
 function stopHeroTimer(){if(heroTimer){clearInterval(heroTimer);heroTimer=null;}}
 function resetHeroTimer(){
   stopHeroTimer();
-  // 약 2초마다 자동 전환. 배너가 너무 빠르게 지나가지 않도록 조정합니다.
+  // 약 1.5초마다 자동 전환. 배너가 너무 빠르게 지나가지 않도록 조정합니다.
   // 일시정지 버튼 또는 브라우저 탭 숨김 상태에서만 전환을 중단합니다.
   // Focus on the carousel's buttons must not silently stop autoplay on mobile.
   // Only a deliberate pause or an explicit reduced-motion setting disables it.
   if(!heroPaused && !document.hidden && !document.body.classList.contains('v19-reduced-motion')){
     heroTimer=setInterval(()=>{
       if(!$('home-screen').classList.contains('hidden')) setHero(heroIndex+1);
-    },4500);
+    },1500);
   }
 }
 $('hero-prev').addEventListener('click',()=>setHero(heroIndex-1,true));
@@ -5504,7 +5504,7 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
 */
 (() => {
   'use strict';
-  const VERSION=68;
+  const VERSION=69;
   const notice=document.getElementById('v52-update-notice');
   const detail=document.getElementById('v52-update-detail');
   const now=document.getElementById('v52-update-now');
