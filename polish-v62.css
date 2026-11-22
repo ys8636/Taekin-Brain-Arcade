@@ -47,3 +47,10 @@ body[data-theme=light] .v61-rank-card .v62-preview-detail{color:#354f4b}
 @media(max-width:720px){.v61-mobile{min-height:63px!important}.v61-rank-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.v61-rank-card{min-height:150px;padding:7px 5px 10px!important}.v61-rank-card .v62-preview-crest{height:92px;width:100px}#v26-header-profile.v61-player{display:none!important}.v62-dialog-panel{padding:18px}}
 @media(max-width:340px){.v61-mobile .v62-head-crest{width:68px;left:-7px}.v61-mobile .v61-mobile-avatar{margin-left:4px!important}.v61-rank-card .v62-preview-crest{width:88px;height:88px}}
 @media(prefers-reduced-motion:reduce){.v62-dialog::backdrop{backdrop-filter:none}}
+/* v63: allow the large rank crest to replace the old avatar, including mobile. */
+#v26-header-profile.v61-player>.v26-avatar,.v61-mobile .v61-mobile-avatar{display:none!important}
+#v26-header-profile.v61-player .v62-head-crest{left:2px!important;top:50%!important;transform:translateY(-50%);width:79px!important;height:86px!important;z-index:4!important}
+#v26-header-profile.v61-player .v61-head-detail{margin-left:75px!important;position:relative;z-index:5!important}
+.v61-mobile .v62-head-crest{left:4px!important;top:50%!important;transform:translateY(-50%);width:68px!important;height:72px!important;z-index:4!important}
+.v61-mobile .v61-mobile-detail{margin-left:65px!important;z-index:5!important}
+@media(max-width:340px){.v61-mobile .v62-head-crest{left:1px!important;width:58px!important;height:65px!important}.v61-mobile .v61-mobile-detail{margin-left:55px!important}}

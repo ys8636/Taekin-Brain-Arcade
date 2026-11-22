@@ -1,7 +1,7 @@
 /* TAEKIN BRAIN ARCADE v61: 기존 레벨/닉네임/대표 배지를 상단에 시각화합니다. */
 (()=>{"use strict";
 const $=id=>document.getElementById(id);
-const stages=[[1,"rookie","기본","✦"],[5,"bronze","브론즈","◆"],[10,"silver","실버","✧"],[15,"gold","골드","★"],[20,"platinum","플래티넘","❖"],[30,"diamond","다이아","💎"],[40,"aurora","오로라","✴"],[50,"legend","레전드","♛"]];
+const stages=[[1,"rookie","루키","✦"],[5,"bronze","브론즈","◆"],[10,"silver","실버","✧"],[15,"gold","골드","★"],[20,"platinum","플래티넘","❖"],[30,"diamond","다이아","💎"],[40,"aurora","마스터","✴"],[50,"legend","레전드","♛"]];
 const el=(tag,cls,txt)=>{const x=document.createElement(tag);if(cls)x.className=cls;if(txt!==undefined)x.textContent=txt;return x;};
 const realLevel=()=>{const v=$("v22-xp-label")?.textContent||"";if(!v.trim())return Math.max(1,Math.min(50,parseInt($("v22-level")?.textContent.match(/\d+/)?.[0])||1));const xp=Number(v.replace(/,/g,"").match(/\d+/)?.[0])||0;let l=1;while(l<50&&xp>=22*l*l+70*l)l++;return l;};
 function init(){
@@ -24,7 +24,7 @@ function init(){
  function render(){
    const n=$("v25-player-name")?.value.trim().slice(0,20)||"플레이어",level=realLevel(),rank=stages.reduce((v,t)=>level>=t[0]?t:v,stages[0]),next=stages.find(t=>t[0]>level);
    const t=$("v22-title")?.textContent.trim()||"견습 탐험가",b=$("v22-featured-badge"),icon=b?.querySelector(".v22-featured-icon")?.textContent.trim()||"",bn=icon?b.textContent.trim().slice(icon.length).trim():"";
-   const symbol=$("v19-profile-mark")?.textContent.trim()||"T.",frame=$("v19-profile-mark")?.dataset.frame||"default";
+   const symbol="✦",frame=$("v19-profile-mark")?.dataset.frame||"default";
    const xp=Math.max(0,Math.min(100,parseFloat($("v22-xp-bar")?.style.width)||0));
    for(const x of [chip,ribbon,box])x.dataset.v61Rank=rank[1];
    name.textContent=n;lvl.textContent="LV."+level;title.textContent=t;

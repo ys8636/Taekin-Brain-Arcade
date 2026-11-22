@@ -4964,7 +4964,7 @@ function v41StyleShikakuPreview(){
     const mark=$('v29-crest-icon'),avatar=$('v29-preview-avatar');
     if(mark)mark.textContent=rankFor(activeLevel).icon;
     if(avatar)avatar.textContent=rankFor(activeLevel).icon;
-    const nickname=$('v27-nickname-input')?.value.trim()||'플레이어';
+    const nickname=$('v25-player-name')?.value.trim()||'플레이어';
     $('v29-preview-nickname').textContent=nickname;
     $('v29-preview-rank').textContent=rankFor(activeLevel).name+' · LV. '+activeLevel;
     try{localStorage.setItem(KEY,JSON.stringify(current));}catch(_){}
@@ -5505,7 +5505,7 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
 */
 (() => {
   'use strict';
-  const VERSION=61;
+  const VERSION=63;
   const notice=document.getElementById('v52-update-notice');
   const detail=document.getElementById('v52-update-detail');
   const now=document.getElementById('v52-update-now');
@@ -5528,7 +5528,8 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
       const response=await fetch(url.href,{cache:'no-store',credentials:'same-origin'});
       if(!response.ok)return false;
       const remote=projectVersion(await response.json());
-      if(remote===null||remote<=VERSION)return false;
+      if(remote===null)return false;
+       if(remote<=VERSION){latest=null;ignored=null;notice.hidden=true;return false;}
       latest=remote;
       if(ignored!==remote){
         detail.textContent=`v${VERSION} → v${remote} · 플레이 기록은 유지돼요.`;
@@ -5548,6 +5549,8 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
     const url=new URL(location.href);
     url.searchParams.set('v',String(latest));
     url.searchParams.set('reload',String(Date.now()));
+     // Clear stale dismissed-update state before a full document reload.
+     notice.hidden=true;
     location.assign(url.href);
   }
   now.addEventListener('click',doUpdate);

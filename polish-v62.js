@@ -116,14 +116,14 @@
 
   // Illustrated rank collection: all eight designs remain previewable, locked tiers never affect XP.
   const specs={
-    rookie:{name:'초심자의 문장',min:1,light:'#98bcb4',deep:'#4a6b6a',gem:'#d8f7ea',wing:0,crown:0,icon:'✧',desc:'기본 방패'},
-    bronze:{name:'청동 수호자',min:5,light:'#e7ad75',deep:'#855039',gem:'#ffda9a',wing:1,crown:0,icon:'◆',desc:'청동 뿔 장식'},
-    silver:{name:'은빛 기사',min:10,light:'#c5e4f4',deep:'#69889b',gem:'#ebfcff',wing:2,crown:0,icon:'✦',desc:'은빛 양쪽 날개'},
-    gold:{name:'황금 정복자',min:15,light:'#f3d482',deep:'#916528',gem:'#fff1b5',wing:2,crown:1,icon:'★',desc:'황금 날개와 왕관'},
-    platinum:{name:'백금 기사단',min:20,light:'#89f0d5',deep:'#438f8a',gem:'#eaffef',wing:3,crown:1,icon:'✺',desc:'백금 다중 날개'},
-    diamond:{name:'푸른 수정의 영웅',min:30,light:'#9ecaff',deep:'#5478ba',gem:'#d8faff',wing:4,crown:1,icon:'❖',desc:'다이아 수정 장식'},
-    aurora:{name:'오로라 군주',min:40,light:'#d8a7ff',deep:'#835cb5',gem:'#ffd6ff',wing:4,crown:2,icon:'✺',desc:'오로라 날개와 보석'},
-    legend:{name:'아케이드 레전드',min:50,light:'#ffdc91',deep:'#b78437',gem:'#fff7d7',wing:5,crown:3,icon:'♛',desc:'전설의 황금 왕관'},
+    rookie:{name:'루키',min:1,light:'#98bcb4',deep:'#4a6b6a',gem:'#d8f7ea',wing:0,crown:0,icon:'✧',desc:'기본 방패'},
+    bronze:{name:'브론즈',min:5,light:'#e7ad75',deep:'#855039',gem:'#ffda9a',wing:1,crown:0,icon:'◆',desc:'청동 뿔 장식'},
+    silver:{name:'실버',min:10,light:'#c5e4f4',deep:'#69889b',gem:'#ebfcff',wing:2,crown:0,icon:'✦',desc:'은빛 양쪽 날개'},
+    gold:{name:'골드',min:15,light:'#f3d482',deep:'#916528',gem:'#fff1b5',wing:2,crown:1,icon:'★',desc:'황금 날개와 왕관'},
+    platinum:{name:'플래티넘',min:20,light:'#89f0d5',deep:'#438f8a',gem:'#eaffef',wing:3,crown:1,icon:'✺',desc:'백금 다중 날개'},
+    diamond:{name:'다이아',min:30,light:'#9ecaff',deep:'#5478ba',gem:'#d8faff',wing:4,crown:1,icon:'❖',desc:'다이아 수정 장식'},
+    aurora:{name:'마스터',min:40,light:'#d8a7ff',deep:'#835cb5',gem:'#ffd6ff',wing:4,crown:2,icon:'✺',desc:'오로라 날개와 보석'},
+    legend:{name:'레전드',min:50,light:'#ffdc91',deep:'#b78437',gem:'#fff7d7',wing:5,crown:3,icon:'♛',desc:'전설의 황금 왕관'},
   };
   const svgRank=id=>{
     const c=specs[id]||specs.rookie;
