@@ -3612,7 +3612,14 @@ document.addEventListener('keydown',event=>{
   if(activeGame)setTimeout(v19StoreSnapshot,150);
 });
 window.addEventListener('beforeunload',v19StoreSnapshot);
-document.addEventListener('visibilitychange',()=>{if(document.hidden){v19StoreSnapshot();if(activeGame&&!challenge.reported)v19PauseOn();}});
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden)return;
+  v19StoreSnapshot();
+  // Alt+Tab 중 앱 자체 대화상자가 열린 경우 일시정지 오버레이를 겹치지 않습니다.
+  // 게임 나가기 버튼이 눌리지 않던 문제를 예방합니다.
+  if(document.querySelector('dialog[open]'))return;
+  if(activeGame&&!challenge.reported)v19PauseOn();
+});
 
 /* 모든 플레이어가 이용하는 6종 순차 체험 코스. 개별 250단계 기록은 불변. */
 function v19LaunchDemo(step=0){
@@ -3706,14 +3713,16 @@ document.addEventListener('keydown',event=>{
   if(!activeGame||event.target?.closest('input,textarea,select,[contenteditable="true"]'))return;
   if((event.key==='p'||event.key==='P'||event.key==='Escape')&&!event.repeat){
     if($('clear-overlay')&&!$('clear-overlay').classList.contains('hidden'))return;
-    if(tourDialog.open)return;
+    // 대화상자가 열린 동안 Escape는 그 창의 동작으로 처리합니다.
+    if(document.querySelector('dialog[open]'))return;
     event.preventDefault();v19Paused?v19PauseOff():v19PauseOn();
   }
 },true);
 // 마우스·키보드 입력이 일시정지 상태에 뒤쪽 게임판으로 전달되지 않도록 방지합니다.
 document.addEventListener('click',event=>{
   if(!v19Paused)return;
-  if(event.target.closest('#v19-paused-overlay'))return;
+  // Alt+Tab 등으로 자동 일시정지된 상태라도 열린 확인창의 버튼은 막지 않습니다.
+  if(event.target.closest('#v19-paused-overlay,dialog[open]'))return;
   event.preventDefault();event.stopImmediatePropagation();
 },true);
 const v19PriorShowHome=showHome;
@@ -5020,11 +5029,14 @@ function v41StyleShikakuPreview(){
   'use strict';
   const $ = id => document.getElementById(id);
   const guide = $('v31-onboarding');
-  const seenKey = 'taekin_arcade_onboarding_v31';
+  const seenKey = 'taekin_arcade_onboarding_v60';
   const steps = [
-    {icon:'🎮',title:'원하는 게임을 선택하세요',description:'홈 화면의 게임 카드 6개 중 원하는 것을 눌러 시작해요. 처음에는 쉬움 난이도를 추천해요.'},
-    {icon:'🎯',title:'난이도를 고르고 도전하세요',description:'쉬움부터 전문가까지 바로 선택할 수 있어요. 각 난이도는 1~50단계를 순서대로 클리어하고, 10단계마다 보스가 등장해요.'},
-    {icon:'🏆',title:'기록과 배지를 모아보세요',description:'내 기록에서 JSON 파일로 백업할 수 있어요. 프로필에서 닉네임을 바꾸고, 상단 더보기에서 배지와 트로피를 확인하세요.'}
+    {icon:'🎮',title:'게임 고르기',description:'상단 「게임」을 누르면 숫자야구·2048 등 여섯 게임이 나와요. 게임 카드를 누르면 해당 게임 화면으로 이동합니다.'},
+    {icon:'🧭',title:'단계 선택하기',description:'게임에 들어가 난이도를 고르고 단계에 도전하세요. 게임별 첫 입장 시 튜토리얼이 자동으로 열리며, 나중에도 「튜토리얼」 버튼으로 다시 볼 수 있어요.'},
+    {icon:'🎯',title:'도전 살펴보기',description:'상단 「도전」을 누르면 여러 게임을 이어서 진행하는 종합 도전과 일일·주간 미션, 다음 목표를 확인할 수 있어요.'},
+    {icon:'📊',title:'내 기록 확인',description:'상단 「내 기록」에서 완료 단계·별·플레이 기록을 볼 수 있어요. 기기를 바꾸려면 JSON 백업·복원 기능을 이용하세요.'},
+    {icon:'👤',title:'프로필 꾸미기',description:'상단 「프로필」에서 닉네임, 레벨·경험치·칭호를 확인하고 획득한 꾸미기 보상을 적용할 수 있어요.'},
+    {icon:'⚙️',title:'화면·음악 설정',description:'「설정」에서 음악·효과음, 화면과 글씨 크기를 바꿀 수 있어요. 게임판도 개별 확대·축소가 가능하며 플레이 내용은 브라우저에 저장돼요.'}
   ];
   let step = 0;
   function showStep(){
@@ -5036,6 +5048,7 @@ function v41StyleShikakuPreview(){
     $('v31-guide-dots').textContent = steps.map((_,i)=>i===step?'●':'○').join('  ');
     $('v31-guide-prev').disabled = step === 0;
     $('v31-guide-next').textContent = step === steps.length - 1 ? '게임 시작하기' : '다음';
+    window.TaekinSiteGuideV60?.render(step);
   }
   function openGuide(){
     if(!guide || guide.open)return;
@@ -5091,10 +5104,14 @@ function v41StyleShikakuPreview(){
       return;
     }
     v55CloseLeave();
+    // 다른 창을 다녀오는 동안 일시정지가 겹친 경우에도 클릭/화면 이동이 되도록 해제합니다.
+    if(v19Paused)v19PauseOff();
     v55BypassLeave=true;
     try{destination.click();}finally{v55BypassLeave=false;}
   });
   v55LeaveDialog.addEventListener('click',e=>{if(e.target===v55LeaveDialog)v55CloseLeave();});
+  v55LeaveDialog.addEventListener('cancel',event=>{event.preventDefault();v55CloseLeave();});
+  window.addEventListener('focus',()=>{if(v55LeaveDialog.open){requestAnimationFrame(()=>{if(v55LeaveDialog.open&&!v55LeaveDialog.contains(document.activeElement))document.getElementById('v55-leave-stay').focus({preventScroll:true});});}});
   document.addEventListener('click',event=>{
     if(v55BypassLeave)return;
     const leaving=event.target.closest('#back-to-home,#header-back,#brand-home,.arcade-nav-btn[data-destination],#v19-pause-home');
@@ -5270,7 +5287,7 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
     const name=gameInfo[game]?.name||'게임';
     const g=textByGame[game]||textByGame.baseball;
     switch(topic){
-      case 'game':return [name+'은 어떤 게임인가요?',ARCADE_TOURS[game]?.[0]||g.goal,'처음 시작한다면 「그림 튜토리얼 보기」로 조작과 팁까지 확인하세요.'];
+      case 'game':return [name+'은 어떤 게임인가요?',ARCADE_TOURS[game]?.[0]||g.goal,'처음 시작한다면 「튜토리얼 보기」로 조작과 팁까지 확인하세요.'];
       case 'controls':return [name+'은 어떻게 조작하나요?',g.controls,'PC에서는 마우스·키보드, 스마트폰에서는 터치 버튼과 게임판을 이용하세요.'];
       case 'goal':return ['🎯 목표는 무엇인가요?',g.goal,'현재 단계의 구체적인 성공 조건은 게임판 위 「현재 단계 목표」에서 확인할 수 있어요.'];
       case 'hint':return ['💡 힌트 버튼은 뭔가요?',g.hint,'별점이나 도전 기록에 영향을 줄 수 있으므로 도움이 필요할 때 사용하세요.'];
@@ -5488,7 +5505,7 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
 */
 (() => {
   'use strict';
-  const VERSION=59;
+  const VERSION=60;
   const notice=document.getElementById('v52-update-notice');
   const detail=document.getElementById('v52-update-detail');
   const now=document.getElementById('v52-update-now');
@@ -5579,7 +5596,7 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
   dialog.addEventListener('close',()=>{shownFor=null;});
   dialog.addEventListener('click',e=>{if(e.target===dialog)dismiss();});
   function schedulePrompt(key){
-    if(!info[key])return;
+    if(!info[key] || window.TaekinGameTourV60?.enabled)return;
     const mobile=window.matchMedia('(max-width:720px)').matches;
     touchHint.textContent='📱 '+info[key].mobile;
     let seen=false;

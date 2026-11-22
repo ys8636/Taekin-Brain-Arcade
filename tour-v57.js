@@ -149,6 +149,14 @@
     const item=stepsByGame[game][i];
     return stageScene(s,`${game} ${i+1}단계 설명: ${item.caption}`);
   }
+  // v60: 같은 게임의 도움말은 핵심 4장면만 보여, 6단계가 길다는 의견을 반영합니다.
+  // 서로 다른 장면은 그대로 유지하고 설명/그림 인덱스를 한 번에 선택합니다.
+  const compactFrames={
+    baseball:[1,2,4,5], '2048':[0,1,4,5], mines:[0,1,2,3,5],
+    pipes:[0,1,4,5], shikaku:[0,1,2,5], blocks:[0,1,2,3]
+  };
+  const compactSteps=Object.fromEntries(Object.entries(compactFrames).map(([key,frames])=>
+    [key,frames.map(originalIndex=>stepsByGame[key][originalIndex])]));
   const visual=dom('figure','v59-tour-visual');visual.id='v59-tour-visual';
   const topline=dom('div','v59-tour-meta');const phase=dom('span','v59-tour-label','그림으로 배우기');const marker=dom('span','v59-tour-marker');
   topline.append(phase,marker);
@@ -157,13 +165,13 @@
   visual.append(topline,diagramBox,caption);
   const tourText=$('tutorial-text');
   if(tourText)tourText.before(visual);
-  window.TaekinTutorialV59={stepsByGame,diagram};
+  window.TaekinTutorialV59={stepsByGame:compactSteps,diagram};
   window.addEventListener('taekin-tutorial-render',event=>{
     const {game,step}=event.detail||{};
-    if(!stepsByGame[game]||!stepsByGame[game][step])return;
-    marker.textContent=`${step+1} / ${stepsByGame[game].length}`;
-    diagramBox.innerHTML=diagram(game,step);
-    caption.textContent=stepsByGame[game][step].caption;
+    if(!compactSteps[game]||!compactSteps[game][step])return;
+    marker.textContent=`${step+1} / ${compactSteps[game].length}`;
+    diagramBox.innerHTML=diagram(game,compactFrames[game][step]);
+    caption.textContent=compactSteps[game][step].caption;
   });
   // 첫 방문에 '설명 보기'를 누르면 짧은 요약 대신 그림형 튜토리얼로 곧바로 연결합니다.
   const first=$('v55-first-guide');const show=$('v55-guide-show');
@@ -220,5 +228,5 @@
       try{localStorage.setItem(storageKey,fold.open?'0':'1');}catch(_){}
     });
   }
-  window.TaekinV59={stepsByGame,menus,version:59};
+  window.TaekinV59={stepsByGame:compactSteps,menus,version:60};
 })();
