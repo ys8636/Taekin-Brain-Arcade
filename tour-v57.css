@@ -1,0 +1,54 @@
+/* TAEKIN BRAIN ARCADE v57 · 그림 예시 튜토리얼 / 메뉴 길잡이 */
+#tutorial-dialog{width:min(96vw,580px);max-width:580px;max-height:min(91dvh,830px);overflow-y:auto;overscroll-behavior:contain}
+#tutorial-dialog .tutorial-shell{box-sizing:border-box;padding:clamp(13px,3.2vw,24px)}
+#tutorial-dialog .tutorial-symbol{font-size:25px;margin-top:7px}
+#tutorial-dialog .tutorial-progress{margin:4px 0}
+#tutorial-dialog h2{margin:5px 0 8px}
+#tutorial-dialog #tutorial-text{min-height:0;margin:7px 0 12px;line-height:1.65;font-size:14px}
+.v57-tour-visual{box-sizing:border-box;margin:10px 0 8px;width:100%;max-width:100%;min-width:0;border:1px solid #4f7290;background:linear-gradient(160deg,#182c43,#19283e);border-radius:14px;padding:10px;overflow:hidden}
+.v57-tour-visual-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:12px;margin-bottom:6px;color:#dfecf2}
+.v57-demo-chip{background:#295768;color:#e0fff7;border:1px solid #438c85;border-radius:100px;padding:5px 9px;font-weight:750}
+.v57-demo-stage{color:#ffe6a7;font-weight:800}
+.v57-tour-board{width:100%;min-width:0;overflow:hidden;border-radius:12px;line-height:0}
+.v57-tour-board svg{display:block;width:100%;height:auto;max-height:240px}
+.v57-tour-caption{margin:7px 0 2px;text-align:center;font-size:12px;color:#b8ddea;line-height:1.45}
+.v57-tour-detail{color:#f5f9dc;background:#263f54;padding:9px 12px;border-left:3px solid #94e8be;border-radius:9px;margin:8px 0 0!important;line-height:1.6;font-weight:650;font-size:13px}
+.v57-arrow{transform-box:fill-box;transform-origin:center;animation:v57-nudge 1.55s ease-in-out infinite}
+.v57-water{animation:v57-water-flow 2.8s linear infinite}
+@keyframes v57-nudge{0%,100%{transform:translateX(-4px);opacity:.75}50%{transform:translateX(6px);opacity:1}}
+@keyframes v57-water-flow{to{stroke-dashoffset:-152}}
+.v57-category-guide{margin:5px 0 17px;background:linear-gradient(130deg,#213f4c,#21364b);border:1px solid #4e7a8c;border-radius:16px;color:#f1f8fa;overflow:hidden;max-width:100%;box-sizing:border-box}
+.v57-category-summary{display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;padding:14px 16px;line-height:1.4;list-style:none;flex-wrap:wrap}
+.v57-category-summary::-webkit-details-marker{display:none}
+.v57-category-summary strong{font-size:15px;color:#f9f2da}
+.v57-category-summary span{font-size:12px;color:#b5d9e7}
+.v57-category-guide[open] .v57-category-summary{border-bottom:1px solid #4b6d7a}
+.v57-category-inside{padding:13px 15px 15px}
+.v57-category-sub{margin:0 0 11px;line-height:1.5;color:#e1f2f4;font-size:13px}
+.v57-category-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.v57-category-card{min-width:0;background:#162d3d;border:1px solid #345b6a;border-radius:12px;display:flex;align-items:flex-start;gap:9px;padding:12px}
+.v57-category-icon{font-size:25px;line-height:1.25;flex:0 0 auto}
+.v57-category-words{min-width:0;overflow-wrap:anywhere}
+.v57-category-card strong{display:block;font-size:13px;color:#f8eccc;line-height:1.4}
+.v57-category-card p{font-size:12px;color:#c3dce5;line-height:1.55;margin:5px 0 0}
+.v57-category-guide summary:focus-visible{outline:3px solid #b7f2d8;outline-offset:-4px}
+@media(max-width:720px){
+ #tutorial-dialog{width:calc(100vw - 16px);max-height:90dvh}
+ #tutorial-dialog .tutorial-shell{padding:14px}
+ #tutorial-dialog .tutorial-actions button{min-width:0;min-height:45px}
+ .v57-tour-visual{padding:7px}
+ .v57-tour-detail{font-size:12px;padding:8px}
+ .v57-category-summary{padding:13px}
+ .v57-category-inside{padding:11px}
+ .v57-category-cards{grid-template-columns:1fr;gap:7px}
+ .v57-category-card{padding:10px;gap:10px}
+ .v57-category-icon{font-size:23px}
+ .v57-category-card p{margin:2px 0 0}
+}
+@media(prefers-reduced-motion:reduce){.v57-arrow,.v57-water{animation:none!important}}
+body[data-theme=light] .v57-category-guide{background:#f1faf7;color:#244554}
+body[data-theme=light] .v57-category-summary strong{color:#204b57}
+body[data-theme=light] .v57-category-summary span,body[data-theme=light] .v57-category-sub{color:#355f69}
+body[data-theme=light] .v57-category-card{background:#dcece9;border-color:#a5c4c3}
+body[data-theme=light] .v57-category-card strong{color:#225259}
+body[data-theme=light] .v57-category-card p{color:#335963}
