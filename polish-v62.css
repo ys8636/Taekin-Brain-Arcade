@@ -66,8 +66,25 @@ body[data-theme=light] .v61-rank-card .v62-preview-detail{color:#354f4b}
  .hero-carousel .hero-count{display:none!important}
  .hero-carousel .hero-arrow{bottom:8px!important}
 }
-/* Game selector is accessible on desktop and mobile, with no overflow. */
-#play-screen .v64-switch-label{display:flex;align-items:center;flex-wrap:wrap;gap:6px;color:var(--text,#f1f6f4);font-weight:800;font-size:12px;max-width:100%;min-width:0}
-#v64-game-switch{max-width:100%;min-width:0;min-height:42px;padding:7px 8px;border:1px solid #80cdb5;border-radius:9px;color:#f5fffc;background:#21433e;font:inherit;font-size:13px;cursor:pointer}
-#v64-game-switch option{color:#132b26;background:#f4faf7}
-@media(max-width:720px){#play-screen .play-title-tools{justify-content:flex-start!important;max-width:100%;min-width:0}#play-screen .v64-switch-label{width:100%;justify-content:space-between}#v64-game-switch{width:min(60%,230px)}}
+/* v65 - custom arcade launcher, replacing the platform-native select dropdown. */
+#play-screen .v65-game-switch{position:relative;min-width:170px;max-width:100%;z-index:80}
+#play-screen .v65-game-switch-trigger{display:flex;align-items:center;gap:9px;min-height:46px;box-sizing:border-box;padding:7px 11px;border:1px solid #76cfb2;border-radius:12px;background:linear-gradient(160deg,#235850,#173d43 70%,#153238);color:#f2fff8;cursor:pointer;list-style:none;box-shadow:0 5px 17px #081c2280,inset 0 1px #c4ffda2a}
+#play-screen .v65-game-switch-trigger::-webkit-details-marker{display:none}
+#play-screen .v65-game-switch-trigger:focus-visible,#play-screen .v65-game-option:focus-visible{outline:3px solid #ffe39c;outline-offset:2px}
+#play-screen .v65-game-switch[open] .v65-game-switch-trigger,#play-screen .v65-game-switch-trigger:hover{border-color:#a1ffda;box-shadow:0 0 20px #4fdcb343,inset 0 1px #e2ffed44}
+#play-screen .v65-switch-icon{display:grid;place-items:center;width:30px;height:30px;flex:0 0 30px;border-radius:8px;background:#2d75696b}
+#play-screen .v65-switch-text{display:flex;flex:1;min-width:0;flex-direction:column;gap:2px;line-height:1.2}
+#play-screen .v65-switch-text strong{font-size:13px;color:#f8fffc;font-weight:850}
+#play-screen .v65-switch-text small{font-size:10px;color:#bae9dd;white-space:nowrap}
+#play-screen .v65-switch-arrow{color:#b4f6dd;transition:transform .16s}
+#play-screen .v65-game-switch[open] .v65-switch-arrow{transform:rotate(180deg)}
+#play-screen .v65-game-switch-menu{position:absolute;top:calc(100% + 8px);left:0;width:278px;max-width:calc(100vw - 28px);box-sizing:border-box;max-height:min(410px,65dvh);overflow:auto;overscroll-behavior:contain;padding:9px;border:1px solid #66b79f;border-radius:15px;background:linear-gradient(160deg,#1a3138,#101e29);box-shadow:0 20px 48px #000a;display:grid;gap:6px;z-index:100}
+#play-screen .v65-game-option{display:flex;align-items:center;gap:10px;width:100%;min-width:0;min-height:54px;padding:8px 10px;border:1px solid #35555c;border-radius:10px;background:linear-gradient(#243d44,#1b3037);color:#f4fffc;text-align:left;font:inherit;cursor:pointer}
+#play-screen .v65-game-option:hover{background:linear-gradient(#32605a,#254448);border-color:#8ae6c4}
+#play-screen .v65-game-option-icon{display:grid;place-items:center;width:35px;height:35px;flex:0 0 35px;border-radius:9px;background:#365b5b;font-size:19px}
+#play-screen .v65-game-option-info{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
+#play-screen .v65-game-option-info strong{font-size:13px;font-weight:850;color:#fff}
+#play-screen .v65-game-option-info small{font-size:10px;color:#b6d9d1;line-height:1.3}
+#play-screen .v65-game-option-arrow{font-size:22px;opacity:.7;color:#b9ffe4}
+@media(max-width:720px){#play-screen .play-title-tools{justify-content:flex-start!important;max-width:100%;min-width:0}#play-screen .v65-game-switch{width:100%;min-width:0}#play-screen .v65-game-switch-trigger{width:100%}#play-screen .v65-game-switch-menu{width:100%;max-width:100%}}
+

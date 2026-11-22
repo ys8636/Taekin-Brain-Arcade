@@ -5502,7 +5502,7 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
 */
 (() => {
   'use strict';
-  const VERSION=64;
+  const VERSION=65;
   const notice=document.getElementById('v52-update-notice');
   const detail=document.getElementById('v52-update-detail');
   const now=document.getElementById('v52-update-now');
@@ -5722,22 +5722,34 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
   window.TaekinV55Display={syncHidden,moveTo};
 })();
 
-/* v64 · switch directly between games; the outgoing game is saved first. */
+/* v65: accessible game launcher (native details + custom card menu). */
 (() => {
- const picker=document.getElementById('v64-game-switch');
- if(!picker)return;
- picker.addEventListener('change',()=>{
-   const key=picker.value;picker.value='';
-   if(!key||!gameInfo[key]||key===activeGame)return;
-   const leaving=activeGame;
-   if(leaving&&!v19Paused){
-     const status=v19StoreSnapshot();
-     if(status==='failed'){v19Toast('⚠ 자동 저장에 실패했습니다. 저장 공간을 확인해 주세요.');return;}
-   }
-   if(v19Paused)v19PauseOff();
-   const saved=v19Saves[key];
-   if(saved?.data){v19ResumeSaved(key);}
-   else showGame(key);
-   window.TaekinMobileInput?.dismissKeyboard?.();
- });
+  const launcher=document.getElementById('v65-game-switch');
+  if(!launcher)return;
+  const close=()=>{launcher.open=false;};
+  document.addEventListener('pointerdown',event=>{
+    if(launcher.open&&!launcher.contains(event.target))close();
+  });
+  launcher.addEventListener('keydown',event=>{
+    if(event.key==='Escape'){event.preventDefault();event.stopPropagation();close();launcher.querySelector('summary')?.focus();}
+  });
+  launcher.querySelectorAll('[data-v65-game]').forEach(button=>{
+    button.addEventListener('click',()=>{
+      const key=button.dataset.v65Game;
+      close();
+      if(!key||!gameInfo[key]||key===activeGame)return;
+      // Snapshot the current board BEFORE switching, and don't throw away data if saving fails.
+      if(activeGame&&!v19Paused){
+        const status=v19StoreSnapshot();
+        if(status==='failed'){
+          v19Toast('⚠ 자동 저장에 실패했습니다. 저장 공간을 확인해 주세요.');
+          return;
+        }
+      }
+      if(v19Paused)v19PauseOff();
+      window.TaekinMobileInput?.dismissKeyboard?.();
+      if(v19Saves[key]?.data)v19ResumeSaved(key);
+      else showGame(key);
+    });
+  });
 })();
