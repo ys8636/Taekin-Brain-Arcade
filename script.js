@@ -5505,7 +5505,7 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
 */
 (() => {
   'use strict';
-  const VERSION=60;
+  const VERSION=61;
   const notice=document.getElementById('v52-update-notice');
   const detail=document.getElementById('v52-update-detail');
   const now=document.getElementById('v52-update-now');
