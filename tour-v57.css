@@ -1,22 +1,29 @@
-/* TAEKIN BRAIN ARCADE v57 · 그림 예시 튜토리얼 / 메뉴 길잡이 */
-#tutorial-dialog{width:min(96vw,580px);max-width:580px;max-height:min(91dvh,830px);overflow-y:auto;overscroll-behavior:contain}
+/* TAEKIN BRAIN ARCADE v59 · 단계별 규칙 그림 / 기존 메뉴 길잡이 유지 */
+#tutorial-dialog{width:min(96vw,620px);max-width:620px;max-height:min(92dvh,830px);overflow-y:auto;overscroll-behavior:contain}
 #tutorial-dialog .tutorial-shell{box-sizing:border-box;padding:clamp(13px,3.2vw,24px)}
-#tutorial-dialog .tutorial-symbol{font-size:25px;margin-top:7px}
-#tutorial-dialog .tutorial-progress{margin:4px 0}
-#tutorial-dialog h2{margin:5px 0 8px}
-#tutorial-dialog #tutorial-text{min-height:0;margin:7px 0 12px;line-height:1.65;font-size:14px}
-.v57-tour-visual{box-sizing:border-box;margin:10px 0 8px;width:100%;max-width:100%;min-width:0;border:1px solid #4f7290;background:linear-gradient(160deg,#182c43,#19283e);border-radius:14px;padding:10px;overflow:hidden}
-.v57-tour-visual-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:12px;margin-bottom:6px;color:#dfecf2}
-.v57-demo-chip{background:#295768;color:#e0fff7;border:1px solid #438c85;border-radius:100px;padding:5px 9px;font-weight:750}
-.v57-demo-stage{color:#ffe6a7;font-weight:800}
-.v57-tour-board{width:100%;min-width:0;overflow:hidden;border-radius:12px;line-height:0}
-.v57-tour-board svg{display:block;width:100%;height:auto;max-height:240px}
-.v57-tour-caption{margin:7px 0 2px;text-align:center;font-size:12px;color:#b8ddea;line-height:1.45}
-.v57-tour-detail{color:#f5f9dc;background:#263f54;padding:9px 12px;border-left:3px solid #94e8be;border-radius:9px;margin:8px 0 0!important;line-height:1.6;font-weight:650;font-size:13px}
-.v57-arrow{transform-box:fill-box;transform-origin:center;animation:v57-nudge 1.55s ease-in-out infinite}
-.v57-water{animation:v57-water-flow 2.8s linear infinite}
-@keyframes v57-nudge{0%,100%{transform:translateX(-4px);opacity:.75}50%{transform:translateX(6px);opacity:1}}
-@keyframes v57-water-flow{to{stroke-dashoffset:-152}}
+#tutorial-dialog .tutorial-symbol{font-size:24px;margin-top:5px}
+#tutorial-dialog .tutorial-progress{margin:3px 0}
+#tutorial-dialog h2{margin:5px 0 9px}
+#tutorial-dialog #tutorial-text{min-height:0;margin:9px 0 13px;line-height:1.65;font-size:14px;color:#e4edf8}
+#tutorial-dialog .tutorial-dots{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;line-height:1.3}
+#tutorial-dialog .tour-dot-current{color:#a5f5cb;font-size:19px}
+#tutorial-dialog .tour-dot{color:#69859b;font-size:19px}
+.v59-tour-visual{box-sizing:border-box;margin:10px 0 8px;width:100%;max-width:100%;min-width:0;border:1px solid #4b7891;background:#17283c;border-radius:15px;padding:10px;overflow:hidden}
+.v59-tour-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 1px 9px;font-size:12px}
+.v59-tour-label{background:#255365;border:1px solid #47887f;border-radius:100px;padding:5px 10px;color:#defcf5;font-weight:750}
+.v59-tour-marker{color:#ffdf9f;font-weight:850;letter-spacing:1px}
+.v59-tour-diagram{width:100%;max-width:100%;min-width:0;overflow:hidden;border-radius:11px;line-height:0}
+.v59-tour-diagram svg{display:block;width:100%;height:auto;max-height:260px}
+.v59-tour-caption{color:#e0eef2;font-size:13px;line-height:1.5;font-weight:700;text-align:center;padding:7px 4px 2px;overflow-wrap:anywhere}
+#tutorial-dialog .tutorial-actions button{min-height:44px}
+@media(max-width:720px){
+ #tutorial-dialog{width:calc(100vw - 16px);max-height:90dvh}
+ #tutorial-dialog .tutorial-shell{padding:13px}
+ .v59-tour-visual{padding:7px}
+ .v59-tour-caption{font-size:12px;padding:7px 3px 1px}
+ #tutorial-dialog .tutorial-dots{gap:8px}
+ #tutorial-dialog #tutorial-text{font-size:13px}
+}
 .v57-category-guide{margin:5px 0 17px;background:linear-gradient(130deg,#213f4c,#21364b);border:1px solid #4e7a8c;border-radius:16px;color:#f1f8fa;overflow:hidden;max-width:100%;box-sizing:border-box}
 .v57-category-summary{display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;padding:14px 16px;line-height:1.4;list-style:none;flex-wrap:wrap}
 .v57-category-summary::-webkit-details-marker{display:none}
@@ -45,7 +52,7 @@
  .v57-category-icon{font-size:23px}
  .v57-category-card p{margin:2px 0 0}
 }
-@media(prefers-reduced-motion:reduce){.v57-arrow,.v57-water{animation:none!important}}
+
 body[data-theme=light] .v57-category-guide{background:#f1faf7;color:#244554}
 body[data-theme=light] .v57-category-summary strong{color:#204b57}
 body[data-theme=light] .v57-category-summary span,body[data-theme=light] .v57-category-sub{color:#355f69}

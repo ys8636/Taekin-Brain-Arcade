@@ -2987,15 +2987,29 @@ const ARCADE_TOURS={
 };
 let tutorialGame='baseball',tutorialStep=0;
 const tourDialog=$('tutorial-dialog');
+function currentTutorialSteps(){
+  const extended=window.TaekinTutorialV59?.stepsByGame?.[tutorialGame];
+  return Array.isArray(extended)&&extended.length?extended:
+    ARCADE_TOURS[tutorialGame].map((text,index)=>({title:['무엇을 하나요?','어떻게 조작하나요?','클리어 팁'][index],text}));
+}
 function renderTutorial(){
-  const points=ARCADE_TOURS[tutorialGame],info=gameInfo[tutorialGame];
-  $('tutorial-title').textContent=`${info.name} · ${['무엇을 하나요?','어떻게 조작하나요?','클리어 팁'][tutorialStep]}`;
+  const points=currentTutorialSteps(),info=gameInfo[tutorialGame];
+  const step=Math.min(tutorialStep,points.length-1);
+  const item=points[step];
+  $('tutorial-title').textContent=`${info.name} · ${item.title}`;
   $('tutorial-symbol').textContent=info.emoji;
-  $('tutorial-text').textContent=points[tutorialStep];
-  $('tutorial-progress').textContent=`STEP ${tutorialStep+1} / 3`;
-  $('tutorial-dots').textContent=['●','●','●'].map((p,i)=>i===tutorialStep?'●':'○').join('  ');
-  $('tutorial-prev').disabled=tutorialStep===0;
-  $('tutorial-next').textContent=tutorialStep===points.length-1?'게임으로 돌아가기 ✓':'다음 →';
+  $('tutorial-text').textContent=item.text;
+  $('tutorial-progress').textContent=`STEP ${step+1} / ${points.length}`;
+  const dots=$('tutorial-dots');
+  dots.replaceChildren();
+  for(let i=0;i<points.length;i++){
+    const dot=document.createElement('span');dot.className=i===step?'tour-dot-current':'tour-dot';
+    dot.textContent=i===step?'●':'○';dot.setAttribute('aria-label',`${i+1}번째 단계${i===step?' (현재)':''}`);
+    dots.appendChild(dot);
+  }
+  $('tutorial-prev').disabled=step===0;
+  $('tutorial-next').textContent=step===points.length-1?'게임 시작하기 ✓':'다음 단계 →';
+  window.dispatchEvent(new CustomEvent('taekin-tutorial-render',{detail:{game:tutorialGame,step}}));
 }
 function openTutorial(key=activeGame||'baseball'){
   tutorialGame=ARCADE_TOURS[key]?key:'baseball';tutorialStep=0;renderTutorial();
@@ -3006,7 +3020,7 @@ $('game-tutorial').addEventListener('click',()=>openTutorial());
 $('tutorial-close').addEventListener('click',()=>tourDialog.close());
 $('tutorial-prev').addEventListener('click',()=>{tutorialStep=Math.max(0,tutorialStep-1);renderTutorial();});
 $('tutorial-next').addEventListener('click',()=>{
-  if(tutorialStep===2)tourDialog.close();else{tutorialStep++;renderTutorial();}
+  if(tutorialStep===currentTutorialSteps().length-1)tourDialog.close();else{tutorialStep++;renderTutorial();}
 });
 tourDialog.addEventListener('click',e=>{if(e.target===tourDialog)tourDialog.close();});
 
@@ -5256,7 +5270,7 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
     const name=gameInfo[game]?.name||'게임';
     const g=textByGame[game]||textByGame.baseball;
     switch(topic){
-      case 'game':return [name+'은 어떤 게임인가요?',ARCADE_TOURS[game]?.[0]||g.goal,'처음 시작한다면 「3단계 튜토리얼 보기」로 조작과 팁까지 확인하세요.'];
+      case 'game':return [name+'은 어떤 게임인가요?',ARCADE_TOURS[game]?.[0]||g.goal,'처음 시작한다면 「그림 튜토리얼 보기」로 조작과 팁까지 확인하세요.'];
       case 'controls':return [name+'은 어떻게 조작하나요?',g.controls,'PC에서는 마우스·키보드, 스마트폰에서는 터치 버튼과 게임판을 이용하세요.'];
       case 'goal':return ['🎯 목표는 무엇인가요?',g.goal,'현재 단계의 구체적인 성공 조건은 게임판 위 「현재 단계 목표」에서 확인할 수 있어요.'];
       case 'hint':return ['💡 힌트 버튼은 뭔가요?',g.hint,'별점이나 도전 기록에 영향을 줄 수 있으므로 도움이 필요할 때 사용하세요.'];
@@ -5474,7 +5488,7 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
 */
 (() => {
   'use strict';
-  const VERSION=58;
+  const VERSION=59;
   const notice=document.getElementById('v52-update-notice');
   const detail=document.getElementById('v52-update-detail');
   const now=document.getElementById('v52-update-now');
@@ -5530,7 +5544,7 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
 
 /* ====================== v55 · 게임 첫 방문 튜토리얼 ======================
  * 한 게임당 한 번만 질문합니다. 거절하거나 설명을 본 뒤에는 다시 묻지 않고,
- * 수동 도움말과 기존 3단계 튜토리얼은 계속 사용할 수 있습니다. */
+ * 수동 도움말과 새 그림형 튜토리얼은 계속 사용할 수 있습니다. */
 (() => {
   'use strict';
   const info={
