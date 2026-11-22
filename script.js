@@ -4788,6 +4788,11 @@ function v41StyleShikakuPreview(){
     updateHeaderProgress();
   };
   window.addEventListener('popstate',()=>{
+    // On mobile, the first Back action dismisses an active software keyboard.
+    const focused=document.activeElement;
+    if(window.matchMedia('(max-width:720px)').matches && focused?.matches?.('input:not([type=checkbox]),textarea,[contenteditable=true]')){
+      focused.blur();window.TaekinMobileInput?.dismissKeyboard?.();return;
+    }
     let page=location.hash.slice(1);
     if(!pageNames.has(page))page='games';
     if(!$('play-screen').classList.contains('hidden'))showHome();
@@ -5113,16 +5118,8 @@ function v41StyleShikakuPreview(){
   v55LeaveDialog.addEventListener('click',e=>{if(e.target===v55LeaveDialog)v55CloseLeave();});
   v55LeaveDialog.addEventListener('cancel',event=>{event.preventDefault();v55CloseLeave();});
   window.addEventListener('focus',()=>{if(v55LeaveDialog.open){requestAnimationFrame(()=>{if(v55LeaveDialog.open&&!v55LeaveDialog.contains(document.activeElement))document.getElementById('v55-leave-stay').focus({preventScroll:true});});}});
-  document.addEventListener('click',event=>{
-    if(v55BypassLeave)return;
-    const leaving=event.target.closest('#back-to-home,#header-back,#brand-home,.arcade-nav-btn[data-destination],#v19-pause-home');
-    if(!leaving || !activeGame || !v19IsPlaying() || window.TaekinV32?.getPreference?.('leaveConfirm')===false)return;
-    event.preventDefault();event.stopImmediatePropagation();
-    v55PendingDestination=leaving;
-    v55LeaveMessage.textContent=`${gameInfo[activeGame]?.name||'게임'} 진행 중이에요. 나가면 현재 게임판을 저장하고 게임 선택 화면으로 이동해요.`;
-    if(!v55LeaveDialog.open)v55LeaveDialog.showModal();
-    document.getElementById('v55-leave-stay').focus({preventScroll:true});
-  }, true);
+  // v64: navigation is immediate; ongoing gameplay has already been snapshot-saved
+  // by the pointerdown/showHome handlers. Do not intercept clicks with a modal.
   window.TaekinV31 = {openGuide};
 })();
 
@@ -5142,7 +5139,7 @@ async function v31FinalResetCheck(subject){
   const KEY='taekin_arcade_preferences_v32';
   const AUTO='taekin_arcade_auto_guide_v32';
   const SEEN='taekin_arcade_onboarding_v31';
-  const defaults={font:'normal',largeTargets:false,showGameTutorial:true,leaveConfirm:true,touchSpacing:true,fontPct:100,uiPct:100,compactGame:true,autoFit:true};
+  const defaults={font:'normal',largeTargets:false,showGameTutorial:true,leaveConfirm:false,touchSpacing:true,fontPct:100,uiPct:100,compactGame:true,autoFit:true};
   function safeRead(k){try{return localStorage.getItem(k);}catch(_){return null;}}
   function safeWrite(k,v){try{localStorage.setItem(k,v);window.TaekinV32Save?.record(true);return true;}catch(_){window.TaekinV32Save?.record(false);return false;}}
   function obj(k){try{return JSON.parse(safeRead(k)||'null');}catch(_){return null;}}
@@ -5505,7 +5502,7 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
 */
 (() => {
   'use strict';
-  const VERSION=63;
+  const VERSION=64;
   const notice=document.getElementById('v52-update-notice');
   const detail=document.getElementById('v52-update-detail');
   const now=document.getElementById('v52-update-now');
@@ -5723,4 +5720,24 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
     // 설정 팝업 뒤에 숨지 않도록 조절 버튼 위치를 유지한 채 다시 표시합니다.
   });
   window.TaekinV55Display={syncHidden,moveTo};
+})();
+
+/* v64 · switch directly between games; the outgoing game is saved first. */
+(() => {
+ const picker=document.getElementById('v64-game-switch');
+ if(!picker)return;
+ picker.addEventListener('change',()=>{
+   const key=picker.value;picker.value='';
+   if(!key||!gameInfo[key]||key===activeGame)return;
+   const leaving=activeGame;
+   if(leaving&&!v19Paused){
+     const status=v19StoreSnapshot();
+     if(status==='failed'){v19Toast('⚠ 자동 저장에 실패했습니다. 저장 공간을 확인해 주세요.');return;}
+   }
+   if(v19Paused)v19PauseOff();
+   const saved=v19Saves[key];
+   if(saved?.data){v19ResumeSaved(key);}
+   else showGame(key);
+   window.TaekinMobileInput?.dismissKeyboard?.();
+ });
 })();

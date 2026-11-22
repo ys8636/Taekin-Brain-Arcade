@@ -46,7 +46,7 @@
   render(0);
   const games=['baseball','2048','mines','pipes','shikaku','blocks'];
   const seenInSession=new Set();
-  const prefix='taekin.arcade.v60.tutorialSeen.';
+  const prefix='taekin.arcade.v64.tutorialSeen.';
   window.TaekinGameTourV60={enabled:true,seenKey:key=>prefix+key};
   const prior=window.showGame;
   if(typeof prior==='function'){

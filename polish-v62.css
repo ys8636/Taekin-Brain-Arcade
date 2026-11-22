@@ -54,3 +54,20 @@ body[data-theme=light] .v61-rank-card .v62-preview-detail{color:#354f4b}
 .v61-mobile .v62-head-crest{left:4px!important;top:50%!important;transform:translateY(-50%);width:68px!important;height:72px!important;z-index:4!important}
 .v61-mobile .v61-mobile-detail{margin-left:65px!important;z-index:5!important}
 @media(max-width:340px){.v61-mobile .v62-head-crest{left:1px!important;width:58px!important;height:65px!important}.v61-mobile .v61-mobile-detail{margin-left:55px!important}}
+
+/* v64: profile header shows rank rather than duplicating the title */
+#v26-header-profile.v61-player .v61-head-title,.v61-mobile .v61-mobile-title{display:none!important}
+/* The showcase carousel controls must stay inside small mobile viewports. */
+@media(max-width:540px){
+ .hero-carousel .hero-footer{position:relative!important;display:flex!important;flex-wrap:wrap!important;align-items:center!important;justify-content:center!important;gap:8px!important;padding:10px 39px!important;min-height:51px!important;box-sizing:border-box!important}
+ .hero-carousel .hero-controls{position:static!important;display:flex!important;gap:5px!important;flex:0 0 auto!important;min-width:0!important;align-items:center!important}
+ .hero-carousel .hero-dots{margin:0!important;display:flex!important;flex-wrap:wrap!important;min-width:0!important;justify-content:center!important}
+ .hero-carousel .hero-pause{position:static!important;white-space:nowrap!important;font-size:12px!important;line-height:1.35!important;min-height:32px!important;padding:5px 8px!important;max-width:100%!important}
+ .hero-carousel .hero-count{display:none!important}
+ .hero-carousel .hero-arrow{bottom:8px!important}
+}
+/* Game selector is accessible on desktop and mobile, with no overflow. */
+#play-screen .v64-switch-label{display:flex;align-items:center;flex-wrap:wrap;gap:6px;color:var(--text,#f1f6f4);font-weight:800;font-size:12px;max-width:100%;min-width:0}
+#v64-game-switch{max-width:100%;min-width:0;min-height:42px;padding:7px 8px;border:1px solid #80cdb5;border-radius:9px;color:#f5fffc;background:#21433e;font:inherit;font-size:13px;cursor:pointer}
+#v64-game-switch option{color:#132b26;background:#f4faf7}
+@media(max-width:720px){#play-screen .play-title-tools{justify-content:flex-start!important;max-width:100%;min-width:0}#play-screen .v64-switch-label{width:100%;justify-content:space-between}#v64-game-switch{width:min(60%,230px)}}
