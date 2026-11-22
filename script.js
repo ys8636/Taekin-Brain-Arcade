@@ -298,6 +298,70 @@ function baseballJudge(answer, guess) {
   }
   return { strikes, balls, text: strikes === 0 && balls === 0 ? "OUT" : `${strikes}S ${balls}B` };
 }
+
+function createBaseballResultVisual(record, compact = false) {
+  const wrap = document.createElement('div');
+  wrap.className = compact ? 'bb-result-cell' : 'bb-result-stack';
+  const text = document.createElement('span');
+  text.className = 'bb-result-text';
+  text.textContent = record?.text || 'OUT';
+  const visual = document.createElement('div');
+  visual.className = 'bb-result-visual';
+  const makeIndicator = (kind, value, label) => {
+    const pill = document.createElement('span');
+    pill.className = `bb-indicator ${kind}`;
+    const light = document.createElement('i');
+    light.setAttribute('aria-hidden', 'true');
+    const num = document.createElement('strong');
+    num.textContent = String(value);
+    const small = document.createElement('small');
+    small.textContent = label;
+    pill.append(light, num, small);
+    return pill;
+  };
+  if (record && (record.strikes > 0 || record.balls > 0)) {
+    if (record.strikes > 0) visual.appendChild(makeIndicator('strike', record.strikes, 'STRIKE'));
+    if (record.balls > 0) visual.appendChild(makeIndicator('ball', record.balls, 'BALL'));
+  } else {
+    visual.appendChild(makeIndicator('out', 1, 'OUT'));
+  }
+  wrap.append(text, visual);
+  return wrap;
+}
+function renderBaseballJudgeCard(record) {
+  const card = $('bb-judge-card');
+  if (!card) return;
+  const body = card.querySelector('.bb-judge-body');
+  if (!body) return;
+  body.replaceChildren();
+  if (!record) {
+    const empty = document.createElement('span');
+    empty.className = 'bb-judge-empty';
+    empty.textContent = '아직 판정 결과가 없어요.';
+    body.appendChild(empty);
+    return;
+  }
+  body.appendChild(createBaseballResultVisual(record, false));
+}
+function appendBaseballHistoryRow(index, record) {
+  const body = $('bb-history');
+  if (!body) return;
+  if (index === 1) body.innerHTML = '';
+  const tr = document.createElement('tr');
+  const number = document.createElement('td');
+  number.textContent = String(index);
+  tr.appendChild(number);
+  const guessTd = document.createElement('td');
+  guessTd.className = 'guess';
+  guessTd.textContent = record.guess;
+  tr.appendChild(guessTd);
+  const resultTd = document.createElement('td');
+  resultTd.className = 'result-cell';
+  resultTd.appendChild(createBaseballResultVisual(record, true));
+  tr.appendChild(resultTd);
+  body.appendChild(tr);
+}
+
 function resetBaseball() {
   resetRunStats();
   if(typeof challenge!=="undefined" && challenge.reported){challenge.reported=false;hideVictoryOverlay();}
@@ -321,6 +385,7 @@ function resetBaseball() {
   $("bb-history").innerHTML = '<tr class="empty-row"><td colspan="3">아직 입력한 기록이 없어요.</td></tr>';
   $("panel-baseball").querySelector(".secret-slots").innerHTML = "<span>?</span>".repeat(baseball.digits);
   setStatus("bb-status", `0~9에서 서로 다른 숫자 ${baseball.digits}개를 입력하세요.${Number.isFinite(baseball.maxAttempts) ? ` · 최대 ${baseball.maxAttempts}회` : ""}`);
+  renderBaseballJudgeCard(null);
   v19UpdateBaseballCandidates();
   $("bb-input").focus();
 }
@@ -333,17 +398,10 @@ function submitBaseball(event) {
   if (new Set(guess).size !== baseball.digits) return setStatus("bb-status", "같은 숫자는 중복해서 입력할 수 없습니다.", "error");
   if (baseball.guesses.some((record) => record.guess === guess)) return setStatus("bb-status", "이미 시도했던 숫자입니다.", "error");
   const result = baseballJudge(baseball.answer, guess);
-  baseball.guesses.push({ guess, ...result });
-  const body = $("bb-history");
-  if (baseball.guesses.length === 1) body.innerHTML = "";
-  const tr = document.createElement("tr");
-  for (const value of [String(baseball.guesses.length), guess, result.text]) {
-    const td = document.createElement("td");
-    td.textContent = value;
-    if (value === guess) td.className = "guess";
-    tr.appendChild(td);
-  }
-  body.appendChild(tr);
+  const record = { guess, ...result };
+  baseball.guesses.push(record);
+  appendBaseballHistoryRow(baseball.guesses.length, record);
+  renderBaseballJudgeCard(record);
   $("bb-attempts").textContent = `도전 ${baseball.guesses.length}회`;
   v19UpdateBaseballCandidates();
   if (result.strikes !== baseball.digits) playSfx(result.text === "OUT" ? "out" : "guess");
@@ -3497,8 +3555,8 @@ function v19ResumeSaved(key){
       $('bb-submit').disabled=baseball.finished;$('bb-hint').disabled=baseball.finished;$('bb-answer').disabled=baseball.finished;
       $('bb-attempts').textContent=`도전 ${baseball.guesses.length}회`;
       $('bb-history').replaceChildren();
-      if(!baseball.guesses.length)$('bb-history').innerHTML='<tr class="empty-row"><td colspan="3">아직 입력한 기록이 없어요.</td></tr>';
-      baseball.guesses.forEach((g,i)=>{const tr=document.createElement('tr');[i+1,g.guess,g.text].forEach(v=>{const td=document.createElement('td');td.textContent=String(v);tr.appendChild(td);});$('bb-history').appendChild(tr);});
+      if(!baseball.guesses.length){$('bb-history').innerHTML='<tr class="empty-row"><td colspan="3">아직 입력한 기록이 없어요.</td></tr>';renderBaseballJudgeCard(null);}
+      else {baseball.guesses.forEach((g,i)=>appendBaseballHistoryRow(i+1,g));renderBaseballJudgeCard(baseball.guesses[baseball.guesses.length-1]);}
       $('panel-baseball').querySelector('.secret-slots').innerHTML=Array.from({length:baseball.digits},(_,i)=>`<span>${baseball.known.includes(i)?baseball.answer[i]:'?'}</span>`).join('');
     }else if(key==='2048'){Object.assign(game2048,d);game2048.undoLimit=Infinity;render2048();}
     else if(key==='mines'){
@@ -5416,7 +5474,7 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
 */
 (() => {
   'use strict';
-  const VERSION=57;
+  const VERSION=58;
   const notice=document.getElementById('v52-update-notice');
   const detail=document.getElementById('v52-update-detail');
   const now=document.getElementById('v52-update-now');

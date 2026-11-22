@@ -2765,3 +2765,32 @@ body[data-theme=light] .v55-button-outline{background:#dcece9;color:#204447}
   .v55-dialog-actions{flex-direction:column}
   .v55-dialog-actions button{flex:0 0 auto;width:100%;min-height:45px}
 }
+
+
+/* ===================== v58 · 숫자야구 판정 카드/색상 표시 ===================== */
+#panel-baseball .bb-judge-card{margin-top:12px;border:1px solid #3b4b68;border-radius:15px;background:linear-gradient(180deg,#1b273d,#182434);padding:12px 14px;box-shadow:0 10px 24px rgba(0,0,0,.15)}
+#panel-baseball .bb-judge-heading{font-size:12px;letter-spacing:1.1px;font-weight:800;color:#a8bedf;margin-bottom:8px}
+#panel-baseball .bb-judge-body{display:flex;align-items:center;justify-content:center;min-height:58px}
+#panel-baseball .bb-judge-empty{color:#90a4c6;font-size:13px}
+#panel-baseball .bb-result-stack{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;width:100%}
+#panel-baseball .bb-result-cell{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+#panel-baseball .bb-result-text{font-weight:850;color:#fff4d8;letter-spacing:.8px}
+#panel-baseball .bb-result-stack .bb-result-text{font-size:22px}
+#panel-baseball .bb-result-cell .bb-result-text{font-size:14px}
+#panel-baseball .bb-result-visual{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+#panel-baseball .bb-indicator{display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:7px 11px;font-size:11px;font-weight:800;border:1px solid transparent;line-height:1}
+#panel-baseball .bb-indicator i{width:11px;height:11px;border-radius:50%;display:inline-block;background:currentColor;box-shadow:0 0 14px currentColor}
+#panel-baseball .bb-indicator strong{font-size:14px}
+#panel-baseball .bb-indicator small{font-size:10px;letter-spacing:.8px}
+#panel-baseball .bb-indicator.strike{background:rgba(154,112,16,.20);border-color:#f3cf77;color:#ffe295}
+#panel-baseball .bb-indicator.ball{background:rgba(19,101,74,.22);border-color:#69dea8;color:#bdf7d5}
+#panel-baseball .bb-indicator.out{background:rgba(136,35,53,.20);border-color:#ff93a6;color:#ffd3db}
+#panel-baseball .history-table td.result-cell{padding:8px 6px}
+#panel-baseball .history-table td.result-cell .bb-indicator{padding:5px 9px}
+#panel-baseball .history-table td.result-cell .bb-indicator strong{font-size:12px}
+#panel-baseball .history-table td.result-cell .bb-indicator small{font-size:9px}
+@media (max-width:540px){
+  #panel-baseball .bb-result-stack{justify-content:center}
+  #panel-baseball .bb-result-stack .bb-result-text{font-size:19px}
+  #panel-baseball .bb-indicator{padding:6px 9px}
+}

@@ -16,6 +16,7 @@
   const round = (x,y,n,color='#24475d',w=70) => r(x,y,w,70,color,12) + t(x+w/2,y+47,n,34);
   const arrow = (x=322,y=117) => `<g class="v57-arrow">${t(x,y,'➜',46,'#7fe3c7')}</g>`;
   const boxCaption = (left,right) => t(164,39,left,16,'#a3d8e3',800)+t(476,39,right,16,'#a3d8e3',800);
+  const pill = (x,y,w,label,fill,stroke='none',textFill='#fff8eb') => r(x,y,w,34,fill,17,stroke)+t(x+w/2,y+23,label,18,textFill,850);
   const baseGrid=(x,y,cols,rows,csize=38,gap=4,fill='#274158')=>{
     let out='';for(let a=0;a<rows;a++)for(let b=0;b<cols;b++)out+=r(x+b*(csize+gap),y+a*(csize+gap),csize,csize,fill,5);return out;
   };
@@ -23,7 +24,9 @@
     baseball: wrap('숫자야구 예시. 4 2 7 1을 입력하면 정답과 비교한 결과 1스트라이크 2볼이 표시됩니다.',
       t(33,41,'입력한 숫자',18,'#b7dfed',750,'start')+
       round(46,65,'4','#247a65',76)+round(138,65,'2','#926526',76)+round(230,65,'7','#926526',76)+round(322,65,'1','#405169',76)+
-      r(424,71,172,60,'#263c58',13)+t(510,110,'1 S · 2 B',27,'#ffdf91',850)+
+      r(412,56,192,96,'#20344c',16,'#466785')+t(508,83,'판정 결과',16,'#a9d8e6',800)+
+      pill(430,94,58,'1 S','#6a521e','#f1ca74','#fff2c3')+pill(493,94,58,'2 B','#1d614e','#72e3ac','#e8fff0')+pill(556,94,30,'0','#6d2332','#ff93a6','#fff3f5')+
+      t(571,118,'OUT',11,'#ffd6dd',800)+t(508,142,'노랑 = 스트라이크 · 초록 = 볼 · 빨강 = 아웃',14,'#c6deea',650)+
       t(321,189,'자리까지 일치 = S   /   숫자만 일치 = B',19,'#bcdbe6',650)),
     '2048': wrap('2048 예시. 왼쪽으로 이동하면 나란히 있던 2와 2가 합쳐져 4가 됩니다.',
       boxCaption('이동 전','← 왼쪽으로 이동 후')+
@@ -161,5 +164,5 @@
       try{localStorage.setItem(storageKey,fold.open?'0':'1');}catch(_){}
     });
   }
-  window.TaekinV57={demos,notes,menus,version:57};
+  window.TaekinV58={demos,notes,menus,version:58};
 })();
