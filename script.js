@@ -2958,10 +2958,12 @@ function resetHeroTimer(){
   stopHeroTimer();
   // 약 2초마다 자동 전환. 배너가 너무 빠르게 지나가지 않도록 조정합니다.
   // 일시정지 버튼 또는 브라우저 탭 숨김 상태에서만 전환을 중단합니다.
-  if(!heroPaused && !document.hidden && !heroRoot.contains(document.activeElement) && !document.body.classList.contains('v19-reduced-motion')){
+  // Focus on the carousel's buttons must not silently stop autoplay on mobile.
+  // Only a deliberate pause or an explicit reduced-motion setting disables it.
+  if(!heroPaused && !document.hidden && !document.body.classList.contains('v19-reduced-motion')){
     heroTimer=setInterval(()=>{
       if(!$('home-screen').classList.contains('hidden')) setHero(heroIndex+1);
-    },2000);
+    },4500);
   }
 }
 $('hero-prev').addEventListener('click',()=>setHero(heroIndex-1,true));
@@ -2973,9 +2975,8 @@ $('hero-pause').addEventListener('click',()=>{
   $('hero-pause').setAttribute('aria-label',heroPaused?'소개 슬라이드 자동 재생':'소개 슬라이드 자동 넘김 일시정지');
   resetHeroTimer();
 });
-heroRoot.addEventListener('focusin',stopHeroTimer);
-heroRoot.addEventListener('focusout',()=>setTimeout(resetHeroTimer,0));
 document.addEventListener('visibilitychange',resetHeroTimer);
+window.addEventListener('pageshow',resetHeroTimer);
 renderHero();resetHeroTimer();
 
 /* ======================= 게임별 조작 튜토리얼 ======================= */
@@ -5503,7 +5504,7 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
 */
 (() => {
   'use strict';
-  const VERSION=67;
+  const VERSION=68;
   const notice=document.getElementById('v52-update-notice');
   const detail=document.getElementById('v52-update-detail');
   const now=document.getElementById('v52-update-now');

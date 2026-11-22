@@ -192,3 +192,97 @@ body[data-theme=light] .v61-rank-card .v62-preview-detail{color:#354f4b}
   #hero-carousel .hero-footer{padding-left:34px!important;padding-right:34px!important}
   #hero-carousel #hero-pause{font-size:12px!important;min-width:104px!important}
 }
+
+/* v68: mobile showcase artwork previously hidden by style.css media rules.
+   Restore a readable in-flow game preview for phones without covering copy. */
+@media (max-width:720px){
+  #v26-view-games #hero-carousel .hero-slide.current{
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    justify-content:flex-start!important;
+    gap:12px!important;
+    padding:21px 23px 18px!important;
+    min-height:0!important;
+    height:auto!important;
+    overflow:hidden!important;
+  }
+  #v26-view-games #hero-carousel .hero-slide-text{
+    position:relative!important;
+    z-index:2!important;
+    flex:0 0 auto!important;
+    max-width:100%!important;
+    width:100%!important;
+  }
+  #v26-view-games #hero-carousel .hero-slide-art{
+    display:flex!important;
+    position:relative!important;
+    inset:auto!important;
+    left:auto!important;
+    right:auto!important;
+    top:auto!important;
+    bottom:auto!important;
+    transform:none!important;
+    transform-origin:center!important;
+    opacity:1!important;
+    visibility:visible!important;
+    width:100%!important;
+    max-width:100%!important;
+    height:auto!important;
+    min-height:150px!important;
+    flex:0 0 auto!important;
+    align-items:center!important;
+    justify-content:center!important;
+    margin:0 auto!important;
+    overflow:visible!important;
+    box-sizing:border-box!important;
+  }
+  #v26-view-games #hero-carousel .hero-device{
+    display:block!important;
+    position:relative!important;
+    width:min(100%,290px)!important;
+    max-width:100%!important;
+    margin:0 auto!important;
+    transform:none!important;
+    opacity:1!important;
+    visibility:visible!important;
+    overflow:hidden!important;
+    box-sizing:border-box!important;
+  }
+  #v26-view-games #hero-carousel .hero-device-canvas{
+    height:auto!important;
+    min-height:170px!important;
+    padding:10px!important;
+    display:grid!important;
+    place-items:center!important;
+    overflow:hidden!important;
+    box-sizing:border-box!important;
+  }
+  #v26-view-games #hero-carousel .hero-device-head,
+  #v26-view-games #hero-carousel .hero-device-bottom{
+    display:flex!important;
+  }
+  #v26-view-games #hero-carousel .hero-device-bottom{justify-content:center!important;gap:5px!important}
+  #v26-view-games #hero-carousel .demo-2048{
+    grid-template-columns:repeat(4,minmax(0,36px))!important;
+    grid-auto-rows:36px!important;
+  }
+  #v26-view-games #hero-carousel .demo-mines{
+    grid-template-columns:repeat(5,minmax(0,30px))!important;
+    grid-auto-rows:30px!important;
+  }
+  #v26-view-games #hero-carousel .demo-shikaku,
+  #v26-view-games #hero-carousel .demo-blocks{
+    grid-template-columns:repeat(5,minmax(0,30px))!important;
+    grid-auto-rows:30px!important;
+  }
+  #v26-view-games #hero-carousel .hero-slide-cta{margin-bottom:0!important}
+}
+@media (max-width:350px){
+  #v26-view-games #hero-carousel .hero-slide.current{padding:17px 15px 14px!important}
+  #v26-view-games #hero-carousel .hero-device{width:min(100%,250px)!important}
+  #v26-view-games #hero-carousel .demo-2048{grid-template-columns:repeat(4,30px)!important;grid-auto-rows:30px!important}
+  #v26-view-games #hero-carousel .demo-mines,
+  #v26-view-games #hero-carousel .demo-shikaku,
+  #v26-view-games #hero-carousel .demo-blocks{grid-template-columns:repeat(5,26px)!important;grid-auto-rows:26px!important}
+}
