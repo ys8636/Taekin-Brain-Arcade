@@ -88,3 +88,18 @@ body[data-theme=light] .v61-rank-card .v62-preview-detail{color:#354f4b}
 #play-screen .v65-game-option-arrow{font-size:22px;opacity:.7;color:#b9ffe4}
 @media(max-width:720px){#play-screen .play-title-tools{justify-content:flex-start!important;max-width:100%;min-width:0}#play-screen .v65-game-switch{width:100%;min-width:0}#play-screen .v65-game-switch-trigger{width:100%}#play-screen .v65-game-switch-menu{width:100%;max-width:100%}}
 
+
+/* v66: simpler start flow; game cards appear before the decorative showcase. */
+#v26-view-games .v19-welcome{margin-bottom:18px!important}
+#v26-view-games #game-collection{scroll-margin-top:110px;margin-top:14px!important}
+#v26-view-games .game-cards{margin-bottom:14px!important}
+#v26-view-games .v47-showcase-label{margin-top:24px!important}
+#v26-view-games .v66-backup-reminder{display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0;margin:14px 0 18px;padding:13px 16px;border:1px solid #4b746e;border-radius:14px;background:linear-gradient(110deg,#193139,#1f3a3b);color:#ebfbf6}
+#v26-view-games .v66-backup-icon{font-size:23px;flex:0 0 auto}
+#v26-view-games .v66-backup-copy{flex:1;min-width:170px;display:flex;flex-direction:column;gap:3px}
+#v26-view-games .v66-backup-copy strong{font-size:13px;font-weight:850}
+#v26-view-games .v66-backup-copy small{font-size:11px;line-height:1.5;color:#c8e6de;overflow-wrap:anywhere}
+#v26-view-games #v66-backup-now{flex:0 0 auto;min-height:40px;max-width:100%;padding:8px 12px;border:1px solid #94e0c6;border-radius:9px;background:#255c51;color:#f7fff9;font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+#v26-view-games #v66-backup-now:hover{background:#337969}
+#v26-view-games #v66-backup-now:focus-visible{outline:3px solid #ffe7a1;outline-offset:2px}
+@media(max-width:560px){#v26-view-games .v66-backup-reminder{padding:11px;gap:8px}#v26-view-games .v66-backup-copy{min-width:0;flex-basis:calc(100% - 42px)}#v26-view-games #v66-backup-now{width:100%}}

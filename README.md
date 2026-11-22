@@ -8,7 +8,7 @@
 
 PC와 스마트폰에서 설치 없이 즐기는 무료 퍼즐 아케이드
 
-[**▶ 지금 게임 플레이하기**](https://ys8636.github.io/Taekin-Brain-Arcade/play.html)
+[**▶ 지금 게임 플레이하기**](https://ys8636.github.io/Taekin-Brain-Arcade/)
 
 **6가지 게임 | 5가지 난이도 | 총 1,500단계 | 모바일 터치 지원**
 
@@ -19,7 +19,7 @@ PC와 스마트폰에서 설치 없이 즐기는 무료 퍼즐 아케이드
 
 ## 🚀 처음 시작하는 방법
 
-1. **[게임 사이트 열기](https://ys8636.github.io/Taekin-Brain-Arcade/play.html)**를 누릅니다.
+1. **[게임 사이트 열기](https://ys8636.github.io/Taekin-Brain-Arcade/)**를 누릅니다.
 2. 메인 화면에서 원하는 **게임 카드**를 선택합니다.
 3. **난이도와 단계**를 확인하고 플레이합니다.
 4. 각 게임을 **처음 열면 튜토리얼이 자동으로 표시**돼요. 이후에는 게임의 「튜토리얼」 버튼으로 다시 볼 수 있어요.
@@ -133,6 +133,6 @@ PC와 스마트폰에서 설치 없이 즐기는 무료 퍼즐 아케이드
 
 ### 🎮 지금 바로 두뇌 게임에 도전해 보세요!
 
-**[▶ TAEKIN BRAIN ARCADE 플레이하기](https://ys8636.github.io/Taekin-Brain-Arcade/play.html)**
+**[▶ TAEKIN BRAIN ARCADE 플레이하기](https://ys8636.github.io/Taekin-Brain-Arcade/)**
 
 </div>

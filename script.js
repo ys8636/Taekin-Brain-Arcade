@@ -5502,7 +5502,7 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
 */
 (() => {
   'use strict';
-  const VERSION=65;
+  const VERSION=66;
   const notice=document.getElementById('v52-update-notice');
   const detail=document.getElementById('v52-update-detail');
   const now=document.getElementById('v52-update-now');
@@ -5751,5 +5751,20 @@ document.body.classList.toggle('v34-master-active',isMasterUnlocked());
       if(v19Saves[key]?.data)v19ResumeSaved(key);
       else showGame(key);
     });
+  });
+})();
+
+/* v66: keep first visit focused on the six playable game cards.
+   Move only decorative DOM sections; do not recreate games or interrupt listeners. */
+(() => {
+  const cards=document.querySelector('#v26-view-games .game-cards');
+  const carousel=document.getElementById('hero-carousel');
+  const banner=document.querySelector('#v26-view-games .v47-showcase-label');
+  if(cards&&carousel&&banner){cards.insertAdjacentElement('afterend',banner);banner.insertAdjacentElement('afterend',carousel);}
+  document.getElementById('v66-choose-game')?.addEventListener('click',()=>{
+    document.getElementById('game-collection')?.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+  document.getElementById('v66-backup-now')?.addEventListener('click',()=>{
+    document.getElementById('export-progress')?.click();
   });
 })();
